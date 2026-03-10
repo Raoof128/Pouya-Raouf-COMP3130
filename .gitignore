@@ -1,6 +1,7 @@
-# Local notes
-AGENTS.md
-.DS_Store
+# Only track syllabus-sync_flutter in this repo
+# Ignore everything else at the top level
+/*
 
-# Web app has its own git repo
-syllabus-sync/
+# Allow the Flutter app directory and this gitignore
+!/.gitignore
+!/syllabus-sync_flutter/
