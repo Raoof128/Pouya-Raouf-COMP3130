@@ -1,8 +1,8 @@
-# Syllabus Sync
+# MQ Navigation
 
 A full-stack campus management platform for Macquarie University, built as part of COMP3130 Mobile Application Development.
 
-Syllabus Sync helps students manage their academic life — deadlines, calendars, campus navigation, events, and more — through a unified mobile experience backed by a shared cloud infrastructure.
+MQ Navigation helps students manage their academic life — deadlines, calendars, campus navigation, events, and more — through a unified mobile experience backed by a shared cloud infrastructure.
 
 ## Architecture
 
@@ -30,7 +30,7 @@ Both clients share a single Supabase backend — Auth, Postgres with Row-Level S
 
 ```
 Pouya-Raouf-COMP3130/
-└── syllabus-sync_flutter/      # Flutter mobile app
+└── MQ_Navigation/              # Flutter mobile app
     ├── lib/
     │   ├── app/                # Bootstrap, router, theme, l10n
     │   ├── core/               # Config, errors, logging, security, network
@@ -80,7 +80,7 @@ Pouya-Raouf-COMP3130/
 ### Setup
 
 ```bash
-cd syllabus-sync_flutter
+cd MQ_Navigation
 
 # Install dependencies
 flutter pub get
@@ -133,11 +133,11 @@ GitHub Actions runs on every push and PR to `main`:
 
 | Document | Location |
 |----------|----------|
-| Architecture Overview | [`syllabus-sync_flutter/docs/ARCHITECTURE.md`](syllabus-sync_flutter/docs/ARCHITECTURE.md) |
+| Architecture Overview | [`MQ_Navigation/docs/ARCHITECTURE.md`](MQ_Navigation/docs/ARCHITECTURE.md) |
 | Contributing Guidelines | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 | Code of Conduct | [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) |
 | Security Policy | [`SECURITY.md`](SECURITY.md) |
-| Changelog | [`syllabus-sync_flutter/CHANGELOG.md`](syllabus-sync_flutter/CHANGELOG.md) |
+| Changelog | [`MQ_Navigation/CHANGELOG.md`](MQ_Navigation/CHANGELOG.md) |
 
 ## Roadmap
 
