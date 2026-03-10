@@ -1,0 +1,42 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build debug APK"
+  lane :build_debug do
+    sh("cd ../.. && flutter build apk --debug " \
+       "--dart-define=SUPABASE_URL=#{ENV['SUPABASE_URL']} " \
+       "--dart-define=SUPABASE_ANON_KEY=#{ENV['SUPABASE_ANON_KEY']} " \
+       "--dart-define=GOOGLE_MAPS_API_KEY=#{ENV['GOOGLE_MAPS_API_KEY'] || ''} " \
+       "--dart-define=APP_ENV=development")
+  end
+
+  desc "Build release AAB for Play Store"
+  lane :build_release do
+    sh("cd ../.. && flutter build appbundle --release " \
+       "--dart-define=SUPABASE_URL=#{ENV['SUPABASE_URL']} " \
+       "--dart-define=SUPABASE_ANON_KEY=#{ENV['SUPABASE_ANON_KEY']} " \
+       "--dart-define=GOOGLE_MAPS_API_KEY=#{ENV['GOOGLE_MAPS_API_KEY'] || ''} " \
+       "--dart-define=APP_ENV=production")
+  end
+
+  desc "Deploy to Google Play internal testing track"
+  lane :deploy_internal do
+    build_release
+    upload_to_play_store(
+      track: "internal",
+      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+
+  desc "Promote internal to beta track"
+  lane :promote_beta do
+    upload_to_play_store(
+      track: "internal",
+      track_promote_to: "beta",
+      skip_upload_changelogs: false,
+    )
+  end
+end

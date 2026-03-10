@@ -4,6 +4,44 @@ All notable changes to the Syllabus Sync Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-11 (AEDT) — Phase 0 Gap Closure: Edge Functions + Fastlane
+
+**Scope:** Close the two remaining Phase 0 blueprint gaps — Supabase Edge Functions scaffold and Fastlane distribution config — identified during a full Phases 0–3 audit.
+
+**Summary:**
+Created the complete Supabase Edge Functions scaffold with 7 production-ready Deno functions matching the endpoint inventory: `auth-email` (Resend-based email verification send/resend/verify), `auth-cleanup` (expired password-reset and email-verification token cleanup), `routes-proxy` (Google Routes API proxy keeping billing key server-side), `places-proxy` (Google Places API search and detail proxy), `weather-proxy` (Google Weather API proxy for campus conditions), `security-utils` (Have I Been Pwned k-anonymity password breach check), and `cleanup-cron` (rate-limit and audit-log retention cleanup). All functions include shared CORS headers, structured error handling, and cron-secret verification where applicable.
+
+Created Fastlane configs for both platforms: Android lanes (`build_debug`, `build_release`, `deploy_internal`, `promote_beta`) and iOS lanes (`build_debug`, `build_release`, `deploy_testflight`, `promote_appstore`), both with `--dart-define` environment variable injection for Supabase and Google Maps keys.
+
+**Files created:**
+- `supabase/config.toml` — Supabase project config with auth, redirect URLs, and per-function JWT settings
+- `supabase/functions/_shared/cors.ts` — Shared CORS headers and OPTIONS handler
+- `supabase/functions/auth-email/index.ts` — Email verification via Resend API
+- `supabase/functions/auth-cleanup/index.ts` — Expired token cleanup (cron)
+- `supabase/functions/routes-proxy/index.ts` — Google Routes API proxy
+- `supabase/functions/places-proxy/index.ts` — Google Places API proxy
+- `supabase/functions/weather-proxy/index.ts` — Google Weather API proxy
+- `supabase/functions/security-utils/index.ts` — HIBP password breach check
+- `supabase/functions/cleanup-cron/index.ts` — Rate-limit and audit-log cleanup (cron)
+- `android/Gemfile` — Fastlane Ruby dependency
+- `android/fastlane/Appfile` — Android package name config
+- `android/fastlane/Fastfile` — Android build and deploy lanes
+- `ios/Gemfile` — Fastlane Ruby dependency
+- `ios/fastlane/Appfile` — iOS app identifier config
+- `ios/fastlane/Fastfile` — iOS build and deploy lanes
+
+**Verification:**
+- `flutter analyze` → No issues found
+- `flutter test` → 94/94 tests passed
+- `scripts/check.sh --quick` → 5/5 checks passed
+
+**Follow-ups:**
+- Deploy AASA + assetlinks.json to web domain for universal link verification
+- Configure Apple/Google developer account credentials in CI secrets for Fastlane
+- Set Supabase Edge Function secrets via `supabase secrets set`
+
+---
+
 ### Raouf: 2026-03-11 (AEDT) — Remove Unrelated MQ_Navigation Tree
 
 **Scope:** Clean the parent repository so `syllabus-sync_flutter` remains the sole active Flutter application after the earlier history merge.

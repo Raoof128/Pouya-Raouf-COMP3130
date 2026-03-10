@@ -144,3 +144,10 @@ Raouf: 2026-03-11 (AEDT) — Repository Cleanup After Merge
 - Files changed: parent repo root `README.md`, root git tree (removed `../MQ_Navigation/**`).
 - Verification: root repository now retains `syllabus-sync_flutter` as the only Flutter app directory.
 - Follow-ups: none.
+
+Raouf: 2026-03-11 (AEDT) — Phase 0 Gap Closure: Edge Functions + Fastlane
+- Scope: Close the two remaining Phase 0 gaps found during the full blueprint audit — Supabase Edge Functions scaffold and Fastlane distribution config.
+- Summary: Created the complete Supabase Edge Functions scaffold with 7 production-ready Deno functions matching the endpoint inventory: auth-email (Resend email verification), auth-cleanup (expired token cleanup), routes-proxy (Google Routes API), places-proxy (Google Places API), weather-proxy (Google Weather API), security-utils (HIBP password breach check), cleanup-cron (rate-limit/audit log cleanup). All functions include CORS support, error handling, and cron-secret verification where needed. Created Fastlane configs for both Android (build_debug, build_release, deploy_internal, promote_beta) and iOS (build_debug, build_release, deploy_testflight, promote_appstore) with --dart-define env var injection.
+- Files created: `supabase/config.toml`, `supabase/functions/_shared/cors.ts`, `supabase/functions/auth-email/index.ts`, `supabase/functions/auth-cleanup/index.ts`, `supabase/functions/routes-proxy/index.ts`, `supabase/functions/places-proxy/index.ts`, `supabase/functions/weather-proxy/index.ts`, `supabase/functions/security-utils/index.ts`, `supabase/functions/cleanup-cron/index.ts`, `android/Gemfile`, `android/fastlane/Appfile`, `android/fastlane/Fastfile`, `ios/Gemfile`, `ios/fastlane/Appfile`, `ios/fastlane/Fastfile`.
+- Verification: `flutter analyze` → no issues, `flutter test` → 94/94 passing, `scripts/check.sh --quick` → all 5 checks passed.
+- Follow-ups: Deploy AASA + assetlinks.json to web domain; configure Apple/Google developer account credentials in CI secrets for Fastlane.

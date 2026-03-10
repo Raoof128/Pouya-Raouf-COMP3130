@@ -1,0 +1,47 @@
+# Supabase Edge Functions configuration
+# https://supabase.com/docs/guides/functions
+
+[project]
+id = "syllabus-sync"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[auth]
+enabled = true
+site_url = "io.syllabussync://callback"
+additional_redirect_urls = [
+  "io.syllabussync://callback",
+  "https://syllabussync.io/auth/callback",
+]
+
+[auth.email]
+enable_confirmations = true
+
+[auth.external.google]
+enabled = true
+
+[functions.auth-email]
+verify_jwt = true
+
+[functions.auth-cleanup]
+verify_jwt = true
+
+[functions.routes-proxy]
+verify_jwt = true
+
+[functions.places-proxy]
+verify_jwt = true
+
+[functions.weather-proxy]
+verify_jwt = true
+
+[functions.security-utils]
+verify_jwt = false
+
+[functions.cleanup-cron]
+verify_jwt = true
