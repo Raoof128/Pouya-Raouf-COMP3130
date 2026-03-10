@@ -110,7 +110,7 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   void _closeSearch() {
     _searchController.clear();
-    ref.read(buildingSearchQueryProvider.notifier).state = '';
+    ref.read(buildingSearchQueryProvider.notifier).update('');
     setState(() => _isSearching = false);
   }
 
@@ -129,7 +129,7 @@ class _MapPageState extends ConsumerState<MapPage> {
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
-                  ref.read(buildingSearchQueryProvider.notifier).state = value;
+                  ref.read(buildingSearchQueryProvider.notifier).update(value);
                 },
               )
             : const Text('MQ Navigation'),
@@ -191,7 +191,7 @@ class _CategoryFilterBar extends ConsumerWidget {
               selectedColor: MqColors.red.withValues(alpha: 0.15),
               checkmarkColor: MqColors.red,
               onSelected: (_) {
-                ref.read(selectedCategoryProvider.notifier).state = null;
+                ref.read(selectedCategoryProvider.notifier).select(null);
               },
             ),
           ),
@@ -204,8 +204,8 @@ class _CategoryFilterBar extends ConsumerWidget {
                 selectedColor: MqColors.red.withValues(alpha: 0.15),
                 checkmarkColor: MqColors.red,
                 onSelected: (isSelected) {
-                  ref.read(selectedCategoryProvider.notifier).state =
-                      isSelected ? category : null;
+                  ref.read(selectedCategoryProvider.notifier).select(
+                      isSelected ? category : null);
                 },
               ),
             ),

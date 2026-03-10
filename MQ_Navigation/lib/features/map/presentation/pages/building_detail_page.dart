@@ -36,11 +36,11 @@ class BuildingDetailPage extends StatelessWidget {
                   ? CachedNetworkImage(
                       imageUrl: building.imageUrl!,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => Container(
+                      placeholder: (_, _) => const ColoredBox(
                         color: MqColors.slate200,
-                        child: const Center(child: CircularProgressIndicator()),
+                        child: Center(child: CircularProgressIndicator()),
                       ),
-                      errorWidget: (_, __, ___) => _defaultBackground(),
+                      errorWidget: (_, _, _) => _defaultBackground(),
                     )
                   : _defaultBackground(),
             ),
@@ -131,15 +131,15 @@ class BuildingDetailPage extends StatelessWidget {
   }
 
   Widget _defaultBackground() {
-    return Container(
-      decoration: const BoxDecoration(
+    return const DecoratedBox(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [MqColors.slate300, MqColors.slate100],
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Icon(Icons.domain, size: 64, color: MqColors.charcoal600),
       ),
     );

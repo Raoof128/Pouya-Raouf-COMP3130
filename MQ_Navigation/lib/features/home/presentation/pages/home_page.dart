@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   color: MqColors.red,
-                  borderRadius: BorderRadius.circular(MqSpacing.radius3xl),
+                  borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
                 ),
                 child: const Icon(
                   Icons.school,

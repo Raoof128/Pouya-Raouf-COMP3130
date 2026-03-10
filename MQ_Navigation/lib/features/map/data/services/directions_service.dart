@@ -15,7 +15,7 @@ class DirectionsService {
   /// Returns an ordered list of [LatLng] points for the polyline.
   /// Throws on network or API errors.
   static Future<List<LatLng>> getRoute(LatLng start, LatLng end) async {
-    final apiKey = EnvConfig.orsApiKey;
+    const apiKey = EnvConfig.orsApiKey;
 
     // If no ORS key is configured, return a direct line as fallback.
     if (apiKey.isEmpty) {

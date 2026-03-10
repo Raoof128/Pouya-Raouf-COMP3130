@@ -22,10 +22,30 @@ final buildingsByCategoryProvider =
 );
 
 /// Current category filter selection.
-final selectedCategoryProvider = StateProvider<BuildingCategory?>((ref) => null);
+final selectedCategoryProvider =
+    NotifierProvider<SelectedCategoryNotifier, BuildingCategory?>(
+  SelectedCategoryNotifier.new,
+);
+
+class SelectedCategoryNotifier extends Notifier<BuildingCategory?> {
+  @override
+  BuildingCategory? build() => null;
+
+  void select(BuildingCategory? category) => state = category;
+}
 
 /// Search query state.
-final buildingSearchQueryProvider = StateProvider<String>((ref) => '');
+final buildingSearchQueryProvider =
+    NotifierProvider<BuildingSearchQueryNotifier, String>(
+  BuildingSearchQueryNotifier.new,
+);
+
+class BuildingSearchQueryNotifier extends Notifier<String> {
+  @override
+  String build() => '';
+
+  void update(String query) => state = query;
+}
 
 /// Buildings matching the current search query and category filter.
 final filteredBuildingsProvider = FutureProvider<List<Building>>((ref) async {
