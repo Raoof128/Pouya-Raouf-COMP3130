@@ -20,16 +20,17 @@ void main() {
       expect(EnvConfig.isStaging, isFalse);
     });
 
-    test('supabaseUrl defaults to empty string', () {
-      expect(EnvConfig.supabaseUrl, isEmpty);
+    test('supabaseUrl falls back to dev default in debug mode', () {
+      expect(EnvConfig.supabaseUrl, isNotEmpty);
+      expect(EnvConfig.supabaseUrl, contains('supabase.co'));
     });
 
-    test('supabaseAnonKey defaults to empty string', () {
-      expect(EnvConfig.supabaseAnonKey, isEmpty);
+    test('supabaseAnonKey falls back to dev default in debug mode', () {
+      expect(EnvConfig.supabaseAnonKey, isNotEmpty);
     });
 
-    test('googleMapsApiKey defaults to empty string', () {
-      expect(EnvConfig.googleMapsApiKey, isEmpty);
+    test('googleMapsApiKey falls back to dev default in debug mode', () {
+      expect(EnvConfig.googleMapsApiKey, isNotEmpty);
     });
   });
 }
