@@ -42,6 +42,11 @@ class EnvConfig {
   static bool get hasSupabase =>
       supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 
+  /// Whether a real Google Maps API key is configured.
+  static bool get hasGoogleMapsKey =>
+      googleMapsApiKey.isNotEmpty &&
+      googleMapsApiKey != 'your-google-maps-api-key';
+
   /// Logs warnings for missing env vars instead of crashing.
   ///
   /// In production, missing Supabase credentials are fatal.

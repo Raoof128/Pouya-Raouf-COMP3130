@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
+import 'package:mq_navigation/core/config/env_config.dart';
 import 'package:mq_navigation/features/map/data/services/directions_service.dart';
 import 'package:mq_navigation/features/map/data/services/location_service.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
@@ -111,6 +112,32 @@ class _DirectionsPageState extends ConsumerState<DirectionsPage> {
   }
 
   Widget _buildDirectionsMap() {
+    if (!EnvConfig.hasGoogleMapsKey) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.map_outlined, size: 64, color: Colors.grey),
+              const SizedBox(height: 16),
+              Text(
+                'Google Maps API key not configured',
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Set GOOGLE_MAPS_API_KEY via --dart-define to enable directions.',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final dest = widget.destination;
     final destLatLng = LatLng(dest.routingLatitude!, dest.routingLongitude!);
 

@@ -1,8 +1,19 @@
+import groovy.json.JsonSlurper
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+// Read Google Maps API key from dart_defines.json for native Android SDK
+val dartDefinesFile = rootProject.file("../dart_defines.json")
+val googleMapsApiKey: String = if (dartDefinesFile.exists()) {
+    val json = JsonSlurper().parseText(dartDefinesFile.readText()) as Map<*, *>
+    json["GOOGLE_MAPS_API_KEY"]?.toString() ?: ""
+} else {
+    ""
 }
 
 android {
@@ -29,6 +40,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Inject Google Maps API key into AndroidManifest.xml
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = googleMapsApiKey
     }
 
     buildTypes {
