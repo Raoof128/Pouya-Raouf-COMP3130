@@ -4,6 +4,22 @@ All notable changes to the Syllabus Sync Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-11 (AEDT) — Remove Unrelated MQ_Navigation Tree
+
+**Scope:** Clean the parent repository so `syllabus-sync_flutter` remains the sole active Flutter application after the earlier history merge.
+
+**Summary:**
+Removed the unrelated `MQ_Navigation` directory from the repository root and restored the root documentation to point back to `syllabus-sync_flutter` as the primary mobile app. No application logic inside `syllabus-sync_flutter` was changed in this cleanup.
+
+**Files changed:**
+- Parent repo `README.md` — restored project paths to `syllabus-sync_flutter`
+- Parent repo git tree — removed `MQ_Navigation/**`
+
+**Verification:**
+- Root repository tree confirms `syllabus-sync_flutter` is the only remaining Flutter app directory
+
+---
+
 ### Raouf: 2026-03-11 (AEDT) — Context7 Audit Hardening for Phase 2 + Phase 3
 
 **Scope:** Re-audit the completed Phase 2 and Phase 3 migration slices against current Flutter, go_router, and Supabase docs fetched via Context7, then correct any concrete deviations.

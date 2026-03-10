@@ -137,3 +137,10 @@ Raouf: 2026-03-11 (AEDT) — Context7 Audit for Phase 2 + Phase 3
 - Files changed: `lib/app/router/app_router.dart`, `lib/app/router/route_guard.dart`, `lib/features/auth/data/repositories/auth_repository.dart`, `lib/features/auth/presentation/controllers/auth_flow_controller.dart`, `lib/features/auth/presentation/pages/verify_email_page.dart`, `lib/features/auth/presentation/widgets/biometric_lock_gate.dart`, `lib/features/calendar/presentation/controllers/calendar_controller.dart`, `lib/shared/models/academic_models.dart`, `test/app/route_guard_test.dart`, `test/features/auth/auth_flow_controller_test.dart`, `test/features/calendar/calendar_state_test.dart`.
 - Verification: `flutter analyze` → no issues, `flutter test` → 94/94 passing, `scripts/check.sh --quick` → all 5 checks passed.
 - Follow-ups: upstream `origin/main` still needs a safe history reconciliation because the root branch has diverged into the `MQ_Navigation` tree while this work remains under `syllabus-sync_flutter`.
+
+Raouf: 2026-03-11 (AEDT) — Repository Cleanup After Merge
+- Scope: Remove the unrelated `MQ_Navigation` tree from the parent repository so the Syllabus Sync Flutter app remains the only active mobile app in the shared repo.
+- Summary: Cleaned the parent repository after the upstream merge by deleting `MQ_Navigation`, keeping `syllabus-sync_flutter` as the authoritative Flutter codebase, and restoring the root documentation paths to this app.
+- Files changed: parent repo root `README.md`, root git tree (removed `../MQ_Navigation/**`).
+- Verification: root repository now retains `syllabus-sync_flutter` as the only Flutter app directory.
+- Follow-ups: none.

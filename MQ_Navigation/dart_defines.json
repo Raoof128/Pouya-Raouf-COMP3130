@@ -1,8 +1,0 @@
-{
-  "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4c3FsZ3Zid3RldmtrbGp6b2xnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMjkwNTEsImV4cCI6MjA4MjYwNTA1MX0.5OXdkYfflYE27WRhw2PKf-up3UYctGKn3w2RQbTZrWw",
-  "SUPABASE_URL": "https://cxsqlgvbwtevkkljzolg.supabase.co",
-  "ORS_API_KEY": "7bf5c564f49448449103024c4c0f976f",
-  "GOOGLE_MAPS_API_KEY": "your-google-maps-api-key",
-  "APP_ENV": "development"
-}
-

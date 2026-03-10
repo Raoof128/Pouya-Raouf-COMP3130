@@ -1,17 +1,18 @@
-# MQ Navigation
+# MQ Project
 
-A full-stack campus management platform for Macquarie University, built as part of COMP3130 Mobile Application Development.
+A repository for the Macquarie University mobile coursework deliverables, with `syllabus-sync_flutter` as the primary Flutter application.
 
-MQ Navigation helps students manage their academic life — deadlines, calendars, campus navigation, events, and more — through a unified mobile experience backed by a shared cloud infrastructure.
+The active app in this repository is `syllabus-sync_flutter`, which contains the Syllabus Sync Flutter migration work: auth, profile, dashboard, calendar, map, settings, and shared Supabase-backed mobile flows.
 
 ## Architecture
 
-**Two frontends, one backend:**
+**Primary app:**
 
 ```
 ┌──────────────────┐     ┌──────────────────┐
 │  Flutter Mobile   │     │  Next.js Web App  │
-│  (this repo)      │     │  (production)     │
+│ syllabus-sync_    │     │  (production)     │
+│ flutter           │     │                   │
 └────────┬─────────┘     └────────┬─────────┘
          │                        │
          └───────┐    ┌───────────┘
@@ -24,13 +25,13 @@ MQ Navigation helps students manage their academic life — deadlines, calendars
            └─────────────────┘
 ```
 
-Both clients share a single Supabase backend — Auth, Postgres with Row-Level Security, Realtime subscriptions, and Edge Functions. The Flutter app is a presentation-layer-only client with no server logic in the binary.
+The mobile app shares a single Supabase backend with the web product — Auth, Postgres with Row-Level Security, Realtime subscriptions, and Edge Functions. The Flutter app is a presentation-layer-only client with no server logic in the binary.
 
 ## Project Structure
 
 ```
 Pouya-Raouf-COMP3130/
-└── MQ_Navigation/              # Flutter mobile app
+└── syllabus-sync_flutter/      # Primary Flutter mobile app
     ├── lib/
     │   ├── app/                # Bootstrap, router, theme, l10n
     │   ├── core/               # Config, errors, logging, security, network
@@ -80,7 +81,7 @@ Pouya-Raouf-COMP3130/
 ### Setup
 
 ```bash
-cd MQ_Navigation
+cd syllabus-sync_flutter
 
 # Install dependencies
 flutter pub get
@@ -133,11 +134,11 @@ GitHub Actions runs on every push and PR to `main`:
 
 | Document | Location |
 |----------|----------|
-| Architecture Overview | [`MQ_Navigation/docs/ARCHITECTURE.md`](MQ_Navigation/docs/ARCHITECTURE.md) |
+| Architecture Overview | [`syllabus-sync_flutter/docs/ARCHITECTURE.md`](syllabus-sync_flutter/docs/ARCHITECTURE.md) |
 | Contributing Guidelines | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 | Code of Conduct | [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) |
 | Security Policy | [`SECURITY.md`](SECURITY.md) |
-| Changelog | [`MQ_Navigation/CHANGELOG.md`](MQ_Navigation/CHANGELOG.md) |
+| Changelog | [`syllabus-sync_flutter/CHANGELOG.md`](syllabus-sync_flutter/CHANGELOG.md) |
 
 ## Roadmap
 
