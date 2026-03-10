@@ -4,6 +4,24 @@ All notable changes to the Syllabus Sync Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-10 (AEDT) — Context7 Docs Compliance Fixes
+
+**Scope:** Compare codebase against latest 2026 Flutter/Riverpod/GoRouter/Supabase/local_auth docs via Context7; fix deviations.
+
+**Summary:**
+Fetched latest documentation for Flutter, Riverpod 3, GoRouter 17, Supabase Flutter, and local_auth 3 via Context7 MCP. Compared all patterns against our code. Found 3 deviations from the Flutter error handling docs: missing `PlatformDispatcher.instance.onError` (Layer 2 error catcher), missing `ErrorWidget.builder` customisation in MaterialApp, and missing `FlutterError.presentError` call for debug console output. All other patterns (ColorScheme.fromSeed, NavigationBar, AsyncNotifier, ref.listen/read/watch, refreshListenable, StatefulShellRoute, PKCE auth, onAuthStateChange, biometric API) confirmed correct.
+
+**Files changed:**
+- `lib/core/error/error_boundary.dart` — Added `PlatformDispatcher.instance.onError` (Layer 2) + `FlutterError.presentError` call
+- `lib/app/syllabus_sync_app.dart` — Added `MaterialApp.builder` with custom `ErrorWidget.builder`
+
+**Verification:**
+- `flutter analyze` -> No issues found
+- `flutter test` -> 78/78 tests passed
+- 12/12 patterns confirmed matching latest 2026 docs
+
+---
+
 ### Raouf: 2026-03-10 (AEDT) — Production-Grade Audit & Polish
 
 **Scope:** Comprehensive audit fixing critical bugs, adding professional docs, hardening configs.

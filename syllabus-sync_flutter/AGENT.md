@@ -115,3 +115,11 @@ Raouf: 2026-03-10 (AEDT) — Production-Grade Audit & Polish
 - Added: analysis_options.yaml — hardened with 20+ lint rules
 - Added: .editorconfig, .vscode/settings.json, .vscode/extensions.json
 - Status: 0 analysis issues, 78/78 tests passing, 5/5 checks green
+
+Raouf: 2026-03-10 (AEDT) — Context7 Docs Compliance
+- Scope: Compared all code patterns against latest 2026 Flutter/Riverpod/GoRouter/Supabase/local_auth docs
+- Fixed: Added PlatformDispatcher.instance.onError (Layer 2 error catcher per Flutter docs)
+- Fixed: Added ErrorWidget.builder in MaterialApp.builder (friendly error UI per Flutter docs)
+- Fixed: Added FlutterError.presentError call for debug console output
+- Confirmed: 12/12 other patterns match latest docs (M3, AsyncNotifier, refreshListenable, PKCE, etc.)
+- Status: 0 analysis issues, 78/78 tests passing

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:syllabus_sync/core/logging/app_logger.dart';
 
@@ -83,14 +85,29 @@ class _ErrorFallback extends StatelessWidget {
   }
 }
 
-/// Installs global Flutter error handlers that log errors and show
-/// a user-friendly error widget instead of the red screen.
+/// Installs global error handlers as recommended by Flutter's error handling
+/// documentation (https://docs.flutter.dev/testing/errors).
+///
+/// Sets up three layers:
+/// 1. [FlutterError.onError] — catches errors during widget build/layout/paint
+/// 2. [PlatformDispatcher.instance.onError] — catches platform-level errors
+///    (unhandled Future errors, isolate errors) that escape the Flutter framework
+/// 3. [runZonedGuarded] — set up separately in bootstrap.dart as a final fallback
 void installErrorHandlers() {
+  // Layer 1: Flutter framework errors (widget build, layout, paint).
   FlutterError.onError = (details) {
+    // Preserve default debug console output.
+    FlutterError.presentError(details);
     AppLogger.error(
       'Flutter framework error',
       details.exception,
       details.stack,
     );
+  };
+
+  // Layer 2: Platform-level errors (unhandled Futures, isolate errors).
+  PlatformDispatcher.instance.onError = (error, stack) {
+    AppLogger.error('Platform dispatcher error', error, stack);
+    return true; // Prevents the error from being reported to the zone.
   };
 }
