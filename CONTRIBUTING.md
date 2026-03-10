@@ -1,4 +1,4 @@
-# Contributing to Syllabus Sync
+# Contributing to MQ Navigation
 
 Thank you for your interest in contributing. This document outlines the workflow and standards expected for all contributions.
 
@@ -9,7 +9,7 @@ Thank you for your interest in contributing. This document outlines the workflow
 3. Navigate to the Flutter project:
 
 ```bash
-cd syllabus-sync_flutter
+cd MQ_Navigation
 flutter pub get
 flutter gen-l10n
 ```
@@ -35,7 +35,7 @@ flutter run \
 
 ### Before Submitting a PR
 
-Run the full check suite from `syllabus-sync_flutter/`:
+Run the full check suite from `MQ_Navigation/`:
 
 ```bash
 ./scripts/check.sh --quick
