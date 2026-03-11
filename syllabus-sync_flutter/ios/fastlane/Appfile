@@ -1,4 +1,0 @@
-app_identifier("io.syllabussync.syllabusSync")
-apple_id("")       # Apple ID email — set in CI secrets or locally
-team_id("")        # Apple Developer Team ID — set in CI secrets or locally
-itc_team_id("")    # App Store Connect Team ID — set in CI secrets or locally

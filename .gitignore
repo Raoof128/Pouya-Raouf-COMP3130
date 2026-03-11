@@ -1,4 +1,4 @@
-# Only track syllabus-sync_flutter and root docs in this repo
+# Only track mq_navigation and root docs in this repo
 # Ignore everything else at the top level
 /*
 
@@ -9,4 +9,6 @@
 !/CONTRIBUTING.md
 !/CODE_OF_CONDUCT.md
 !/SECURITY.md
-!/syllabus-sync_flutter/
+!/AGENT.md
+!/CHANGELOG.md
+!/mq_navigation/

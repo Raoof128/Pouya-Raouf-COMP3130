@@ -1,2 +1,0 @@
-json_key_file("") # Path to service account JSON — set in CI secrets
-package_name("io.syllabussync.syllabus_sync")

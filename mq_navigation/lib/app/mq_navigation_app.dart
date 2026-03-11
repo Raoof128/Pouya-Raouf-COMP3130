@@ -1,0 +1,56 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
+import 'package:mq_navigation/app/router/app_router.dart';
+import 'package:mq_navigation/app/theme/mq_theme.dart';
+import 'package:mq_navigation/features/auth/presentation/widgets/biometric_lock_gate.dart';
+import 'package:mq_navigation/features/notifications/presentation/controllers/notifications_controller.dart';
+import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
+
+class MqNavigationApp extends ConsumerWidget {
+  const MqNavigationApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+    final preferences = ref.watch(settingsControllerProvider).value;
+    ref.watch(notificationsControllerProvider);
+
+    return MaterialApp.router(
+      title: 'MQ Navigation',
+      debugShowCheckedModeBanner: false,
+      theme: MqTheme.light,
+      darkTheme: MqTheme.dark,
+      themeMode: preferences?.themeMode ?? ThemeMode.system,
+      locale: preferences?.locale,
+      routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      builder: (context, widget) {
+        ErrorWidget.builder = (details) => _buildErrorWidget(context, details);
+        if (widget == null) {
+          throw StateError('MaterialApp.router returned null widget');
+        }
+        return BiometricLockGate(child: widget);
+      },
+    );
+  }
+
+  static Widget _buildErrorWidget(
+    BuildContext context,
+    FlutterErrorDetails details,
+  ) {
+    return Material(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            'A rendering error occurred.',
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+}
