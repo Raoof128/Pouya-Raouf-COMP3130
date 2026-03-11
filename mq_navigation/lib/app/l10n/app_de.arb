@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "Zugangsschlüssel",
   "authenticationFailed": "Authentifizierung fehlgeschlagen.",
   "contact_emailSubject": "{appName} Kontakt und Feedback",
-  "contact_notProvided": "Nicht angegeben"
+  "contact_notProvided": "Nicht angegeben",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

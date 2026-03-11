@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "Hozzáférési kulcs",
   "authenticationFailed": "A hitelesítés sikertelen.",
   "contact_emailSubject": "{appName} kapcsolat és visszajelzés",
-  "contact_notProvided": "Nincs megadva"
+  "contact_notProvided": "Nincs megadva",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

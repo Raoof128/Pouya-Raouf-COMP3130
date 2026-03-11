@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "பாஸ்கீ",
   "authenticationFailed": "அங்கீகாரம் தோல்வியடைந்தது.",
   "contact_emailSubject": "{appName} தொடர்பு மற்றும் கருத்து",
-  "contact_notProvided": "வழங்கப்படவில்லை"
+  "contact_notProvided": "வழங்கப்படவில்லை",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

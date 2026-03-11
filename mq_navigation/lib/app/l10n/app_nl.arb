@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "Toegangssleutel",
   "authenticationFailed": "Authenticatie mislukt.",
   "contact_emailSubject": "{appName} contact en feedback",
-  "contact_notProvided": "Niet opgegeven"
+  "contact_notProvided": "Niet opgegeven",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

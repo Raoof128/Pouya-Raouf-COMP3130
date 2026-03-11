@@ -4,6 +4,27 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-11 (AEDT) — Fix Scripts + ARB + Run Configuration
+
+**Scope:** Fix run.sh, add missing .env.example, propagate 13 missing ARB keys to all 34 locales.
+
+**Summary:**
+Rewrote `scripts/run.sh` to use Flutter's built-in `--dart-define-from-file` flag instead of manually parsing `.env` with shell IFS splitting. Created `.env.example` with placeholder keys so fresh clones have a setup template (the `.gitignore` already preserves it via `!.env.example`). Added 13 missing localization keys to all 34 non-English ARB files — these were added to `app_en.arb` during Phase 4/5 but never propagated, causing untranslated-message warnings on every build.
+
+**Files changed:**
+- `scripts/run.sh` — rewritten to use `--dart-define-from-file`
+- `.env.example` — created with placeholder keys
+- 34 ARB locale files — added `examReminders`, `systemAlerts`, `locationServicesDisabled`, `locationPermissionBlocked`, `locationPermissionRequired`, `locationUnsupported`, `locationUnavailable`, `dailyAt`, `deadlineLabel`, `studyPromptLabel`, `starts`, `ends`, `itemNoLongerAvailable`
+
+**Verification:**
+- `flutter analyze` → 0 issues
+- `flutter test` → 99/99 passed
+- `flutter gen-l10n` → 0 untranslated warnings
+- `scripts/check.sh --quick` → 5/5 passed
+
+**Follow-ups:**
+- None
+
 ### Raouf: 2026-03-11 (AEDT) — Documentation Sweep: Stale References Cleanup
 
 **Scope:** Read all project `.md` docs and fix stale directory names, outdated test counts, and completed-status labels.

@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "पासकी",
   "authenticationFailed": "प्रमाणीकरण असफल भयो।",
   "contact_emailSubject": "{appName} सम्पर्क र प्रतिक्रिया",
-  "contact_notProvided": "प्रदान गरिएको छैन"
+  "contact_notProvided": "प्रदान गरिएको छैन",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

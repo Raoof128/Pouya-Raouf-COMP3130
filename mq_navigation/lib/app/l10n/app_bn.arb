@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "পাসকি",
   "authenticationFailed": "প্রমাণীকরণ ব্যর্থ হয়েছে।",
   "contact_emailSubject": "{appName} যোগাযোগ ও মতামত",
-  "contact_notProvided": "প্রদান করা হয়নি"
+  "contact_notProvided": "প্রদান করা হয়নি",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

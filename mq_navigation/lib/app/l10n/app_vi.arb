@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "Khóa truy cập",
   "authenticationFailed": "Xác thực thất bại.",
   "contact_emailSubject": "{appName} liên hệ và phản hồi",
-  "contact_notProvided": "Không cung cấp"
+  "contact_notProvided": "Không cung cấp",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

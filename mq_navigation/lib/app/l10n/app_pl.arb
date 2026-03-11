@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "Klucz dostępu",
   "authenticationFailed": "Uwierzytelnianie nie powiodło się.",
   "contact_emailSubject": "{appName} kontakt i opinia",
-  "contact_notProvided": "Nie podano"
+  "contact_notProvided": "Nie podano",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

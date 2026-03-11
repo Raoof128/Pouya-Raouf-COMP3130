@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "مفتاح مرور",
   "authenticationFailed": "فشلت المصادقة.",
   "contact_emailSubject": "{appName} التواصل والملاحظات",
-  "contact_notProvided": "غير متوفر"
+  "contact_notProvided": "غير متوفر",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "패스키",
   "authenticationFailed": "인증에 실패했습니다.",
   "contact_emailSubject": "{appName} 문의 및 피드백",
-  "contact_notProvided": "제공되지 않음"
+  "contact_notProvided": "제공되지 않음",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

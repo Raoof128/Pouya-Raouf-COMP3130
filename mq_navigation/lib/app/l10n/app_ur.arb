@@ -1994,5 +1994,18 @@
   "passkeyDefaultName": "پاس کی",
   "authenticationFailed": "توثیق ناکام ہوگئی۔",
   "contact_emailSubject": "{appName} رابطہ اور رائے",
-  "contact_notProvided": "فراہم نہیں کیا گیا"
+  "contact_notProvided": "فراہم نہیں کیا گیا",
+  "examReminders": "Exam Reminders",
+  "systemAlerts": "System Alerts",
+  "locationServicesDisabled": "Location services are disabled.",
+  "locationPermissionBlocked": "Location permission is blocked.",
+  "locationPermissionRequired": "Location permission is required.",
+  "locationUnsupported": "Location is not available on this platform.",
+  "locationUnavailable": "Location unavailable.",
+  "dailyAt": "Daily at {time}",
+  "deadlineLabel": "Deadline",
+  "studyPromptLabel": "Study Prompt",
+  "starts": "Starts",
+  "ends": "Ends",
+  "itemNoLongerAvailable": "This item is no longer available."
 }

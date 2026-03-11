@@ -75,6 +75,13 @@ Located in project root:
 
 ---
 
+Raouf: 2026-03-11 (AEDT) — Fix Scripts + ARB + Run Configuration
+- Scope: Fix run.sh, add missing .env.example, propagate 13 missing ARB keys to all 34 locales.
+- Summary: Rewrote `run.sh` to use `--dart-define-from-file` instead of manual .env parsing. Created `.env.example` with placeholder keys so fresh clones have a setup template. Added 13 missing localization keys (`examReminders`, `systemAlerts`, `locationServicesDisabled`, `locationPermissionBlocked`, `locationPermissionRequired`, `locationUnsupported`, `locationUnavailable`, `dailyAt`, `deadlineLabel`, `studyPromptLabel`, `starts`, `ends`, `itemNoLongerAvailable`) to all 34 non-English ARB files — eliminates untranslated warnings during build.
+- Files changed: `scripts/run.sh`, `.env.example` (new), 34 ARB locale files under `lib/app/l10n/`.
+- Verification: `flutter analyze` → 0 issues, `flutter test` → 99/99 passed, `flutter gen-l10n` → 0 untranslated warnings, `scripts/check.sh --quick` → 5/5 passed.
+- Follow-ups: None.
+
 Raouf: 2026-03-11 (AEDT) — Documentation Sweep: Stale References Cleanup
 - Scope: Read all project .md docs and fix stale directory names, outdated test counts, and completed-status labels.
 - Summary: Updated `README.md` to use `mq_navigation` directory name (was `mq-navigation_flutter`) and corrected test count from 78 to 99. Updated `Flutter_Migration_Plan.md` to use `mq_navigation` directory name in 3 places. Updated `endpoint_inventory.md` header from "Edge Functions to Build" to "Edge Functions (Deployed)" since all 9 functions are implemented.
