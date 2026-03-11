@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:mq_navigation/core/logging/app_logger.dart';
@@ -41,7 +41,7 @@ class FcmService {
   StreamSubscription<RemoteMessage>? _openAppSubscription;
   bool _isInitialised = false;
 
-  bool get _isSupported => Platform.isAndroid || Platform.isIOS;
+  bool get _isSupported => !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
 
   Future<void> initialize({
     required Future<void> Function(String link) onOpenLink,
@@ -80,7 +80,7 @@ class FcmService {
       return NotificationPermissionStatus.denied;
     }
 
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       final permission = await Permission.notification.status;
       if (permission.isGranted) {
         return NotificationPermissionStatus.granted;
@@ -108,7 +108,7 @@ class FcmService {
       return NotificationPermissionStatus.denied;
     }
 
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       final permission = await Permission.notification.request();
       if (permission.isGranted) {
         return NotificationPermissionStatus.granted;
@@ -122,7 +122,7 @@ class FcmService {
       alert: true,
       badge: true,
       sound: true,
-      provisional: Platform.isIOS,
+      provisional: defaultTargetPlatform == TargetPlatform.iOS,
     );
     return switch (settings.authorizationStatus) {
       AuthorizationStatus.authorized => NotificationPermissionStatus.granted,
@@ -146,7 +146,7 @@ class FcmService {
     await _remoteSource.upsertFcmToken(
       userId: userId,
       token: token,
-      platform: Platform.isIOS ? 'ios' : 'android',
+      platform: defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android',
     );
 
     _tokenRefreshSubscription ??= _messaging.onTokenRefresh.listen((
@@ -159,7 +159,7 @@ class FcmService {
         await _remoteSource.upsertFcmToken(
           userId: userId,
           token: token,
-          platform: Platform.isIOS ? 'ios' : 'android',
+          platform: defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android',
         );
       } catch (error, stackTrace) {
         AppLogger.warning('Failed to refresh FCM token', error, stackTrace);

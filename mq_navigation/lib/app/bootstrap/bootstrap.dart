@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -24,7 +24,7 @@ Future<void> bootstrap(Widget Function() appBuilder) async {
       // Validate required env vars.
       EnvConfig.validate();
 
-      if (Platform.isAndroid || Platform.isIOS) {
+      if (!kIsWeb) {
         try {
           await Firebase.initializeApp();
           FirebaseMessaging.onBackgroundMessage(

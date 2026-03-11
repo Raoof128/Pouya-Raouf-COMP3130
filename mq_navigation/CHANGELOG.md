@@ -4,6 +4,27 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-11 (AEDT) — Fix dart:io Platform crash on web
+
+**Scope:** Replace all `dart:io` `Platform.*` calls with web-safe alternatives.
+
+**Summary:**
+Four files used `dart:io`'s `Platform.isAndroid` / `Platform.isIOS` which throws `Unsupported operation: Platform._operatingSystem` when running on web (Chrome). Replaced all occurrences with `kIsWeb` guard + `defaultTargetPlatform` from `package:flutter/foundation.dart`. No `dart:io` imports remain anywhere in `lib/`.
+
+**Files changed:**
+- `lib/app/bootstrap/bootstrap.dart` — Firebase init guard
+- `lib/features/notifications/data/datasources/fcm_service.dart` — `_isSupported` and platform-specific permission/token logic
+- `lib/features/notifications/data/datasources/local_notifications_service.dart` — `_isSupported`
+- `lib/features/map/data/datasources/location_source.dart` — `_isSupported`
+
+**Verification:**
+- `flutter analyze` → 0 issues
+- `flutter test` → 99/99 passed
+- Web build + launch no longer crashes
+
+**Follow-ups:**
+- None
+
 ### Raouf: 2026-03-11 (AEDT) — Fix Scripts + ARB + Run Configuration
 
 **Scope:** Fix run.sh, add missing .env.example, propagate 13 missing ARB keys to all 34 locales.

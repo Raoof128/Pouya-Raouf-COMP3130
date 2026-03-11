@@ -75,6 +75,13 @@ Located in project root:
 
 ---
 
+Raouf: 2026-03-11 (AEDT) — Fix dart:io Platform crash on web
+- Scope: Replace all `dart:io` `Platform.*` calls with web-safe `kIsWeb` + `defaultTargetPlatform` checks.
+- Summary: `bootstrap.dart`, `fcm_service.dart`, `local_notifications_service.dart`, and `location_source.dart` all used `dart:io` `Platform.isAndroid`/`Platform.isIOS` which throws `Unsupported operation: Platform._operatingSystem` on web. Replaced with `kIsWeb` guard + `defaultTargetPlatform` from `package:flutter/foundation.dart`. Zero `dart:io` imports remain in `lib/`.
+- Files changed: `lib/app/bootstrap/bootstrap.dart`, `lib/features/notifications/data/datasources/fcm_service.dart`, `lib/features/notifications/data/datasources/local_notifications_service.dart`, `lib/features/map/data/datasources/location_source.dart`.
+- Verification: `flutter analyze` → 0 issues, `flutter test` → 99/99 passed. Web build succeeds without runtime crash.
+- Follow-ups: None.
+
 Raouf: 2026-03-11 (AEDT) — Fix Scripts + ARB + Run Configuration
 - Scope: Fix run.sh, add missing .env.example, propagate 13 missing ARB keys to all 34 locales.
 - Summary: Rewrote `run.sh` to use `--dart-define-from-file` instead of manual .env parsing. Created `.env.example` with placeholder keys so fresh clones have a setup template. Added 13 missing localization keys (`examReminders`, `systemAlerts`, `locationServicesDisabled`, `locationPermissionBlocked`, `locationPermissionRequired`, `locationUnsupported`, `locationUnavailable`, `dailyAt`, `deadlineLabel`, `studyPromptLabel`, `starts`, `ends`, `itemNoLongerAvailable`) to all 34 non-English ARB files — eliminates untranslated warnings during build.

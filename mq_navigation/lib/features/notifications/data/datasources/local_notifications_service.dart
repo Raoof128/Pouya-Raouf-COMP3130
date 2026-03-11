@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -16,7 +16,7 @@ class LocalNotificationsService {
   final FlutterLocalNotificationsPlugin _plugin;
   bool _isInitialised = false;
 
-  bool get _isSupported => Platform.isAndroid || Platform.isIOS;
+  bool get _isSupported => !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
 
   Future<void> initialize({
     required Future<void> Function(String link) onOpenLink,

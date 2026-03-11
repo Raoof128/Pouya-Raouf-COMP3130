@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
@@ -16,7 +16,7 @@ enum LocationPermissionState {
 class LocationSource {
   const LocationSource();
 
-  bool get _isSupported => Platform.isAndroid || Platform.isIOS;
+  bool get _isSupported => !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
 
   Future<LocationPermissionState> ensurePermission() async {
     if (!_isSupported) {
