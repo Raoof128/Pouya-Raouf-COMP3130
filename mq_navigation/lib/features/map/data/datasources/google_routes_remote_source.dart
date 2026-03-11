@@ -38,12 +38,14 @@ class GoogleRoutesRemoteSource {
       'key': apiKey,
     });
 
-    final response = await http.get(uri);
+    final response = await http.get(uri).timeout(const Duration(seconds: 15));
 
     if (response.statusCode >= 400) {
-      debugPrint(
-        'Directions API error ${response.statusCode}: ${response.body}',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          'Directions API error ${response.statusCode}: ${response.body}',
+        );
+      }
       throw StateError(
         'Google Directions API returned ${response.statusCode}',
       );
@@ -51,14 +53,14 @@ class GoogleRoutesRemoteSource {
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
 
-    debugPrint(
-      'Directions API response (${response.statusCode}): status=${json['status']}',
-    );
-    debugPrint(
-      'Directions API request: origin=(${origin.latitude}, ${origin.longitude}), '
-      'destination=($destinationLatitude, $destinationLongitude), '
-      'mode=${travelMode.directionsApiValue}',
-    );
+    if (kDebugMode) {
+      debugPrint(
+        'Directions API response (${response.statusCode}): status=${json['status']}',
+      );
+      debugPrint(
+        'Directions API request: mode=${travelMode.directionsApiValue}',
+      );
+    }
 
     return MapRoute.fromJson(json, travelMode);
   }

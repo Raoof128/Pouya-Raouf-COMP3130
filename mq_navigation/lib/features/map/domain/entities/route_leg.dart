@@ -33,19 +33,20 @@ class LocationSample {
 
 @immutable
 class MapRoute {
-  const MapRoute({
+  MapRoute({
     required this.travelMode,
     required this.distanceMeters,
     required this.durationSeconds,
     required this.encodedPolyline,
     required this.instructions,
-  });
+  }) : arrivalAt = DateTime.now().add(Duration(seconds: durationSeconds));
 
   final TravelMode travelMode;
   final int distanceMeters;
   final int durationSeconds;
   final String encodedPolyline;
   final List<NavInstruction> instructions;
+  final DateTime arrivalAt;
 
   factory MapRoute.fromJson(Map<String, dynamic> json, TravelMode travelMode) {
     // ── Directions API response parsing ──

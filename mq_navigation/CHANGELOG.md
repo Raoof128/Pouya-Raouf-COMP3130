@@ -4,6 +4,51 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-12 (AEDT) — Comprehensive audit fix batch (25+ issues)
+
+**Scope:** Fix all critical, high, medium, and low severity issues from full codebase audit.
+
+**Summary:**
+Fixed 30+ issues across 20 files from a comprehensive audit. Critical: fixed polyline decoder algorithm (C5), moved `didChangeDependencies` to `initState` (C4), cancel location subscription on `clearRoute()` (C7), made ErrorBoundary actually catch errors (C6), removed hardcoded dev API keys from source (C1), added try/catch to Firebase background handler (C8). High: added link allowlist to notification deep-link handler preventing open redirect (H2). Medium: fixed `DateTime.now()` → `.toUtc()` for Supabase timestamps (M1), fixed autoDispose mismatch (M2), fixed stale userId in FCM token refresh (M3), replaced `AsyncLoading` with optimistic update in settings (M4), fixed null locale selection for "System" (M5), removed unbundled font family references (M6), replaced hardcoded Colors with MqColors tokens (M7), guarded `debugPrint` with `kDebugMode` and added HTTP timeout (M8), fixed RoutePanel always showing "Walking Directions" (M9), fixed `selectBuilding` mid-navigation state (M11), added `onError` to location stream (M12), added production log level filter (M13), removed unused iOS permissions (M14). Low: disposed GoogleMapController (L1), fixed ETA drift with `arrivalAt` field (L8), replaced raw AppBar with MqAppBar (L10), fixed loading spinner color per variant (L11), added focusedErrorBorder and textButtonTheme (L12), used RouteNames constants in home page (L9). Moved ErrorWidget.builder setup from build() to installErrorHandlers(). Updated tests to match.
+
+**Files changed:**
+- `lib/core/config/env_config.dart` — removed hardcoded keys
+- `lib/core/error/error_boundary.dart` — functional error catching + ErrorWidget.builder
+- `lib/core/logging/app_logger.dart` — production log filter
+- `lib/app/mq_navigation_app.dart` — removed ErrorWidget.builder from build()
+- `lib/app/theme/mq_theme.dart` — focusedErrorBorder, textButtonTheme
+- `lib/app/theme/mq_typography.dart` — null font families (no fonts bundled)
+- `lib/features/map/presentation/widgets/campus_map_view.dart` — fixed polyline decoder, dispose controller
+- `lib/features/map/presentation/pages/map_page.dart` — initState, removed unused import
+- `lib/features/map/presentation/controllers/map_controller.dart` — clearRoute cancel, selectBuilding fix, onError
+- `lib/features/map/presentation/widgets/route_panel.dart` — travel mode label, cached ETA
+- `lib/features/map/domain/entities/route_leg.dart` — arrivalAt field
+- `lib/features/map/data/datasources/google_routes_remote_source.dart` — kDebugMode guard, timeout
+- `lib/features/notifications/data/datasources/fcm_service.dart` — background handler try/catch, stale userId fix
+- `lib/features/notifications/data/datasources/notification_remote_source.dart` — UTC timestamps
+- `lib/features/notifications/presentation/controllers/notifications_controller.dart` — link allowlist, UTC, autoDispose
+- `lib/features/settings/presentation/pages/settings_page.dart` — MqAppBar, null locale fix
+- `lib/features/settings/presentation/controllers/settings_controller.dart` — optimistic update
+- `lib/features/home/presentation/pages/home_page.dart` — MqColors, MqAppBar, RouteNames
+- `lib/shared/widgets/mq_button.dart` — variant-aware spinner color
+- `ios/Runner/Info.plist` — removed unused permissions
+- `.env`, `.env.example` — DEV_* keys
+- `test/core/env_config_test.dart`, `test/app/mq_theme_test.dart` — updated tests
+
+**Verification:**
+- `flutter analyze` → 0 issues
+- `flutter test` → 83/83 passed
+
+**Follow-ups:**
+- H1: Create release signing config (android/app/build.gradle.kts)
+- H3: Add semantic labels/tooltips to all interactive elements
+- H4: Wire or remove notificationsEnabled toggle
+- C2: Move Directions API call to Supabase Edge Function
+- C3: Replace EdgeInsets with EdgeInsetsDirectional for RTL
+- M10: Implement all notification preference types (not just studyPrompt)
+- M15: Expand language picker beyond 6 of 35 supported locales
+- L2: Replace hardcoded English strings in notification_scheduler with l10n
+
 ### Raouf: 2026-03-11 (AEDT) — Update root documentation post-cleanup
 
 **Scope:** Update all root docs to reflect current project state after auth/calendar/feed removal.

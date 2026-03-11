@@ -144,10 +144,16 @@ class MapController extends AsyncNotifier<MapState> {
     if (current == null) {
       return;
     }
+    // Clear route and stop tracking when selecting a new building during navigation.
+    if (current.mode == MapMode.navigation) {
+      _locationSubscription?.cancel();
+      _locationSubscription = null;
+    }
     state = AsyncData(
       current.copyWith(
         selectedBuilding: building,
         mode: MapMode.campus,
+        clearRoute: current.mode == MapMode.navigation,
         clearError: true,
       ),
     );
@@ -260,6 +266,8 @@ class MapController extends AsyncNotifier<MapState> {
     if (current == null) {
       return;
     }
+    _locationSubscription?.cancel();
+    _locationSubscription = null;
     state = AsyncData(
       current.copyWith(
         clearRoute: true,
@@ -282,13 +290,18 @@ class MapController extends AsyncNotifier<MapState> {
     _locationSubscription = ref
         .read(mapRepositoryProvider)
         .watchLocation()
-        .listen((location) {
-          final current = state.value;
-          if (current == null) {
-            return;
-          }
-          state = AsyncData(current.copyWith(currentLocation: location));
-        });
+        .listen(
+          (location) {
+            final current = state.value;
+            if (current == null) {
+              return;
+            }
+            state = AsyncData(current.copyWith(currentLocation: location));
+          },
+          onError: (Object error, StackTrace stackTrace) {
+            AppLogger.warning('Location stream error', error, stackTrace);
+          },
+        );
   }
 
 

@@ -45,6 +45,8 @@ lib/
 
 ## Key Environment Variables (--dart-define)
 - SUPABASE_URL, SUPABASE_ANON_KEY, GOOGLE_MAPS_API_KEY, APP_ENV
+- DEV_SUPABASE_URL, DEV_SUPABASE_ANON_KEY, DEV_GOOGLE_MAPS_API_KEY (debug-only fallbacks)
+- All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 
 ## Coding Conventions
 - Use Riverpod providers (not setState or Bloc)
@@ -74,3 +76,5 @@ Located in project root:
 See `CHANGELOG.md` for full development history.
 
 Summary: The project was built through phases 0–5, originally including auth, calendar, event feed, profile management, and gamification features. These were subsequently removed to focus the Flutter app on campus navigation: 3-tab nav (Home/Map/Settings), local-only settings, FCM push + study prompt notifications, and Google Maps with building search and routing via Edge Function proxy.
+
+2026-03-12: Comprehensive audit fix batch — 30+ issues fixed across security (hardcoded keys removed, open redirect blocked), correctness (polyline decoder, didChangeDependencies→initState, location subscription leak, UTC timestamps), reliability (ErrorBoundary, Firebase background handler, HTTP timeout, onError handlers), and quality (MqColors tokens, MqAppBar, RouteNames, production log filter, variant-aware spinner, focusedErrorBorder). All tests pass (83/83), zero analyzer issues.

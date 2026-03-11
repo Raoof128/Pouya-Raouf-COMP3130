@@ -55,7 +55,7 @@ final notificationsControllerProvider =
     );
 
 final notificationsStreamProvider =
-    StreamProvider.autoDispose<List<AppNotification>>((ref) {
+    StreamProvider<List<AppNotification>>((ref) {
       final user = Supabase.instance.client.auth.currentUser;
       if (user == null) {
         return Stream.value(const <AppNotification>[]);
@@ -145,7 +145,7 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
     final updatedPreferences = current.preferences
         .map(
           (preference) => preference.type == type
-              ? preference.copyWith(enabled: enabled, updatedAt: DateTime.now())
+              ? preference.copyWith(enabled: enabled, updatedAt: DateTime.now().toUtc())
               : preference,
         )
         .toList();
@@ -189,7 +189,7 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
               ? preference.copyWith(
                   scheduledHour: time.hour,
                   scheduledMinute: time.minute,
-                  updatedAt: DateTime.now(),
+                  updatedAt: DateTime.now().toUtc(),
                 )
               : preference,
         )
@@ -258,8 +258,16 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
     }
   }
 
+  static const _allowedPrefixes = ['/home', '/map', '/settings', '/notifications'];
+
   Future<void> _openLink(String link) async {
+    final path = link.startsWith('/') ? link : '/$link';
+    final isAllowed = _allowedPrefixes.any((prefix) => path.startsWith(prefix));
+    if (!isAllowed) {
+      AppLogger.warning('Blocked navigation to untrusted link', link);
+      return;
+    }
     final router = ref.read(appRouterProvider);
-    router.go(link.startsWith('/') ? link : '/$link');
+    router.go(path);
   }
 }

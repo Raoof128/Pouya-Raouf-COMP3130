@@ -68,7 +68,7 @@ class NotificationRemoteSource {
     return _client
         .from('notifications')
         .update(<String, dynamic>{
-          'deleted_at': DateTime.now().toIso8601String(),
+          'deleted_at': DateTime.now().toUtc().toIso8601String(),
         })
         .eq('id', notificationId);
   }
@@ -82,7 +82,7 @@ class NotificationRemoteSource {
       'user_id': userId,
       'token': token,
       'platform': platform,
-      'updated_at': DateTime.now().toIso8601String(),
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
     }, onConflict: 'user_id,token');
   }
 

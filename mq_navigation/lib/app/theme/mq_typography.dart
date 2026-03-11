@@ -3,11 +3,14 @@ import 'package:mq_navigation/app/theme/mq_colors.dart';
 
 /// Macquarie University typography scale.
 ///
-/// Primary: Work Sans (sans-serif).  Secondary: Source Serif Pro (serif).
+/// Primary: system sans-serif.  Secondary: system serif.
+/// To enable branded fonts, add Work Sans and Source Serif Pro to
+/// pubspec.yaml under the `fonts:` section.
 /// Sizes mapped from the web app's token system.
 abstract final class MqTypography {
-  static const String _fontPrimary = 'WorkSans';
-  static const String _fontSecondary = 'SourceSerifPro';
+  // Set to 'WorkSans'/'SourceSerifPro' once fonts are bundled in pubspec.yaml.
+  static const String? _fontPrimary = null;
+  static const String? _fontSecondary = null;
 
   // ── Light theme text styles ────────────────────────────
   static TextTheme get lightTextTheme =>

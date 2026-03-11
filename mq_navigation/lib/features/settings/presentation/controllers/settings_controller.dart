@@ -44,7 +44,8 @@ class SettingsController extends AsyncNotifier<UserPreferences> {
 
   Future<String?> _save(UserPreferences preferences) async {
     try {
-      state = const AsyncLoading();
+      // Optimistic update — show new value immediately, no loading spinner.
+      state = AsyncData(preferences);
       final saved = await ref
           .read(settingsRepositoryProvider)
           .savePreferences(preferences);

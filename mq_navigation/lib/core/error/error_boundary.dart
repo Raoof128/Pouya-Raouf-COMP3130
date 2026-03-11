@@ -15,6 +15,29 @@ class ErrorBoundary extends StatefulWidget {
 
 class _ErrorBoundaryState extends State<ErrorBoundary> {
   Object? _error;
+  void Function(FlutterErrorDetails)? _previousHandler;
+
+  @override
+  void initState() {
+    super.initState();
+    _previousHandler = FlutterError.onError;
+    FlutterError.onError = (details) {
+      AppLogger.error(
+        'ErrorBoundary caught Flutter error',
+        details.exception,
+        details.stack,
+      );
+      if (mounted) {
+        setState(() => _error = details.exception);
+      }
+    };
+  }
+
+  @override
+  void dispose() {
+    FlutterError.onError = _previousHandler;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +48,6 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
       );
     }
     return widget.child;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Reset error when dependencies change (e.g. navigation).
-    _error = null;
   }
 }
 
@@ -94,6 +110,21 @@ class _ErrorFallback extends StatelessWidget {
 ///    (unhandled Future errors, isolate errors) that escape the Flutter framework
 /// 3. [runZonedGuarded] — set up separately in bootstrap.dart as a final fallback
 void installErrorHandlers() {
+  // Custom error widget for release mode.
+  ErrorWidget.builder = (details) {
+    return const Material(
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            'A rendering error occurred.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  };
+
   // Layer 1: Flutter framework errors (widget build, layout, paint).
   FlutterError.onError = (details) {
     // Preserve default debug console output.

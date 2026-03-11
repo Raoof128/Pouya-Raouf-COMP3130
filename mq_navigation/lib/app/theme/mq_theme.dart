@@ -76,6 +76,16 @@ abstract final class MqTheme {
           borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
           borderSide: const BorderSide(color: MqColors.error),
         ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
+          borderSide: const BorderSide(color: MqColors.error, width: 2),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: MqColors.red,
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -179,6 +189,16 @@ abstract final class MqTheme {
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
           borderSide: const BorderSide(color: MqColors.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
+          borderSide: const BorderSide(color: MqColors.error, width: 2),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: MqColors.brightRed,
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(

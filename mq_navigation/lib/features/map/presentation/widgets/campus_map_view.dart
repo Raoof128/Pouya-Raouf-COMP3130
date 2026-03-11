@@ -32,6 +32,12 @@ class _CampusMapViewState extends State<CampusMapView> {
   GoogleMapController? _controller;
 
   @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(covariant CampusMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
 
@@ -162,23 +168,23 @@ class _CampusMapViewState extends State<CampusMapView> {
     var longitude = 0;
 
     while (index < encoded.length) {
-      var result = 1;
+      var result = 0;
       var shift = 0;
-      var byte = 0;
+      int byte;
       do {
-        byte = encoded.codeUnitAt(index++) - 63 - 1;
-        result += byte << shift;
+        byte = encoded.codeUnitAt(index++) - 63;
+        result |= (byte & 0x1f) << shift;
         shift += 5;
-      } while (byte >= 0x1f);
+      } while (byte >= 0x20);
       latitude += (result & 1) != 0 ? ~(result >> 1) : result >> 1;
 
-      result = 1;
+      result = 0;
       shift = 0;
       do {
-        byte = encoded.codeUnitAt(index++) - 63 - 1;
-        result += byte << shift;
+        byte = encoded.codeUnitAt(index++) - 63;
+        result |= (byte & 0x1f) << shift;
         shift += 5;
-      } while (byte >= 0x1f);
+      } while (byte >= 0x20);
       longitude += (result & 1) != 0 ? ~(result >> 1) : result >> 1;
 
       coordinates.add(LatLng(latitude / 1e5, longitude / 1e5));

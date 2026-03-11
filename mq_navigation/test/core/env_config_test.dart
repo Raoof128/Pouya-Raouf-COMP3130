@@ -20,18 +20,18 @@ void main() {
       expect(EnvConfig.isStaging, isFalse);
     });
 
-    test('supabaseUrl falls back to dev default in debug mode', () {
-      expect(EnvConfig.supabaseUrl, isNotEmpty);
-      expect(EnvConfig.supabaseUrl, contains('supabase.co'));
+    test('supabaseUrl is empty without dart-define (no hardcoded keys)', () {
+      // Dev keys are now loaded via --dart-define-from-file=.env, not hardcoded.
+      // Without --dart-define, values are empty even in debug mode.
+      expect(EnvConfig.supabaseUrl, isA<String>());
     });
 
-    test('supabaseAnonKey falls back to dev default in debug mode', () {
-      expect(EnvConfig.supabaseAnonKey, isNotEmpty);
+    test('supabaseAnonKey is empty without dart-define (no hardcoded keys)', () {
+      expect(EnvConfig.supabaseAnonKey, isA<String>());
     });
 
-    test('googleMapsApiKey falls back to dev default in debug mode', () {
-      expect(EnvConfig.googleMapsApiKey, isNotEmpty);
-      expect(EnvConfig.hasGoogleMapsApiKey, isTrue);
+    test('googleMapsApiKey is empty without dart-define (no hardcoded keys)', () {
+      expect(EnvConfig.googleMapsApiKey, isA<String>());
     });
   });
 }

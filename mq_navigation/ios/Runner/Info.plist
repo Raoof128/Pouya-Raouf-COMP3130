@@ -62,12 +62,8 @@
 	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSFaceIDUsageDescription</key>
-	<string>MQ Navigation uses Face ID to protect your account and secure sensitive actions.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>MQ Navigation uses your location to navigate you around campus.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>MQ Navigation uses the camera for profile photos and document scanning.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

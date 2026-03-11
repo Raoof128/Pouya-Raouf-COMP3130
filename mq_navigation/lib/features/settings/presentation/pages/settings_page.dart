@@ -4,6 +4,7 @@ import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
+import 'package:mq_navigation/shared/widgets/mq_app_bar.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -14,7 +15,7 @@ class SettingsPage extends ConsumerWidget {
     final settingsState = ref.watch(settingsControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.settings)),
+      appBar: MqAppBar(title: l10n.settings),
       body: settingsState.when(
         data: (preferences) {
           return ListView(
@@ -223,10 +224,8 @@ class _DropdownListTile<T> extends StatelessWidget {
             )
             .toList(),
         onChanged: (item) async {
-          if (item == null) {
-            return;
-          }
-          final message = await onChanged(item);
+          // item is the selected T value (can be null for "System" locale).
+          final message = await onChanged(item as T);
           if (message != null && context.mounted) {
             ScaffoldMessenger.of(
               context,

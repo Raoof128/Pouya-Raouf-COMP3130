@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mq_navigation/app/router/route_names.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
+import 'package:mq_navigation/shared/widgets/mq_app_bar.dart';
 
 /// Navigation-focused home screen for the Open Day app.
 ///
@@ -17,7 +19,7 @@ class HomePage extends StatelessWidget {
     final subtitleColor = theme.colorScheme.onSurfaceVariant;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.appName)),
+      appBar: MqAppBar(title: l10n.appName),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(MqSpacing.space4),
@@ -67,7 +69,7 @@ class HomePage extends StatelessWidget {
                     l10n.exploreMap,
                     style: const TextStyle(fontSize: 18),
                   ),
-                  onPressed: () => context.go('/map'),
+                  onPressed: () => context.goNamed(RouteNames.map),
                 ),
               ),
 
@@ -91,25 +93,25 @@ class HomePage extends StatelessWidget {
                   _QuickAccessCard(
                     icon: Icons.restaurant,
                     label: l10n.food,
-                    color: Colors.orange,
+                    color: MqColors.warning,
                     searchQuery: 'food',
                   ),
                   _QuickAccessCard(
                     icon: Icons.local_parking,
                     label: l10n.services,
-                    color: Colors.purple,
+                    color: MqColors.purple,
                     searchQuery: 'parking',
                   ),
                   _QuickAccessCard(
                     icon: Icons.menu_book,
                     label: l10n.study,
-                    color: Colors.blue,
+                    color: MqColors.info,
                     searchQuery: 'library',
                   ),
                   _QuickAccessCard(
                     icon: Icons.local_hospital,
                     label: l10n.health,
-                    color: Colors.green,
+                    color: MqColors.success,
                     searchQuery: 'health',
                   ),
                 ],
@@ -139,7 +141,10 @@ class _QuickAccessCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () => context.go('/map?q=$searchQuery'),
+        onTap: () => context.goNamed(
+          RouteNames.map,
+          queryParameters: {'q': searchQuery},
+        ),
         borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
         child: Padding(
           padding: const EdgeInsets.all(MqSpacing.space3),

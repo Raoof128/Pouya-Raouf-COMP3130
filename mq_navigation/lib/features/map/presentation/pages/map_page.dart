@@ -10,7 +10,7 @@ import 'package:mq_navigation/features/map/presentation/widgets/campus_map_view.
 import 'package:mq_navigation/features/map/presentation/widgets/route_panel.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
 import 'package:mq_navigation/shared/widgets/mq_app_bar.dart';
-import 'package:mq_navigation/shared/widgets/mq_button.dart'; // ignore: unused_import
+import 'package:mq_navigation/shared/widgets/mq_button.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key, this.initialBuildingId, this.initialSearchQuery});
@@ -24,8 +24,8 @@ class MapPage extends ConsumerStatefulWidget {
 
 class _MapPageState extends ConsumerState<MapPage> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     final buildingId = widget.initialBuildingId;
     final searchQuery = widget.initialSearchQuery;
     if (buildingId != null) {

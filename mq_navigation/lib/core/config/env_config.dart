@@ -26,25 +26,30 @@ class EnvConfig {
   );
   static const String _appEnv = String.fromEnvironment('APP_ENV');
 
-  // Development defaults — the anon key is a public client key (RLS enforced).
-  static const String _devSupabaseUrl =
-      'https://cxsqlgvbwtevkkljzolg.supabase.co';
-  static const String _devSupabaseAnonKey =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4c3FsZ3Zid3RldmtrbGp6b2xnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMjkwNTEsImV4cCI6MjA4MjYwNTA1MX0.5OXdkYfflYE27WRhw2PKf-up3UYctGKn3w2RQbTZrWw';
-  static const String _devGoogleMapsApiKey =
-      'AIzaSyD9WlnjQntUsWNzHR2oa-P-8zG3l60D2SA';
+  // Development defaults loaded via --dart-define-from-file=.env
+  // NEVER hardcode API keys in source. Use:
+  //   flutter run --dart-define-from-file=.env
+  static const String _devSupabaseUrl = String.fromEnvironment(
+    'DEV_SUPABASE_URL',
+  );
+  static const String _devSupabaseAnonKey = String.fromEnvironment(
+    'DEV_SUPABASE_ANON_KEY',
+  );
+  static const String _devGoogleMapsApiKey = String.fromEnvironment(
+    'DEV_GOOGLE_MAPS_API_KEY',
+  );
 
-  /// Supabase project URL. Falls back to dev project in debug mode.
+  /// Supabase project URL. Falls back to dev env var in debug mode.
   static String get supabaseUrl => _supabaseUrl.isNotEmpty
       ? _supabaseUrl
       : (kDebugMode ? _devSupabaseUrl : '');
 
-  /// Supabase anonymous key (public, RLS-enforced). Falls back to dev key in debug mode.
+  /// Supabase anonymous key (public, RLS-enforced). Falls back to dev env var in debug mode.
   static String get supabaseAnonKey => _supabaseAnonKey.isNotEmpty
       ? _supabaseAnonKey
       : (kDebugMode ? _devSupabaseAnonKey : '');
 
-  /// Google Maps client-side API key. Falls back to dev key in debug mode.
+  /// Google Maps client-side API key. Falls back to dev env var in debug mode.
   static String get googleMapsApiKey => _googleMapsApiKey.isNotEmpty
       ? _googleMapsApiKey
       : (kDebugMode ? _devGoogleMapsApiKey : '');

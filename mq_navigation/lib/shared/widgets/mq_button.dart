@@ -24,13 +24,16 @@ class MqButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spinnerColor = variant == MqButtonVariant.filled
+        ? Colors.white
+        : Theme.of(context).colorScheme.primary;
     final child = isLoading
-        ? const SizedBox(
+        ? SizedBox(
             width: 20,
             height: 20,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: Colors.white,
+              color: spinnerColor,
             ),
           )
         : Text(label);

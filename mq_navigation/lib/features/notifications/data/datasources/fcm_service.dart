@@ -20,7 +20,11 @@ enum NotificationPermissionStatus {
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+  } catch (_) {
+    // Firebase may already be initialised or native config may be missing.
+  }
   AppLogger.info('Handled background notification', message.messageId);
 }
 
@@ -133,10 +137,14 @@ class FcmService {
     };
   }
 
+  String? _currentUserId;
+
   Future<void> syncToken(String userId) async {
     if (!_isSupported) {
       return;
     }
+
+    _currentUserId = userId;
 
     final token = await _messaging.getToken();
     if (token == null || token.isEmpty) {
@@ -152,12 +160,13 @@ class FcmService {
     _tokenRefreshSubscription ??= _messaging.onTokenRefresh.listen((
       token,
     ) async {
-      if (token.isEmpty) {
+      final currentId = _currentUserId;
+      if (token.isEmpty || currentId == null) {
         return;
       }
       try {
         await _remoteSource.upsertFcmToken(
-          userId: userId,
+          userId: currentId,
           token: token,
           platform: defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android',
         );

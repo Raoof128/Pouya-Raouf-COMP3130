@@ -29,9 +29,6 @@ class RoutePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final arrivalAt = route == null
-        ? null
-        : DateTime.now().add(Duration(seconds: route!.durationSeconds));
 
     return MqCard(
       child: Column(
@@ -80,7 +77,7 @@ class RoutePanel extends StatelessWidget {
           if (route != null) ...[
             const SizedBox(height: 8),
             Text(
-              '${l10n.eta}: ${DateFormat('h:mm a').format(arrivalAt!)} · ${_distanceLabel(route!.distanceMeters, l10n)}',
+              '${l10n.eta}: ${DateFormat('h:mm a').format(route!.arrivalAt)} · ${_distanceLabel(route!.distanceMeters, l10n)}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 8),
@@ -111,7 +108,9 @@ class RoutePanel extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             MqButton(
-              label: isLoading ? l10n.loadingRoute : l10n.walkingDirections,
+              label: isLoading
+                  ? l10n.loadingRoute
+                  : _directionsLabel(l10n),
               isLoading: isLoading,
               onPressed: selectedBuilding == null ? null : onLoadRoute,
             ),
@@ -119,6 +118,15 @@ class RoutePanel extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _directionsLabel(AppLocalizations l10n) {
+    return switch (travelMode) {
+      TravelMode.walk => l10n.walkingDirections,
+      TravelMode.drive => l10n.drive,
+      TravelMode.bike => l10n.bike,
+      TravelMode.transit => l10n.transit,
+    };
   }
 
   String _distanceLabel(int distanceMeters, AppLocalizations l10n) {
