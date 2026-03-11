@@ -75,6 +75,13 @@ Located in project root:
 
 ---
 
+Raouf: 2026-03-11 (AEDT) — Fix zone mismatch in bootstrap
+- Scope: Move `WidgetsFlutterBinding.ensureInitialized()` inside `runZonedGuarded` so binding and `runApp()` share the same zone.
+- Summary: `ensureInitialized()` was in the root zone while `runApp()` was in the guarded zone, causing a `Zone mismatch` error. Moved binding init + `installErrorHandlers()` inside `runZonedGuarded`.
+- Files changed: `lib/app/bootstrap/bootstrap.dart`.
+- Verification: `flutter analyze` → 0 issues, `flutter test` → 88/88 passed.
+- Follow-ups: None.
+
 Raouf: 2026-03-11 (AEDT) — Remove all auth/login code
 - Scope: Strip login, signup, auth guards, biometric lock, profile management, and auth provider from the project. App now starts directly at `/home` with no authentication gate.
 - Summary: Deleted the entire `features/auth/` module (11 files), `features/profiles/` module (3 files), `route_guard.dart`, `auth_provider.dart`, `biometric_service.dart`, and `user_profile.dart`. Removed `local_auth` dependency. Rewrote `app_router.dart` to start at `/home` with no redirect logic or auth guards. Rewrote `settings_page.dart` to remove profile card, security section, and sign-out button. Rewrote `settings_controller.dart` to remove biometric lock method. Rewrote `settings_repository.dart` from `SupabaseSettingsRepository` to local-only `LocalSettingsRepository`. Cleaned `user_preferences.dart` to remove `biometricLockEnabled`, `fromRemoteJson`, and `toRemoteJson`. Cleaned `notifications_controller.dart` to remove `authProvider` listener, `_handleAuthStateChanged`, and `_reloadForUser` methods — now uses `Supabase.instance.client.auth.currentUser` directly. Removed `BiometricLockGate` from `mq_navigation_app.dart`. Updated `route_names_test.dart` to match the reduced route set. Removed unused `context_extensions.dart` import from settings page. Updated AGENT.md to reflect removed modules.

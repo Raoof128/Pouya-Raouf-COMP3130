@@ -4,6 +4,23 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-11 (AEDT) — Fix zone mismatch in bootstrap
+
+**Scope:** Move `WidgetsFlutterBinding.ensureInitialized()` inside `runZonedGuarded` so it shares the same zone as `runApp()`.
+
+**Summary:**
+`ensureInitialized()` was called in the root zone while `runApp()` was called inside `runZonedGuarded()`. Flutter requires both in the same zone. Moved binding initialization inside the guarded zone.
+
+**Files changed:**
+- `lib/app/bootstrap/bootstrap.dart`
+
+**Verification:**
+- `flutter analyze` → 0 issues
+- `flutter test` → 88/88 passed
+
+**Follow-ups:**
+- None
+
 ### Raouf: 2026-03-11 (AEDT) — Remove all auth/login code
 
 **Scope:** Strip login, signup, auth guards, biometric lock, profile management, and auth provider from the project.

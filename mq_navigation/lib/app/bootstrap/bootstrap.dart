@@ -13,14 +13,13 @@ import 'package:mq_navigation/features/notifications/data/datasources/fcm_servic
 
 /// Initialises all critical services before the widget tree mounts.
 Future<void> bootstrap(Widget Function() appBuilder) async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Install global error handlers.
-  installErrorHandlers();
-
   // Catch errors outside the Flutter framework.
   await runZonedGuarded(
     () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      // Install global error handlers.
+      installErrorHandlers();
       // Validate required env vars.
       EnvConfig.validate();
 
