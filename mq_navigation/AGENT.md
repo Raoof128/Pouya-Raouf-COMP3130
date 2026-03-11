@@ -75,6 +75,13 @@ Located in project root:
 
 ---
 
+Raouf: 2026-03-11 (AEDT) — Plan Alignment Audit + Final Old-Name Cleanup
+- Scope: Verify full project alignment with the updated Flutter Migration Plan and eliminate the last old-name reference.
+- Summary: Audited the entire codebase against the user's updated migration plan. Confirmed all navigation-focused goals (map, buildings, directions, categories) are fully implemented and the project exceeds the plan's scope with completed auth, calendar, dashboard, notifications, and feed features. Fixed the critical Android Kotlin directory mismatch: `MainActivity.kt` was still at `io/syllabussync/syllabus_sync/` with old package name while `build.gradle.kts` used `io.mqnavigation.mq_navigation` — moved to correct path and updated package declaration. Updated `Flutter_Migration_Plan.md` to remove stale external `syllabus-sync` URLs. Verified zero old-name references remain in source/config files (only historical changelog entries preserved).
+- Files changed: `android/app/src/main/kotlin/io/mqnavigation/mq_navigation/MainActivity.kt` (created, replacing old path), `android/app/src/main/kotlin/io/syllabussync/` (deleted), `Flutter_Migration_Plan.md`, `AGENT.md`, `CHANGELOG.md`.
+- Verification: `flutter analyze` → 0 issues, `flutter test` → 99/99 passed.
+- Follow-ups: None — naming is fully consistent.
+
 Raouf: 2026-03-11 (AEDT) — Full Project Rename: Syllabus Sync → MQ Navigation
 - Scope: Rename every reference across the entire codebase from "Syllabus Sync" to "MQ Navigation".
 - Summary: Renamed all name variants across the full project: `syllabus_sync` → `mq_navigation` (Dart package, imports, identifiers), `SyllabusSyncApp` → `MqNavigationApp` (class), `io.syllabussync.*` → `io.mqnavigation.*` (Android/iOS bundle IDs, URL schemes), `Syllabus Sync` → `MQ Navigation` (display name in 35 ARB locales, UI strings, docs), `syllabus-sync` → `mq-navigation` (hyphenated refs). Renamed the main app file `syllabus_sync_app.dart` → `mq_navigation_app.dart`. Regenerated l10n. Preserved external URLs (web app GitHub repo, Vercel deployment). Renamed project folder from `syllabus-sync_flutter` to `mq_navigation`.

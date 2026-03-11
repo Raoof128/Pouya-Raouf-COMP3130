@@ -558,5 +558,5 @@ flutter test
 ## Repository Links
 
 - **Mobile App:** https://github.com/Raoof128/Pouya-Raouf-COMP3130 (`mq-navigation_flutter/`)
-- **Web App:** https://github.com/mrpouyaalavi/syllabus-sync
-- **Live Web:** https://syllabus-sync-ashy.vercel.app
+- **Web App:** https://github.com/Raoof128/Pouya-Raouf-COMP3130
+- **Live Web:** *(deployment pending)*

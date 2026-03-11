@@ -4,6 +4,26 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-11 (AEDT) — Plan Alignment Audit + Final Old-Name Cleanup
+
+**Scope:** Verify full project alignment with the updated Flutter Migration Plan and eliminate the last old-name reference.
+
+**Summary:**
+Audited the entire codebase against the user's updated migration plan. Confirmed all navigation-focused goals (interactive map, building registry, directions, category filtering) are fully implemented and the project exceeds the plan's scope with completed auth, calendar, dashboard, notifications, and feed features. Fixed the critical Android Kotlin directory mismatch: `MainActivity.kt` was still at `io/syllabussync/syllabus_sync/` with the old package declaration while `build.gradle.kts` used `io.mqnavigation.mq_navigation` — moved to the correct directory path and updated the package declaration. Updated `Flutter_Migration_Plan.md` to remove stale external `syllabus-sync` URLs. Verified zero old-name references remain in source/config files.
+
+**Files changed:**
+- `android/app/src/main/kotlin/io/mqnavigation/mq_navigation/MainActivity.kt` — created at correct path with `package io.mqnavigation.mq_navigation`
+- `android/app/src/main/kotlin/io/syllabussync/` — deleted (old directory tree)
+- `Flutter_Migration_Plan.md` — removed stale syllabus-sync external URLs
+
+**Verification:**
+- `flutter analyze` → 0 issues
+- `flutter test` → 99/99 passed
+- Zero remaining old-name references in source/config files (historical changelog entries preserved)
+
+**Follow-ups:**
+- None — naming is fully consistent across the entire codebase
+
 ### Raouf: 2026-03-11 (AEDT) — Full Project Rename: Syllabus Sync → MQ Navigation
 
 **Scope:** Rename every reference across the entire codebase from "Syllabus Sync" to "MQ Navigation".
