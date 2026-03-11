@@ -1,12 +1,19 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:mq_navigation/core/config/env_config.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 
 class GoogleRoutesRemoteSource {
-  const GoogleRoutesRemoteSource(this._client);
+  const GoogleRoutesRemoteSource();
 
-  final SupabaseClient _client;
+  static const _routesUrl =
+      'https://routes.googleapis.com/directions/v2:computeRoutes';
+  static const _fieldMask =
+      'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline,routes.legs.steps';
 
   Future<MapRoute> getRoute({
     required LocationSample origin,
@@ -19,34 +26,58 @@ class GoogleRoutesRemoteSource {
       throw StateError('Selected building is missing routing coordinates.');
     }
 
-    final response = await _client.functions.invoke(
-      'maps-routes',
-      body: <String, dynamic>{
-        'origin': <String, dynamic>{
-          'latitude': origin.latitude,
-          'longitude': origin.longitude,
-        },
-        'destination': <String, dynamic>{
-          'latitude': destinationLatitude,
-          'longitude': destinationLongitude,
-        },
-        'travelMode': travelMode.apiValue,
-      },
-    );
-
-    if (response.status >= 400) {
-      throw StateError(response.data.toString());
+    final apiKey = EnvConfig.googleMapsApiKey;
+    if (apiKey.isEmpty) {
+      throw StateError('Google Maps API key is not configured.');
     }
 
-    return MapRoute.fromJson(
-      Map<String, dynamic>.from(response.data as Map),
-      travelMode,
+    final body = jsonEncode({
+      'origin': {
+        'location': {
+          'latLng': {
+            'latitude': origin.latitude,
+            'longitude': origin.longitude,
+          },
+        },
+      },
+      'destination': {
+        'location': {
+          'latLng': {
+            'latitude': destinationLatitude,
+            'longitude': destinationLongitude,
+          },
+        },
+      },
+      'travelMode': travelMode.apiValue,
+      'computeAlternativeRoutes': false,
+      'languageCode': 'en',
+      'units': 'METRIC',
+    });
+
+    final response = await http.post(
+      Uri.parse(_routesUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': apiKey,
+        'X-Goog-FieldMask': _fieldMask,
+      },
+      body: body,
     );
+
+    if (response.statusCode >= 400) {
+      debugPrint('Routes API error ${response.statusCode}: ${response.body}');
+      throw StateError(
+        'Google Routes API returned ${response.statusCode}',
+      );
+    }
+
+    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    return MapRoute.fromJson(json, travelMode);
   }
 }
 
 final googleRoutesRemoteSourceProvider = Provider<GoogleRoutesRemoteSource>((
   ref,
 ) {
-  return GoogleRoutesRemoteSource(Supabase.instance.client);
+  return const GoogleRoutesRemoteSource();
 });

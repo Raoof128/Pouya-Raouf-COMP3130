@@ -37,6 +37,7 @@ dependencies:
 
   # Utilities
   connectivity_plus: ^6.1.4
+  http: ^1.4.0
   logger: ^2.5.0
 
 dev_dependencies:
