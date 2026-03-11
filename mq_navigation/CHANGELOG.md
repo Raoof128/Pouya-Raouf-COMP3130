@@ -4,6 +4,27 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-11 (AEDT) — Remove event feed feature
+
+**Scope:** Strip the entire feed feature and feed tab.
+
+**Summary:**
+Deleted `features/feed/` (6 files: repository, controller, page, filter bar, event card, feed item entity). Removed feed branch from router, feed tab from bottom nav (4 → 3 tabs), and `feed` route name.
+
+**Files deleted:**
+- `lib/features/feed/**` (6 files)
+
+**Files changed:**
+- `lib/app/router/app_router.dart`, `lib/app/router/route_names.dart`, `lib/app/router/app_shell.dart`
+- `test/app/route_names_test.dart`
+
+**Verification:**
+- `flutter analyze` → 0 issues
+- `flutter test` → 83/83 passed
+
+**Follow-ups:**
+- None
+
 ### Raouf: 2026-03-11 (AEDT) — Remove calendar/event feature
 
 **Scope:** Strip the entire calendar feature, academic models, dashboard data layer, detail routes, and calendar tab.

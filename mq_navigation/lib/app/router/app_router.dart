@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:mq_navigation/app/router/app_shell.dart';
 import 'package:mq_navigation/app/router/route_names.dart';
 import 'package:mq_navigation/core/config/env_config.dart';
-import 'package:mq_navigation/features/feed/presentation/pages/feed_page.dart';
 import 'package:mq_navigation/features/home/presentation/pages/home_page.dart';
 import 'package:mq_navigation/features/map/presentation/pages/map_page.dart';
 import 'package:mq_navigation/features/notifications/presentation/pages/notifications_page.dart';
@@ -51,15 +50,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     ),
                   ),
                 ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/feed',
-                name: RouteNames.feed,
-                builder: (context, state) => const FeedPage(),
               ),
             ],
           ),

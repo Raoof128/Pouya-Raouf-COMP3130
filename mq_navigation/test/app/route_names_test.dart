@@ -10,7 +10,6 @@ void main() {
     test('shell tab routes are defined', () {
       expect(RouteNames.home, 'home');
       expect(RouteNames.map, 'map');
-      expect(RouteNames.feed, 'feed');
       expect(RouteNames.settings, 'settings');
     });
 

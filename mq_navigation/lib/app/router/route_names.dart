@@ -5,7 +5,6 @@ abstract final class RouteNames {
   // Shell tabs
   static const String home = 'home';
   static const String map = 'map';
-  static const String feed = 'feed';
   static const String settings = 'settings';
 
   // Detail screens (pushed on top of shell)

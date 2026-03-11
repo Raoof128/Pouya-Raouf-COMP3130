@@ -34,11 +34,6 @@ class AppShell extends StatelessWidget {
             label: l10n.map,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.feed_outlined),
-            selectedIcon: const Icon(Icons.feed),
-            label: l10n.feed,
-          ),
-          NavigationDestination(
             icon: const Icon(Icons.settings_outlined),
             selectedIcon: const Icon(Icons.settings),
             label: l10n.settings,
