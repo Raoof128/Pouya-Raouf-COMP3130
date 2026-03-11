@@ -90,20 +90,26 @@ class _CampusMapViewState extends State<CampusMapView> {
                   building.latitude != null && building.longitude != null,
             )
             .map(
-              (building) => Marker(
-                markerId: MarkerId(building.id),
-                position: LatLng(building.latitude!, building.longitude!),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                  building.isHighTraffic
-                      ? BitmapDescriptor.hueAzure
-                      : BitmapDescriptor.hueRed,
-                ),
-                infoWindow: InfoWindow(
-                  title: building.name,
-                  snippet: building.id,
-                ),
-                onTap: () => widget.onSelectBuilding(building),
-              ),
+              (building) {
+                final isSelected =
+                    widget.selectedBuilding?.id == building.id;
+                return Marker(
+                  markerId: MarkerId(building.id),
+                  position: LatLng(building.latitude!, building.longitude!),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                    isSelected
+                        ? BitmapDescriptor.hueRed
+                        : BitmapDescriptor.hueOrange,
+                  ),
+                  alpha: isSelected ? 1.0 : 0.5,
+                  zIndexInt: isSelected ? 1 : 0,
+                  infoWindow: InfoWindow(
+                    title: building.name,
+                    snippet: building.id,
+                  ),
+                  onTap: () => widget.onSelectBuilding(building),
+                );
+              },
             )
             .toSet(),
         polylines: widget.route == null || widget.route!.encodedPolyline.isEmpty

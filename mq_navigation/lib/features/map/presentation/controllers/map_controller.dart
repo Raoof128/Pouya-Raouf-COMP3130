@@ -10,7 +10,6 @@ import 'package:mq_navigation/features/map/domain/entities/map_mode.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 
 enum MapStateError {
-  outsideCampus,
   routeUnavailable,
   locationServicesDisabled,
   locationPermissionBlocked,
@@ -203,17 +202,6 @@ class MapController extends AsyncNotifier<MapState> {
       return;
     }
 
-    if (!_isInsideCampus(location)) {
-      state = AsyncData(
-        current.copyWith(
-          currentLocation: location,
-          permissionState: permissionState,
-          isLoadingRoute: false,
-          error: MapStateError.outsideCampus,
-        ),
-      );
-      return;
-    }
 
     try {
       final route = await ref
@@ -313,12 +301,6 @@ class MapController extends AsyncNotifier<MapState> {
         });
   }
 
-  bool _isInsideCampus(LocationSample sample) {
-    return sample.latitude <= -33.769571 &&
-        sample.latitude >= -33.778124 &&
-        sample.longitude <= 151.122172 &&
-        sample.longitude >= 151.103934;
-  }
 
   bool _isStrongMatch(Building building, String query) {
     final normalized = query.trim().toLowerCase();
