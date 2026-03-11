@@ -1,60 +1,56 @@
-# MQ Project
+# MQ Navigation
 
-A repository for the Macquarie University mobile coursework deliverables, with `syllabus-sync_flutter` as the primary Flutter application.
-
-The active app in this repository is `syllabus-sync_flutter`, which contains the Syllabus Sync Flutter migration work: auth, profile, dashboard, calendar, map, settings, and shared Supabase-backed mobile flows.
+A cross-platform mobile client for Macquarie University's campus navigation platform, built with Flutter. Part of a **two frontends, one backend** architecture sharing a Supabase backend with the existing [Next.js web application](https://github.com/Raoof128/Pouya-Raouf-COMP3130).
 
 ## Architecture
-
-**Primary app:**
 
 ```
 ┌──────────────────┐     ┌──────────────────┐
 │  Flutter Mobile   │     │  Next.js Web App  │
-│ syllabus-sync_    │     │  (production)     │
-│ flutter           │     │                   │
+│  mq_navigation    │     │  (production)     │
+│                   │     │                   │
 └────────┬─────────┘     └────────┬─────────┘
          │                        │
          └───────┐    ┌───────────┘
                  │    │
            ┌─────▼────▼─────┐
            │    Supabase     │
-           │  Auth · Postgres│
-           │  RLS · Realtime │
+           │  Postgres · RLS │
+           │  Realtime       │
            │  Edge Functions │
            └─────────────────┘
 ```
 
-The mobile app shares a single Supabase backend with the web product — Auth, Postgres with Row-Level Security, Realtime subscriptions, and Edge Functions. The Flutter app is a presentation-layer-only client with no server logic in the binary.
+The mobile app shares a single Supabase backend with the web product — Postgres with Row-Level Security, Realtime subscriptions, and Edge Functions. The Flutter app is a presentation-layer-only client with no server logic in the binary.
 
 ## Project Structure
 
 ```
 Pouya-Raouf-COMP3130/
-└── syllabus-sync_flutter/      # Primary Flutter mobile app
+└── mq_navigation/                  # Flutter mobile app
     ├── lib/
-    │   ├── app/                # Bootstrap, router, theme, l10n
-    │   ├── core/               # Config, errors, logging, security, network
-    │   ├── shared/             # Design system widgets, providers, extensions
-    │   └── features/           # Feature modules (auth, home, calendar, map, feed, settings)
-    ├── test/                   # 78 unit and widget tests
-    ├── scripts/                # Quality gate scripts
-    ├── tools/                  # i18n conversion utilities
-    ├── docs/                   # Architecture documentation
-    └── .github/workflows/      # CI/CD pipeline
+    │   ├── app/                    # Bootstrap, router, theme, l10n
+    │   ├── core/                   # Config, errors, logging, security, network
+    │   ├── shared/                 # Design system widgets, providers, extensions
+    │   └── features/              # Feature modules (home, map, settings, notifications)
+    ├── test/                       # 83 unit and widget tests
+    ├── supabase/functions/         # 9 Edge Functions (Deno/TypeScript)
+    ├── scripts/                    # Quality gate scripts
+    ├── tools/                      # i18n conversion utilities
+    ├── assets/data/                # 153-building campus registry
+    ├── docs/                       # Architecture documentation
+    └── .github/workflows/          # CI/CD pipeline
 ```
 
 ## Features
 
-- **Dashboard** — upcoming deadlines, schedule overview, study streaks
-- **Academic Calendar** — deadline and exam tracking with reminders
-- **Campus Map** — interactive Google Maps with 100+ buildings, search, and routing
-- **Events Feed** — university events with filtering and bookmarking
-- **Settings** — profile management, theme preferences, notifications
-- **35-Language Support** — full i18n including RTL (Arabic, Farsi, Hebrew, Urdu)
-- **Dark Mode** — system-aware light and dark themes using Macquarie University design tokens
-- **Biometric Auth** — optional fingerprint/face authentication
-- **Offline Awareness** — connectivity monitoring with graceful degradation
+- **Home** -- campus dashboard with time-of-day greeting, building category grid, popular destinations carousel
+- **Campus Map** -- interactive Google Maps with 153 building entries, search, and server-proxied routing
+- **Notifications** -- Supabase inbox, FCM push, and local study-prompt scheduling
+- **Settings** -- theme preferences, notification controls, locale selection
+- **35-Language Support** -- full i18n including RTL (Arabic, Farsi, Hebrew, Urdu)
+- **Dark Mode** -- system-aware light and dark themes using Macquarie University design tokens
+- **Offline Awareness** -- connectivity monitoring with graceful degradation
 
 ## Tech Stack
 
@@ -62,10 +58,10 @@ Pouya-Raouf-COMP3130/
 |-------|-----------|
 | Framework | Flutter 3.11+ / Dart 3.11+ |
 | State Management | Riverpod 3.2 |
-| Routing | GoRouter 17.1 with auth guards |
-| Backend | Supabase (Auth, Postgres, RLS, Realtime, Edge Functions) |
+| Routing | GoRouter 17.1 (StatefulShellRoute, 3-tab bottom nav) |
+| Backend | Supabase (Postgres, RLS, Realtime, Edge Functions) |
 | Maps | Google Maps Flutter 2.14 |
-| Security | flutter_secure_storage, local_auth |
+| Security | flutter_secure_storage |
 | Notifications | Firebase Cloud Messaging |
 | CI/CD | GitHub Actions |
 | Localisation | Flutter ARB (35 locales, 1,995 keys each) |
@@ -81,7 +77,7 @@ Pouya-Raouf-COMP3130/
 ### Setup
 
 ```bash
-cd syllabus-sync_flutter
+cd mq_navigation
 
 # Install dependencies
 flutter pub get
@@ -97,6 +93,42 @@ flutter run \
   --dart-define=APP_ENV=development
 ```
 
+### Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SUPABASE_URL` | Yes | Supabase project URL |
+| `SUPABASE_ANON_KEY` | Yes | Supabase anonymous API key |
+| `GOOGLE_MAPS_API_KEY` | No | Google Maps SDK key (needed for map feature) |
+| `APP_ENV` | No | `development` (default), `staging`, or `production` |
+
+### Mobile Platform Setup
+
+1. Add Firebase mobile config files outside version control:
+   - `android/app/google-services.json`
+   - `ios/Runner/GoogleService-Info.plist`
+   - Android auto-enables the Google Services Gradle plugin when `google-services.json` exists.
+   - iOS `AppDelegate` configures Firebase automatically when `GoogleService-Info.plist` exists.
+2. Enable push prerequisites in Firebase/Apple Developer:
+   - iOS APNs key/certificate
+   - iOS Background Modes -> `remote-notification`
+   - Android notification permission on Android 13+
+3. Provide a restricted client Maps SDK key at build time:
+   - Android reads `GOOGLE_MAPS_API_KEY` through the manifest placeholder
+   - iOS reads `GOOGLE_MAPS_API_KEY` through `Info.plist` / `AppDelegate`
+4. Do not commit Firebase service files, APNs secrets, or unrestricted API keys.
+
+### Edge Function Secrets
+
+| Secret | Required For | Notes |
+|--------|--------------|-------|
+| `SUPABASE_SERVICE_ROLE_KEY` | All privileged Edge Functions | Server-only |
+| `GOOGLE_ROUTES_API_KEY` | `maps-routes` | Server-side routing proxy |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | `notify` (preferred) | FCM HTTP v1 service account JSON |
+| `FCM_SERVER_KEY` | `notify` (legacy fallback) | Supported as a compatibility fallback |
+| `CRON_SECRET` | `cleanup-cron` | Protects scheduled cleanup runs |
+| `RESEND_API_KEY` | `auth-email` | Email verification delivery |
+
 ### Quality Checks
 
 ```bash
@@ -107,7 +139,7 @@ flutter run \
 ./scripts/check.sh --quick
 ```
 
-All 6 checks must pass: dependency resolution, formatting, static analysis, 78 tests, localisation generation, and APK build.
+All checks must pass: dependency resolution, formatting, static analysis, 83 tests, localisation generation, and APK build.
 
 ## Design System
 
@@ -126,34 +158,35 @@ Shared UI components: `MqButton`, `MqCard`, `MqInput`, `MqAppBar`, `MqBottomShee
 
 GitHub Actions runs on every push and PR to `main`:
 
-1. **Analyze & Test** — formatting, static analysis, 78 unit/widget tests with coverage
-2. **Build Android** — release APK with secrets injection (main branch only)
-3. **Build iOS** — release build without code signing (main branch only)
+1. **Analyze & Test** -- formatting, static analysis, 83 unit/widget tests with coverage
+2. **Build Android** -- release APK with secrets injection (main branch only)
+3. **Build iOS** -- release build without code signing (main branch only)
 
 ## Documentation
 
 | Document | Location |
 |----------|----------|
-| Architecture Overview | [`syllabus-sync_flutter/docs/ARCHITECTURE.md`](syllabus-sync_flutter/docs/ARCHITECTURE.md) |
+| Architecture Overview | [`mq_navigation/docs/ARCHITECTURE.md`](mq_navigation/docs/ARCHITECTURE.md) |
 | Contributing Guidelines | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 | Code of Conduct | [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) |
 | Security Policy | [`SECURITY.md`](SECURITY.md) |
-| Changelog | [`syllabus-sync_flutter/CHANGELOG.md`](syllabus-sync_flutter/CHANGELOG.md) |
+| Changelog | [`mq_navigation/CHANGELOG.md`](mq_navigation/CHANGELOG.md) |
+| Agent Rules | [`mq_navigation/AGENT.md`](mq_navigation/AGENT.md) |
 
 ## Roadmap
 
-- [x] **Phase 0** — Foundation: project scaffold, inventories, CI/CD
-- [x] **Phase 1** — App Shell: theme, routing, design system, i18n, core services
-- [ ] **Phase 2** — Auth: login, signup, MFA, OAuth, profile
-- [ ] **Phase 3** — Home & Calendar: dashboard widgets, academic calendar
-- [ ] **Phase 4** — Feed & Notifications: events, push notifications
-- [ ] **Phase 5** — Map: Google Maps integration, building search, routing
-- [ ] **Phase 6** — Polish: performance, accessibility audit, store release
+- [x] **Phase 0** -- Foundation: project scaffold, inventories, CI/CD
+- [x] **Phase 1** -- App Shell: theme, routing, design system, i18n, core services
+- [x] **Phase 2** -- Settings: theme preferences, notification controls, locale selection
+- [x] **Phase 3** -- Home: campus dashboard with category grid, popular destinations, campus stats
+- [x] **Phase 4** -- Notifications: Supabase inbox, FCM push, local study-prompt reminders
+- [x] **Phase 5** -- Map: Google Maps integration, 153-building search, server-proxied routing
+- [ ] **Phase 6** -- Polish: performance, accessibility audit, store release
 
 ## Authors
 
-- **Raouf Abedini** (47990805) — COMP3130, Macquarie University
-- **Pouya Alavi** (48160202) — COMP3130, Macquarie University
+- **Raouf Abedini** (47990805) -- COMP3130, Macquarie University
+- **Pouya Alavi** (48160202) -- COMP3130, Macquarie University
 
 ## License
 

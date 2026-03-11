@@ -25,13 +25,12 @@ We will acknowledge receipt within 48 hours and provide a detailed response with
 ### Client-Side Security
 - **No server secrets**: API keys and server credentials are never stored in the client binary. Sensitive operations are handled by Supabase Edge Functions.
 - **Encrypted storage**: All sensitive data (tokens, user preferences) is stored using `flutter_secure_storage`, backed by iOS Keychain and Android Keystore.
-- **Biometric gates**: Optional biometric authentication via `local_auth` for sensitive operations.
+- **Certificate pinning**: Planned for production releases.
 
-### Authentication
-- **PKCE flow**: OAuth uses Proof Key for Code Exchange (PKCE) for secure token exchange.
+### Backend Security
 - **Row-Level Security**: All database access is governed by Supabase RLS policies.
-- **MFA support**: Multi-factor authentication is supported and can be enforced.
-- **Session management**: Sessions are managed by Supabase Auth with automatic token refresh.
+- **Edge Function proxying**: Google Maps routing and push notification dispatch are handled server-side to avoid exposing service keys to the client.
+- **Rate limiting**: Server-side rate limits protect Edge Functions from abuse.
 
 ### Build & Deployment
 - **Environment isolation**: `--dart-define` injects environment-specific configuration at build time. Secrets are passed via CI/CD secrets, never committed to the repository.
@@ -39,7 +38,7 @@ We will acknowledge receipt within 48 hours and provide a detailed response with
 - **Static analysis**: `flutter analyze` with hardened lint rules runs on every PR.
 
 ### Error Handling
-- **Three-layer error catching**: `FlutterError.onError` (widget errors), `PlatformDispatcher.instance.onError` (platform errors), and `runZonedGuarded` (zone-level fallback) — following Flutter's official error handling documentation.
+- **Three-layer error catching**: `FlutterError.onError` (widget errors), `PlatformDispatcher.instance.onError` (platform errors), and `runZonedGuarded` (zone-level fallback) -- following Flutter's official error handling documentation.
 - **No sensitive data in logs**: Error messages are sanitised before logging.
 
 ### Data Handling
