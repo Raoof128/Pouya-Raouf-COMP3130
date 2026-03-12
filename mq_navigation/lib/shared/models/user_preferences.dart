@@ -37,9 +37,5 @@ class UserPreferences {
           notificationsEnabled == other.notificationsEnabled;
 
   @override
-  int get hashCode => Object.hash(
-        themeMode,
-        localeCode,
-        notificationsEnabled,
-      );
+  int get hashCode => Object.hash(themeMode, localeCode, notificationsEnabled);
 }

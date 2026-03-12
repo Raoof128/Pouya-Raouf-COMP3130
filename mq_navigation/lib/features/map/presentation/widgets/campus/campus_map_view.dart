@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart' as latlong;
+import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/features/map/data/datasources/map_assets_source.dart';
 import 'package:mq_navigation/features/map/data/mappers/campus_projection_impl.dart';
@@ -13,6 +14,7 @@ import 'package:mq_navigation/features/map/presentation/widgets/campus/campus_ma
 import 'package:mq_navigation/features/map/presentation/widgets/campus/campus_map_marker_layer.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/campus/campus_map_overlay.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/campus/campus_map_route_layer.dart';
+import 'package:mq_navigation/features/map/presentation/widgets/campus/campus_overlay_layers.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/map_view_helpers.dart';
 import 'package:mq_navigation/shared/widgets/mq_card.dart';
 
@@ -26,6 +28,7 @@ class CampusMapView extends ConsumerStatefulWidget {
     required this.currentLocation,
     required this.isNavigating,
     required this.onSelectBuilding,
+    this.activeOverlayIds = const {},
   });
 
   final List<Building> searchResults;
@@ -35,6 +38,7 @@ class CampusMapView extends ConsumerStatefulWidget {
   final LocationSample? currentLocation;
   final bool isNavigating;
   final ValueChanged<Building> onSelectBuilding;
+  final Set<String> activeOverlayIds;
 
   @override
   ConsumerState<CampusMapView> createState() => _CampusMapViewState();
@@ -115,9 +119,10 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
       future: _metaFuture,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
+          final l10n = AppLocalizations.of(context)!;
           return MqCard(
             child: Text(
-              'Campus overlay metadata is unavailable.',
+              l10n.campusOverlayUnavailable,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           );
@@ -185,6 +190,10 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
             ),
             children: [
               CampusMapOverlay(meta: meta),
+              CampusOverlayLayers(
+                activeOverlayIds: widget.activeOverlayIds,
+                meta: meta,
+              ),
               if (routePoints.isNotEmpty)
                 CampusMapRouteLayer(
                   route: widget.route!,

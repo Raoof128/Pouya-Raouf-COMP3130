@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/foundation.dart'
+    show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:mq_navigation/core/logging/app_logger.dart';
@@ -45,7 +46,10 @@ class FcmService {
   StreamSubscription<RemoteMessage>? _openAppSubscription;
   bool _isInitialised = false;
 
-  bool get _isSupported => !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
+  bool get _isSupported =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
 
   Future<void> initialize({
     required Future<void> Function(String link) onOpenLink,
@@ -168,7 +172,9 @@ class FcmService {
         await _remoteSource.upsertFcmToken(
           userId: currentId,
           token: token,
-          platform: defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android',
+          platform: defaultTargetPlatform == TargetPlatform.iOS
+              ? 'ios'
+              : 'android',
         );
       } catch (error, stackTrace) {
         AppLogger.warning('Failed to refresh FCM token', error, stackTrace);

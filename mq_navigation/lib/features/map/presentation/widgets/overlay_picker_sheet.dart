@@ -82,6 +82,8 @@ class OverlayPickerSheet extends ConsumerWidget {
             ...OverlayRegistry.overlays.map(
               (overlay) => _OverlayToggleRow(
                 overlay: overlay,
+                label: _resolveLabel(l10n, overlay.id),
+                description: _resolveDescription(l10n, overlay.id),
                 isActive: activeIds.contains(overlay.id),
                 onToggle: () => controller.toggleOverlay(overlay.id),
               ),
@@ -91,16 +93,40 @@ class OverlayPickerSheet extends ConsumerWidget {
       ),
     );
   }
+
+  static String _resolveLabel(AppLocalizations l10n, String id) {
+    return switch (id) {
+      'parking' => l10n.overlayParking,
+      'drinking_water' => l10n.overlayWater,
+      'accessibility' => l10n.overlayAccessibility,
+      'special_permits' => l10n.overlayPermits,
+      _ => id,
+    };
+  }
+
+  static String _resolveDescription(AppLocalizations l10n, String id) {
+    return switch (id) {
+      'parking' => l10n.overlayParkingDesc,
+      'drinking_water' => l10n.overlayWaterDesc,
+      'accessibility' => l10n.overlayAccessibilityDesc,
+      'special_permits' => l10n.overlayPermitsDesc,
+      _ => '',
+    };
+  }
 }
 
 class _OverlayToggleRow extends StatelessWidget {
   const _OverlayToggleRow({
     required this.overlay,
+    required this.label,
+    required this.description,
     required this.isActive,
     required this.onToggle,
   });
 
   final MapOverlay overlay;
+  final String label;
+  final String description;
   final bool isActive;
   final VoidCallback onToggle;
 
@@ -139,14 +165,14 @@ class _OverlayToggleRow extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      overlay.label,
+                      label,
                       style: context.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: MqSpacing.space1),
                     Text(
-                      overlay.description,
+                      description,
                       style: context.textTheme.bodySmall?.copyWith(
                         color: isDark
                             ? MqColors.contentSecondaryDark

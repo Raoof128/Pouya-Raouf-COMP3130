@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
@@ -14,7 +16,6 @@ import 'package:mq_navigation/features/map/presentation/widgets/map_shell.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/overlay_picker_sheet.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/route_panel.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
-import 'package:mq_navigation/shared/widgets/mq_app_bar.dart';
 import 'package:mq_navigation/shared/widgets/mq_button.dart';
 
 class MapPage extends ConsumerStatefulWidget {
@@ -75,7 +76,6 @@ class _MapPageState extends ConsumerState<MapPage> {
     final isDark = context.isDarkMode;
 
     return Scaffold(
-      appBar: MqAppBar(title: l10n.map),
       body: state.when(
         data: (mapState) {
           final controller = ref.read(mapControllerProvider.notifier);
@@ -85,8 +85,7 @@ class _MapPageState extends ConsumerState<MapPage> {
               permissionState == LocationPermissionState.deniedForever ||
               permissionState == LocationPermissionState.servicesDisabled;
 
-          // Determine if we're in category browse mode:
-          // search is active, multiple results, no specific building selected.
+          // Category browse mode: search active, multiple results, nothing selected.
           final isCategoryBrowse =
               mapState.searchQuery.trim().isNotEmpty &&
               mapState.selectedBuilding == null &&
@@ -114,45 +113,35 @@ class _MapPageState extends ConsumerState<MapPage> {
             ),
           };
 
-          return Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(
-              MqSpacing.space4,
-              MqSpacing.space2,
-              MqSpacing.space4,
-              MqSpacing.space4,
-            ),
-            child: MapShell(
-              mapView: mapView,
-              renderer: mapState.renderer,
-              onRendererChanged: controller.setRenderer,
-              onCenterOnLocation: controller.centerOnCurrentLocation,
-              onOpenSearch: _openSearchSheet,
-              onOpenOverlayPicker: _openOverlayPicker,
-              banner: mapState.error == null
-                  ? null
-                  : _MapErrorBanner(
-                      title: _errorTitle(l10n, mapState.error!),
-                      message: _errorMessage(l10n, mapState.error!),
-                      isPermissionBlocked: isPermissionBlocked,
-                      onCenterOnLocation: controller.centerOnCurrentLocation,
-                      onOpenSettings:
-                          permissionState ==
-                              LocationPermissionState.servicesDisabled
-                          ? controller.openLocationSettings
-                          : controller.openAppSettings,
-                    ),
-              footer: isCategoryBrowse
-                  ? _CategoryBuildingList(
-                      buildings: mapState.searchResults,
-                      searchQuery: mapState.searchQuery,
-                      onSelectBuilding: controller.selectBuilding,
-                      onClear: controller.clearSelection,
-                    )
-                  : Padding(
-                      padding: const EdgeInsetsDirectional.only(
-                        top: MqSpacing.space3,
-                      ),
-                      child: RoutePanel(
+          return MapShell(
+            mapView: mapView,
+            renderer: mapState.renderer,
+            onRendererChanged: controller.setRenderer,
+            onCenterOnLocation: controller.centerOnCurrentLocation,
+            onOpenSearch: _openSearchSheet,
+            onOpenOverlayPicker: _openOverlayPicker,
+            banner: mapState.error == null
+                ? null
+                : _MapErrorBanner(
+                    title: _errorTitle(l10n, mapState.error!),
+                    message: _errorMessage(l10n, mapState.error!),
+                    isPermissionBlocked: isPermissionBlocked,
+                    onCenterOnLocation: controller.centerOnCurrentLocation,
+                    onOpenSettings:
+                        permissionState ==
+                            LocationPermissionState.servicesDisabled
+                        ? controller.openLocationSettings
+                        : controller.openAppSettings,
+                  ),
+            footer: isCategoryBrowse
+                ? _CategoryBuildingList(
+                    buildings: mapState.searchResults,
+                    searchQuery: mapState.searchQuery,
+                    onSelectBuilding: controller.selectBuilding,
+                    onClear: controller.clearSelection,
+                  )
+                : mapState.selectedBuilding != null
+                    ? RoutePanel(
                         selectedBuilding: mapState.selectedBuilding,
                         route: mapState.route,
                         travelMode: mapState.travelMode,
@@ -168,9 +157,8 @@ class _MapPageState extends ConsumerState<MapPage> {
                         onDismissArrival: controller.dismissArrival,
                         onOpenInGoogleMaps: controller.openInGoogleMaps,
                         onOpenStreetView: controller.openStreetView,
-                      ),
-                    ),
-            ),
+                      )
+                    : null,
           );
         },
         error: (error, _) => Center(
@@ -332,7 +320,7 @@ class _MapErrorBanner extends StatelessWidget {
   }
 }
 
-/// Scrollable list of buildings shown when browsing a category (e.g., "Food").
+/// Glass-styled scrollable list of buildings for category browse mode.
 class _CategoryBuildingList extends StatelessWidget {
   const _CategoryBuildingList({
     required this.buildings,
@@ -348,108 +336,154 @@ class _CategoryBuildingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final isDark = context.isDarkMode;
     final l10n = AppLocalizations.of(context)!;
 
-    // Only show buildings with valid coordinates.
     final validBuildings = buildings
         .where((b) => b.latitude != null && b.longitude != null)
         .toList();
 
-    return Container(
-      constraints: const BoxConstraints(maxHeight: 220),
-      decoration: BoxDecoration(
-        color: isDark ? MqColors.charcoal850 : Colors.white,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(MqSpacing.radiusXl),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, -2),
-          ),
-        ],
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(
+        top: Radius.circular(24),
+        bottom: Radius.circular(MqSpacing.radiusXl),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Header with title and close button
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(
-              MqSpacing.space4,
-              MqSpacing.space3,
-              MqSpacing.space2,
-              0,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          constraints: const BoxConstraints(maxHeight: 240),
+          decoration: BoxDecoration(
+            color: isDark
+                ? MqColors.charcoal850.withValues(alpha: 0.88)
+                : Colors.white.withValues(alpha: 0.85),
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(24),
+              bottom: Radius.circular(MqSpacing.radiusXl),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '${searchQuery[0].toUpperCase()}${searchQuery.substring(1)} (${validBuildings.length})',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close, size: 20),
-                  tooltip: l10n.clear,
-                  onPressed: onClear,
-                ),
-              ],
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : Colors.black.withValues(alpha: 0.08),
             ),
-          ),
-
-          // Building list
-          Flexible(
-            child: ListView.separated(
-              padding: const EdgeInsetsDirectional.fromSTEB(
-                MqSpacing.space2,
-                0,
-                MqSpacing.space2,
-                MqSpacing.space3,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.15),
+                blurRadius: 24,
+                offset: const Offset(0, -4),
               ),
-              itemCount: validBuildings.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 0),
-              itemBuilder: (context, index) {
-                final building = validBuildings[index];
-                return ListTile(
-                  dense: true,
-                  leading: const Icon(
-                    Icons.location_on,
-                    color: MqColors.red,
-                    size: 20,
-                  ),
-                  title: Text(
-                    building.name,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Padding(
+                padding: const EdgeInsetsDirectional.only(top: MqSpacing.space3),
+                child: Center(
+                  child: Container(
+                    width: 48,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.2)
+                          : Colors.black.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(3),
                     ),
                   ),
-                  subtitle: building.address != null
-                      ? Text(
-                          building.address!,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: isDark
-                                ? MqColors.slate500
-                                : MqColors.charcoal600,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : null,
-                  trailing: const Icon(Icons.chevron_right, size: 20),
-                  onTap: () => onSelectBuilding(building),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
+                ),
+              ),
+
+              // Header
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(
+                  MqSpacing.space4,
+                  MqSpacing.space3,
+                  MqSpacing.space2,
+                  0,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${searchQuery[0].toUpperCase()}${searchQuery.substring(1)} (${validBuildings.length})',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white : MqColors.contentPrimary,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        size: 20,
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : MqColors.contentTertiary,
+                      ),
+                      tooltip: l10n.clear,
+                      onPressed: onClear,
+                    ),
+                  ],
+                ),
+              ),
+
+              // Building list
+              Flexible(
+                child: ListView.separated(
+                  padding: const EdgeInsetsDirectional.fromSTEB(
+                    MqSpacing.space2,
+                    0,
+                    MqSpacing.space2,
+                    MqSpacing.space3,
                   ),
-                );
-              },
-            ),
+                  itemCount: validBuildings.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 0),
+                  itemBuilder: (context, index) {
+                    final building = validBuildings[index];
+                    return ListTile(
+                      dense: true,
+                      leading: const Icon(
+                        Icons.location_on,
+                        color: MqColors.vividRed,
+                        size: 20,
+                      ),
+                      title: Text(
+                        building.name,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: isDark ? Colors.white : MqColors.contentPrimary,
+                        ),
+                      ),
+                      subtitle: building.address != null
+                          ? Text(
+                              building.address!,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.4)
+                                    : MqColors.charcoal600,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : null,
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        size: 20,
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.3)
+                            : MqColors.charcoal600,
+                      ),
+                      onTap: () => onSelectBuilding(building),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

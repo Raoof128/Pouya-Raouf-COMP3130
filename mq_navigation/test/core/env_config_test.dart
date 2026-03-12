@@ -26,12 +26,18 @@ void main() {
       expect(EnvConfig.supabaseUrl, isA<String>());
     });
 
-    test('supabaseAnonKey is empty without dart-define (no hardcoded keys)', () {
-      expect(EnvConfig.supabaseAnonKey, isA<String>());
-    });
+    test(
+      'supabaseAnonKey is empty without dart-define (no hardcoded keys)',
+      () {
+        expect(EnvConfig.supabaseAnonKey, isA<String>());
+      },
+    );
 
-    test('googleMapsApiKey is empty without dart-define (no hardcoded keys)', () {
-      expect(EnvConfig.googleMapsApiKey, isA<String>());
-    });
+    test(
+      'googleMapsApiKey is empty without dart-define (no hardcoded keys)',
+      () {
+        expect(EnvConfig.googleMapsApiKey, isA<String>());
+      },
+    );
   });
 }

@@ -100,10 +100,7 @@ class SettingsPage extends ConsumerWidget {
                         _TapRow(
                           icon: Icons.language_outlined,
                           label: l10n.language,
-                          value: _languageLabel(
-                            preferences.localeCode,
-                            l10n,
-                          ),
+                          value: _languageLabel(preferences.localeCode, l10n),
                           semanticLabel: l10n.language,
                           onTap: () => _showPicker<String?>(
                             context: context,
@@ -159,7 +156,10 @@ class SettingsPage extends ConsumerWidget {
                     _SectionHeader(title: l10n.about),
                     _SettingsCard(
                       children: [
-                        _AboutAppRow(appName: l10n.appName, desc: l10n.aboutDesc),
+                        _AboutAppRow(
+                          appName: l10n.appName,
+                          desc: l10n.aboutDesc,
+                        ),
                         _InfoRow(
                           icon: Icons.code_outlined,
                           label: l10n.version,
@@ -191,10 +191,7 @@ class SettingsPage extends ConsumerWidget {
                   color: dark ? MqColors.slate500 : MqColors.charcoal600,
                 ),
                 const SizedBox(height: MqSpacing.space4),
-                Text(
-                  l10n.settingsError,
-                  textAlign: TextAlign.center,
-                ),
+                Text(l10n.settingsError, textAlign: TextAlign.center),
                 const SizedBox(height: MqSpacing.space4),
                 FilledButton.icon(
                   onPressed: () => ref.invalidate(settingsControllerProvider),
@@ -263,14 +260,12 @@ class SettingsPage extends ConsumerWidget {
                       color: dark
                           ? Colors.white.withAlpha(26)
                           : Colors.black.withAlpha(26),
-                      borderRadius:
-                          BorderRadius.circular(MqSpacing.radiusFull),
+                      borderRadius: BorderRadius.circular(MqSpacing.radiusFull),
                     ),
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsetsDirectional.all(MqSpacing.space4),
+                  padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
                   child: Text(
                     title,
                     style: TextStyle(
@@ -303,8 +298,8 @@ class SettingsPage extends ConsumerWidget {
                               color: isSelected
                                   ? MqColors.vividRed
                                   : dark
-                                      ? MqColors.contentPrimaryDark
-                                      : MqColors.contentPrimary,
+                                  ? MqColors.contentPrimaryDark
+                                  : MqColors.contentPrimary,
                             ),
                           ),
                           trailing: isSelected
@@ -337,52 +332,83 @@ class SettingsPage extends ConsumerWidget {
 
   // ── Locale codes ──────────────────────────────────────────
   static const List<String?> _localeCodes = [
-    null, 'en', 'ar', 'bn', 'cs', 'da', 'de', 'el',
-    'es', 'fa', 'fi', 'fr', 'he', 'hi', 'hu', 'id',
-    'it', 'ja', 'ko', 'ms', 'ne', 'nl', 'no', 'pl',
-    'pt', 'ro', 'ru', 'si', 'sv', 'ta', 'th', 'tr',
-    'uk', 'ur', 'vi', 'zh',
+    null,
+    'en',
+    'ar',
+    'bn',
+    'cs',
+    'da',
+    'de',
+    'el',
+    'es',
+    'fa',
+    'fi',
+    'fr',
+    'he',
+    'hi',
+    'hu',
+    'id',
+    'it',
+    'ja',
+    'ko',
+    'ms',
+    'ne',
+    'nl',
+    'no',
+    'pl',
+    'pt',
+    'ro',
+    'ru',
+    'si',
+    'sv',
+    'ta',
+    'th',
+    'tr',
+    'uk',
+    'ur',
+    'vi',
+    'zh',
   ];
 
   static String _languageLabel(String? code, AppLocalizations l10n) {
     return switch (code) {
-      null  => l10n.system,
-      'en'  => 'English',
-      'ar'  => 'العربية',
-      'bn'  => 'বাংলা',
-      'cs'  => 'Čeština',
-      'da'  => 'Dansk',
-      'de'  => 'Deutsch',
-      'el'  => 'Ελληνικά',
-      'es'  => 'Español',
-      'fa'  => 'فارسی',
-      'fi'  => 'Suomi',
-      'fr'  => 'Français',
-      'he'  => 'עברית',
-      'hi'  => 'हिन्दी',
-      'hu'  => 'Magyar',
-      'id'  => 'Bahasa Indonesia',
-      'it'  => 'Italiano',
-      'ja'  => '日本語',
-      'ko'  => '한국어',
-      'ms'  => 'Bahasa Melayu',
-      'ne'  => 'नेपाली',
-      'nl'  => 'Nederlands',
-      'no'  => 'Norsk',
-      'pl'  => 'Polski',
-      'pt'  => 'Português',
-      'ro'  => 'Română',
-      'ru'  => 'Русский',
-      'si'  => 'සිංහල',
-      'sv'  => 'Svenska',
-      'ta'  => 'தமிழ்',
-      'th'  => 'ไทย',
-      'tr'  => 'Türkçe',
-      'uk'  => 'Українська',
-      'ur'  => 'اردو',
-      'vi'  => 'Tiếng Việt',
-      'zh'  => '中文',
-      _     => code.toUpperCase(),
+      null => l10n.system,
+      'en' => 'English',
+      'ar' => 'العربية',
+      'bn' => 'বাংলা',
+      'cs' => 'Čeština',
+      'da' => 'Dansk',
+      'de' => 'Deutsch',
+      'el' => 'Ελληνικά',
+      'es' => 'Español',
+      'fa' => 'فارسی',
+      'fi' => 'Suomi',
+      'fr' => 'Français',
+      'he' => 'עברית',
+      'hi' => 'हिन्दी',
+      'hu' => 'Magyar',
+      'id' => 'Bahasa Indonesia',
+      'it' => 'Italiano',
+      'ja' => '日本語',
+      'ko' => '한국어',
+      'ms' => 'Bahasa Melayu',
+      'ne' => 'नेपाली',
+      'nl' => 'Nederlands',
+      'no' => 'Norsk',
+      'pl' => 'Polski',
+      'pt' => 'Português',
+      'ro' => 'Română',
+      'ru' => 'Русский',
+      'si' => 'සිංහල',
+      'sv' => 'Svenska',
+      'ta' => 'தமிழ்',
+      'th' => 'ไทย',
+      'tr' => 'Türkçe',
+      'uk' => 'Українська',
+      'ur' => 'اردو',
+      'vi' => 'Tiếng Việt',
+      'zh' => '中文',
+      _ => code.toUpperCase(),
     };
   }
 }
@@ -457,9 +483,7 @@ class _SettingsCard extends StatelessWidget {
                 Divider(
                   height: 1,
                   thickness: 1,
-                  color: dark
-                      ? Colors.white.withAlpha(13)
-                      : MqColors.sand200,
+                  color: dark ? Colors.white.withAlpha(13) : MqColors.sand200,
                 ),
             ],
           ],
@@ -496,9 +520,7 @@ class _TapRow extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          splashColor: dark
-              ? Colors.white.withAlpha(13)
-              : MqColors.sand100,
+          splashColor: dark ? Colors.white.withAlpha(13) : MqColors.sand100,
           child: Padding(
             padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
             child: Row(
@@ -570,9 +592,7 @@ class _ToggleRow extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () => onChanged(!value),
-          splashColor: dark
-              ? Colors.white.withAlpha(13)
-              : MqColors.sand100,
+          splashColor: dark ? Colors.white.withAlpha(13) : MqColors.sand100,
           child: Padding(
             padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
             child: Row(

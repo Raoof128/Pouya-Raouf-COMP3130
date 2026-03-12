@@ -54,16 +54,15 @@ final notificationsControllerProvider =
       NotificationsController.new,
     );
 
-final notificationsStreamProvider =
-    StreamProvider<List<AppNotification>>((ref) {
-      final user = Supabase.instance.client.auth.currentUser;
-      if (user == null) {
-        return Stream.value(const <AppNotification>[]);
-      }
-      return ref
-          .watch(notificationRepositoryProvider)
-          .watchNotifications(user.id);
-    });
+final notificationsStreamProvider = StreamProvider<List<AppNotification>>((
+  ref,
+) {
+  final user = Supabase.instance.client.auth.currentUser;
+  if (user == null) {
+    return Stream.value(const <AppNotification>[]);
+  }
+  return ref.watch(notificationRepositoryProvider).watchNotifications(user.id);
+});
 
 final unreadNotificationsCountProvider = Provider<int>((ref) {
   final notifications = ref.watch(notificationsStreamProvider).value;
@@ -145,7 +144,10 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
     final updatedPreferences = current.preferences
         .map(
           (preference) => preference.type == type
-              ? preference.copyWith(enabled: enabled, updatedAt: DateTime.now().toUtc())
+              ? preference.copyWith(
+                  enabled: enabled,
+                  updatedAt: DateTime.now().toUtc(),
+                )
               : preference,
         )
         .toList();
@@ -258,7 +260,12 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
     }
   }
 
-  static const _allowedPrefixes = ['/home', '/map', '/settings', '/notifications'];
+  static const _allowedPrefixes = [
+    '/home',
+    '/map',
+    '/settings',
+    '/notifications',
+  ];
 
   Future<void> _openLink(String link) async {
     final path = link.startsWith('/') ? link : '/$link';

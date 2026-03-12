@@ -88,7 +88,9 @@ class NotificationsPage extends ConsumerWidget {
                     children: items
                         .map(
                           (item) => Padding(
-                            padding: const EdgeInsetsDirectional.only(bottom: 12),
+                            padding: const EdgeInsetsDirectional.only(
+                              bottom: 12,
+                            ),
                             child: NotificationTile(
                               notification: item,
                               onTap: () =>

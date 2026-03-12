@@ -64,3 +64,4 @@ GoogleService-Info.plist
 
 # Codex desktop workspace metadata
 .codex/
+logs/

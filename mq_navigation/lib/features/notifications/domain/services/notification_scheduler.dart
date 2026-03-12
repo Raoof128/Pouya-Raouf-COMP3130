@@ -62,7 +62,9 @@ class NotificationScheduler {
           stableId: 'study_prompt_daily',
           type: NotificationType.studyPrompt,
           title: studyPromptTitle ?? 'Study prompt',
-          body: studyPromptBody ?? 'Review your next deadline and plan one focused study block.',
+          body:
+              studyPromptBody ??
+              'Review your next deadline and plan one focused study block.',
           scheduledFor: scheduledFor,
           link: '/home',
           repeatsDaily: true,

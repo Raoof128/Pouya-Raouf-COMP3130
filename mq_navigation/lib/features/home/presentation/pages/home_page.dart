@@ -67,7 +67,11 @@ class HomePage extends ConsumerWidget {
                 width: double.infinity,
                 height: 56,
                 child: FilledButton.icon(
-                  icon: Icon(Icons.map, size: 24, semanticLabel: l10n.exploreMap),
+                  icon: Icon(
+                    Icons.map,
+                    size: 24,
+                    semanticLabel: l10n.exploreMap,
+                  ),
                   label: Text(
                     l10n.exploreMap,
                     style: const TextStyle(fontSize: 18),
@@ -79,10 +83,7 @@ class HomePage extends ConsumerWidget {
               const SizedBox(height: MqSpacing.space8),
 
               // Quick access grid
-              Text(
-                l10n.campusNavigation,
-                style: theme.textTheme.titleMedium,
-              ),
+              Text(l10n.campusNavigation, style: theme.textTheme.titleMedium),
               const SizedBox(height: MqSpacing.space3),
 
               GridView.count(
@@ -168,9 +169,9 @@ class _QuickAccessCard extends ConsumerWidget {
                 Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
             ),

@@ -113,6 +113,29 @@ void main() {
       expect(state.isNavigating, isFalse);
     });
   });
+
+  group('MapState', () {
+    test('default activeOverlayIds is empty', () {
+      const state = MapState(buildings: [], searchResults: []);
+      expect(state.activeOverlayIds, isEmpty);
+    });
+
+    test('copyWith preserves activeOverlayIds', () {
+      const state = MapState(
+        buildings: [],
+        searchResults: [],
+        activeOverlayIds: {'parking', 'accessibility'},
+      );
+      final updated = state.copyWith(searchQuery: 'test');
+      expect(updated.activeOverlayIds, {'parking', 'accessibility'});
+    });
+
+    test('copyWith can update activeOverlayIds', () {
+      const state = MapState(buildings: [], searchResults: []);
+      final updated = state.copyWith(activeOverlayIds: {'parking'});
+      expect(updated.activeOverlayIds, {'parking'});
+    });
+  });
 }
 
 class _FakeMapRepository implements MapRepository {

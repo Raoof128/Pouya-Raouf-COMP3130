@@ -55,14 +55,16 @@ void main() {
       final scheduler = NotificationScheduler(LocalNotificationsService());
       final now = DateTime(2026, 3, 11, 8);
 
-      final preferences = NotificationPreference.defaults().map(
-        (p) => p.type == NotificationType.studyPrompt
-            ? const NotificationPreference(
-                type: NotificationType.studyPrompt,
-                enabled: false,
-              )
-            : p,
-      ).toList();
+      final preferences = NotificationPreference.defaults()
+          .map(
+            (p) => p.type == NotificationType.studyPrompt
+                ? const NotificationPreference(
+                    type: NotificationType.studyPrompt,
+                    enabled: false,
+                  )
+                : p,
+          )
+          .toList();
 
       final requests = scheduler.buildRequests(
         preferences: preferences,

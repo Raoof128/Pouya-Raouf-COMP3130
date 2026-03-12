@@ -55,7 +55,6 @@ class SettingsController extends AsyncNotifier<UserPreferences> {
     return result;
   }
 
-
   Future<String?> _save(UserPreferences preferences) async {
     final previous = state.value;
     try {
