@@ -84,3 +84,9 @@ Summary: The project was built through phases 0–5, originally including auth, 
 2026-03-12: Flutter upgrade + i18n fix — upgraded Flutter 3.41.2→3.41.4, 4 major deps (flutter_local_notifications 18→21, connectivity_plus 6→7, geolocator 13→14, timezone 0.10→0.11). Fixed breaking API changes in local notifications (named params). Added 2 missing translation keys (studyPromptNotificationTitle/Body) to all 34 locale ARB files. 83/83 tests pass, zero analyzer issues, zero untranslated messages.
 
 2026-03-12: Settings audit fix batch — 10 issues across 4 files. Critical: null locale picker regression fixed with _PickerItem wrapper. High: repository save errors now propagate (rethrow), controller reverts state on failure instead of AsyncError. Medium: retry button on error state, 48dp tap targets in picker, corrected Experience section l10n keys. Low: UserPreferences value equality, toggle row fully tappable, Semantics on info/about rows. 83/83 tests pass, zero analyzer issues.
+
+Raouf:
+2026-03-12: Technical explanation document added — created a full repository-level technical explanation covering runtime flow, architecture, feature modules, backend Edge Functions, platform integration, tooling, testing scope, and notable implementation-vs-documentation gaps. Files changed: `TECHNICAL_EXPLANATION.md`, `AGENT.md`, `CHANGELOG.md`. Verification: document reviewed for consistency against current codebase; no runtime code paths changed. Follow-ups: keep this document updated when routing architecture or feature scope changes.
+
+Raouf:
+2026-03-12: Technical explanation doc polish — corrected an internal markdown path in `TECHNICAL_EXPLANATION.md` so theme token references resolve cleanly. Files changed: `TECHNICAL_EXPLANATION.md`, `AGENT.md`, `CHANGELOG.md`. Verification: reviewed the corrected link target in the document. Follow-ups: none.

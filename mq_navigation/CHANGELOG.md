@@ -46,6 +46,47 @@ Fixed three critical issues preventing the app from running:
 
 ---
 
+### Raouf: 2026-03-12 (AEDT) — Add full technical explanation document
+
+**Scope:** Write a repository-level technical explanation based on the implemented Flutter app, backend functions, platform setup, tooling, and tests.
+
+**Summary:**
+Added `TECHNICAL_EXPLANATION.md` as a dedicated technical walkthrough of the project. The document explains the startup flow, routing model, core infrastructure, design system, localization pipeline, feature modules (`home`, `settings`, `notifications`, `map`), Supabase Edge Functions, platform integration, CI/tooling, and test coverage. It also explicitly documents the current architectural mismatch where the Flutter map client still calls Google Directions directly while project docs describe the `maps-routes` Edge Function as the intended secure routing path.
+
+**Files changed:**
+- `TECHNICAL_EXPLANATION.md` — new full technical explanation document
+- `AGENT.md` — appended Raouf log entry for this documentation update
+- `CHANGELOG.md` — appended changelog entry for this documentation update
+
+**Verification:**
+- Read through the full repository structure and implementation before writing
+- Cross-checked the document against current Dart, Supabase, platform, CI, and test files
+- No application code changed
+
+**Follow-ups:**
+- Update the explanation when the map client is migrated to the `maps-routes` Edge Function
+- Keep the document aligned with future feature-scope or architecture changes
+
+---
+
+### Raouf: 2026-03-12 (AEDT) — Polish technical explanation doc link
+
+**Scope:** Correct a markdown path typo in the new technical explanation document.
+
+**Summary:**
+Fixed an internal path reference in `TECHNICAL_EXPLANATION.md` so the `mq_spacing.dart` link points to the correct file location.
+
+**Files changed:**
+- `TECHNICAL_EXPLANATION.md` — corrected markdown path
+- `AGENT.md` — appended Raouf log entry for the polish edit
+- `CHANGELOG.md` — appended changelog entry for the polish edit
+
+**Verification:**
+- Reviewed the corrected markdown target
+- No application code changed
+
+**Follow-ups:**
+- None
 ### Raouf: 2026-03-12 (AEDT) — Flutter upgrade + fix untranslated messages
 
 **Scope:** Upgrade Flutter SDK and dependencies, fix 2 untranslated i18n keys across 34 locales.
