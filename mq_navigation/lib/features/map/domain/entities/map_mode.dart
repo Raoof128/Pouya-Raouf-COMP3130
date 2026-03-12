@@ -1,1 +1,0 @@
-enum MapMode { campus, navigation }

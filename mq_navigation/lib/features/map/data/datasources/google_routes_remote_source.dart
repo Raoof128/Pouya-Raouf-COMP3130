@@ -61,14 +61,16 @@ class GoogleRoutesRemoteSource {
           .timeout(const Duration(seconds: 15));
     } else {
       // On mobile, call the Directions API directly (no CORS restrictions).
-      final uri = Uri.parse(_directionsUrl).replace(queryParameters: {
-        'origin': originStr,
-        'destination': destinationStr,
-        'mode': mode,
-        'language': 'en',
-        'units': 'metric',
-        'key': apiKey,
-      });
+      final uri = Uri.parse(_directionsUrl).replace(
+        queryParameters: {
+          'origin': originStr,
+          'destination': destinationStr,
+          'mode': mode,
+          'language': 'en',
+          'units': 'metric',
+          'key': apiKey,
+        },
+      );
       response = await http.get(uri).timeout(const Duration(seconds: 15));
     }
 
@@ -78,9 +80,7 @@ class GoogleRoutesRemoteSource {
           'Directions API error ${response.statusCode}: ${response.body}',
         );
       }
-      throw StateError(
-        'Google Directions API returned ${response.statusCode}',
-      );
+      throw StateError('Google Directions API returned ${response.statusCode}');
     }
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;

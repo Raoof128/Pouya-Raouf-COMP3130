@@ -21,13 +21,14 @@ class NavInstruction {
     final text = rawHtml != null
         ? _stripHtml(rawHtml)
         : (navigationInstruction?['instructions'] as String?) ??
-            (json['instructions'] as String?) ??
-            '';
+              (json['instructions'] as String?) ??
+              '';
 
     // Directions API nests distance in {value, text}; Routes API v2 uses
     // a flat 'distanceMeters' integer.
     final distanceMap = json['distance'] as Map<String, dynamic>?;
-    final distanceMeters = (distanceMap?['value'] as num?)?.toInt() ??
+    final distanceMeters =
+        (distanceMap?['value'] as num?)?.toInt() ??
         (json['distanceMeters'] as num?)?.toInt() ??
         0;
 

@@ -12,14 +12,16 @@ All map-related APIs, services, keys, and data sources used by the campus map su
 
 | Service | Web Usage | Flutter Usage |
 |---------|-----------|---------------|
-| Google Maps JavaScript API | Leaflet + GM JS API | google_maps_flutter (native SDK on Android/iOS, JS API on web) |
-| Google Directions API | Via Next.js API proxy | Direct HTTP on mobile; Supabase `directions-proxy` edge function on web (CORS) |
+| Google Maps JavaScript API | Leaflet + GM JS API | `google_maps_flutter` renderer for Google mode |
+| Google Directions API | Via Next.js API proxy | Shared route source for both renderers today: direct HTTP on mobile; Supabase `directions-proxy` on web |
+| OpenStreetMap raster tiles | N/A | `flutter_map` renderer for campus mode foundation |
 
-> **Note:** On **mobile** (Android/iOS), the app calls the Google Directions API directly.
-> On **web**, direct calls are blocked by CORS, so the app routes through the
-> `directions-proxy` Supabase Edge Function which proxies the request server-side.
-> The older `maps-routes` edge function (Routes API v2) is kept in
-> `supabase/functions/maps-routes/` but is unused by the Flutter app.
+> **Note:** The renderer split is now in place, but routing is still on the old
+> path. On **mobile** (Android/iOS), the app still calls the Google Directions
+> API directly. On **web**, direct calls are blocked by CORS, so the app routes
+> through the `directions-proxy` Supabase Edge Function. Campus mode now has its
+> own data-source entry point, but that adapter still falls back to the same
+> route source until the campus-specific edge function lands.
 
 ## Building Registry
 
@@ -45,7 +47,9 @@ All map-related APIs, services, keys, and data sources used by the campus map su
 
 | Package | Version | Role |
 |---------|---------|------|
-| google_maps_flutter | ^2.14.2 | Primary map engine (Android, iOS, web) |
+| google_maps_flutter | ^2.15.0 | Primary map engine (Android, iOS, web) |
+| flutter_map | ^8.2.2 | Campus renderer foundation |
+| latlong2 | ^0.9.1 | `flutter_map` geometry types |
 | geolocator | ^14.0.2 | GPS location tracking |
 | permission_handler | ^12.0.1 | Location permission flow |
 | http | ^1.4.0 | Google Directions API HTTP calls |
@@ -56,9 +60,11 @@ All map-related APIs, services, keys, and data sources used by the campus map su
 |---------|-----------------|
 | Building registry data source + bundled JSON asset | flutter assets |
 | Current location tracking (fallback to campus centre on web/emulator) | geolocator + permission_handler |
-| Google Map widget (no camera bounds) | google_maps_flutter |
-| Building markers (azure for unselected, red for selected) | google_maps_flutter |
+| Shared renderer state (`MapRendererType`) | Riverpod controller state |
+| Campus map renderer | flutter_map + OpenStreetMap tile layer (overlay-ready scaffold) |
+| Google map renderer | google_maps_flutter |
+| Building markers (selected + search result parity) | renderer-specific widgets |
 | Building search bottom sheet | custom widget |
-| Route request via Google Directions API (HTTP) | http |
-| Route polyline rendering | google_maps_flutter |
+| Route request contract split by renderer | repository + remote sources |
+| Route polyline rendering | google_maps_flutter + flutter_map |
 | Travel mode switching (walk/drive/bike/transit) | Directions API `mode` param |

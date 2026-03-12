@@ -18,7 +18,9 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
+    _controller = TextEditingController(
+      text: ref.read(mapControllerProvider).value?.searchQuery ?? '',
+    );
   }
 
   @override

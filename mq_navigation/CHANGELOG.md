@@ -4,6 +4,65 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-12 (AEDT) — Audit fix dual-renderer race and UI inconsistencies
+
+**Scope:** Audit the new dual-renderer map implementation and fix correctness/state regressions.
+
+**Summary:**
+Performed a review pass on the dual-renderer foundation and fixed the highest-risk issue: stale async route responses could overwrite newer state if the user changed destination, renderer, or travel mode while a route request was still in flight. `MapController` now versions route requests and ignores outdated completions. Also aligned the search bottom sheet with controller state by seeding its text field from the active query, removed the stale unused `map_mode.dart` entity from the old state model, and adjusted map-shell top control spacing so the overlay controls are positioned relative to the page body instead of double-counting the device top safe area below the app bar.
+
+**Files changed:**
+- `lib/features/map/presentation/controllers/map_controller.dart` — invalidated stale route requests and cleared obsolete loading state
+- `lib/features/map/presentation/widgets/building_search_sheet.dart` — seeded the search field from current controller query
+- `lib/features/map/presentation/widgets/map_shell.dart` — corrected top overlay spacing
+- `lib/features/map/domain/entities/map_mode.dart` — deleted stale unused entity
+- `test/features/map/map_controller_test.dart` — added stale-route regression coverage
+- `AGENT.md`, `CHANGELOG.md` — appended Raouf audit log entries
+
+**Verification:**
+- `dart format lib/features/map/presentation/controllers/map_controller.dart lib/features/map/presentation/widgets/building_search_sheet.dart lib/features/map/presentation/widgets/map_shell.dart test/features/map/map_controller_test.dart`
+- `flutter test test/features/map/map_controller_test.dart`
+- `flutter analyze` → 0 issues
+- `flutter test` → 86/86 passed
+
+**Follow-ups:**
+- Campus mode still needs the real raster overlay asset plus campus-space metadata to reach full web-parity overlay behaviour
+
+### Raouf: 2026-03-12 (AEDT) — Build dual-renderer map foundation
+
+**Scope:** Refactor the Flutter map feature toward the shared-shell, dual-renderer architecture from the web app.
+
+**Summary:**
+Implemented the first production-ready dual-renderer foundation for the map feature. The map now has one shared Riverpod controller state and two explicit renderer targets: a new `flutter_map`-based campus renderer foundation and a renamed `GoogleMapView` for Google rendering. Added `MapRendererType`, campus-coordinate support on the shared `Building` entity, a shared polyline decoder, a campus-route adapter source, and a reusable `MapShell` with renderer toggle plus left-side search/location controls. The page can now switch campus ↔ Google without losing selected building or route state. Documentation was updated to describe the new renderer split and to call out that routing still needs the planned server-backed campus engine and legacy Directions migration.
+
+**Files changed:**
+- `pubspec.yaml`, `pubspec.lock` — added `flutter_map`/`latlong2`, aligned `google_maps_flutter` with 2.15.0
+- `lib/features/map/domain/entities/building.dart` — added optional campus coordinate parsing/serialization
+- `lib/features/map/domain/entities/campus_point.dart`, `lib/features/map/domain/entities/map_renderer_type.dart` — added new map foundation entities
+- `lib/features/map/domain/services/map_polyline_codec.dart` — shared polyline decoding for both renderers
+- `lib/features/map/data/datasources/campus_routes_remote_source.dart` — phase-1 campus routing adapter
+- `lib/features/map/data/datasources/google_routes_remote_source.dart`, `location_source.dart` — formatter-aligned existing map data sources after the repository contract update
+- `lib/features/map/data/repositories/map_repository_impl.dart` — renderer-aware route dispatch
+- `lib/features/map/presentation/controllers/map_controller.dart` — renderer state, navigation-state cleanup, shared route loading
+- `lib/features/map/presentation/pages/map_page.dart` — moved to shared shell composition
+- `lib/features/map/presentation/widgets/campus_map_view.dart` — new `flutter_map` campus renderer foundation
+- `lib/features/map/presentation/widgets/google_map_view.dart` — explicit Google renderer extracted from old campus widget
+- `lib/features/map/presentation/widgets/map_action_stack.dart`, `map_mode_toggle.dart`, `map_shell.dart`, `map_view_helpers.dart` — shared renderer UI/control helpers
+- `lib/features/map/domain/entities/nav_instruction.dart`, `route_leg.dart`, `lib/features/map/presentation/widgets/route_panel.dart` — formatter-only normalization in adjacent map files
+- `test/features/map/building_test.dart`, `test/features/map/map_controller_test.dart` — added campus-field and renderer-state coverage
+- `docs/ARCHITECTURE.md`, `map_inventory.md` — documented the new renderer split and remaining routing gap
+- `AGENT.md`, `CHANGELOG.md` — appended Raouf implementation logs
+
+**Verification:**
+- `flutter pub get`
+- `flutter analyze` → 0 issues
+- `flutter test` → 85/85 passed
+
+**Follow-ups:**
+- Replace the campus-route fallback with the planned server-backed campus engine
+- Add the missing raster overlay asset plus campus-space metadata/bounds
+- Migrate Google routing off the legacy client/Directions path and onto the server-only Routes flow
+
 ### Raouf: 2026-03-12 (AEDT) — Fix Chrome crash, map bounds, and Android Kotlin daemon
 
 **Scope:** Fix multi-platform launch failures and map usability issues.

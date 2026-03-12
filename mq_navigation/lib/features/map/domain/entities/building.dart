@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:mq_navigation/features/map/domain/entities/campus_point.dart';
 
 /// A campus building with its metadata and GPS coordinates.
 @immutable
@@ -19,6 +20,8 @@ class Building {
     this.tags = const [],
     this.aliases = const [],
     this.gridRef,
+    this.campusX,
+    this.campusY,
   });
 
   final String id;
@@ -36,10 +39,13 @@ class Building {
   final List<String> tags;
   final List<String> aliases;
   final String? gridRef;
+  final double? campusX;
+  final double? campusY;
 
   factory Building.fromJson(Map<String, dynamic> json) {
     final location = json['location'] as Map<String, dynamic>?;
     final entrance = json['entranceLocation'] as Map<String, dynamic>?;
+    final campusLocation = json['campusLocation'] as Map<String, dynamic>?;
 
     return Building(
       id: json['id'] as String,
@@ -59,6 +65,12 @@ class Building {
       tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
       aliases: (json['aliases'] as List<dynamic>?)?.cast<String>() ?? [],
       gridRef: json['gridRef'] as String?,
+      campusX:
+          (campusLocation?['x'] as num?)?.toDouble() ??
+          (json['campusX'] as num?)?.toDouble(),
+      campusY:
+          (campusLocation?['y'] as num?)?.toDouble() ??
+          (json['campusY'] as num?)?.toDouble(),
     );
   }
 
@@ -78,11 +90,18 @@ class Building {
     'tags': tags,
     'aliases': aliases,
     'gridRef': gridRef,
+    'campusLocation': hasCampusCoordinates
+        ? {'x': campusX, 'y': campusY}
+        : null,
   };
 
   /// Best coordinate for routing: entrance if available, otherwise building center.
   double? get routingLatitude => entranceLatitude ?? latitude;
   double? get routingLongitude => entranceLongitude ?? longitude;
+  bool get hasGeographicCoordinates => latitude != null && longitude != null;
+  bool get hasCampusCoordinates => campusX != null && campusY != null;
+  CampusPoint? get campusPoint =>
+      hasCampusCoordinates ? CampusPoint(x: campusX!, y: campusY!) : null;
 
   bool get isHighTraffic {
     return const <String>{

@@ -119,9 +119,7 @@ class RoutePanel extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             MqButton(
-              label: isLoading
-                  ? l10n.loadingRoute
-                  : _directionsLabel(l10n),
+              label: isLoading ? l10n.loadingRoute : _directionsLabel(l10n),
               isLoading: isLoading,
               onPressed: selectedBuilding == null ? null : onLoadRoute,
             ),

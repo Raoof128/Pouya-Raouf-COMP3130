@@ -116,8 +116,11 @@ features/<name>/
 
 - `features/map/` loads the building registry from the bundled JSON asset (153 buildings from the audited web registry).
 - The 6 high-traffic buildings carry explicit `entranceLocation` and `googlePlaceId` enrichments for routing parity.
-- `supabase/functions/maps-routes` is the authenticated routing proxy. It validates input, enforces a per-user `rate_limits` window, and keeps `GOOGLE_ROUTES_API_KEY` server-side.
-- Client-side rendering uses `google_maps_flutter`, `geolocator` for point-of-need location access, and `GoogleMap` camera bounds locked to the campus extent.
+- The map now uses a shared controller state with two renderer targets: `flutter_map` for campus mode and `google_maps_flutter` for Google mode.
+- `MapRendererType` decides how the map is drawn; search, selected building, route state, travel mode, and location state stay shared.
+- `CampusRoutesRemoteSource` is a phase-1 adapter that keeps the new dual-renderer route contract alive until the campus-specific edge function is wired.
+- `google_routes_remote_source.dart` still uses the legacy Google Directions stack on mobile and the CORS proxy on web; migrating both renderers to a server-only Routes API flow remains an active follow-up.
+- Client-side location uses `geolocator`, with renderer-specific drawing handled by `GoogleMapView` and `CampusMapView`.
 
 ## State Management
 

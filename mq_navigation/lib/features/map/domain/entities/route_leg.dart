@@ -60,7 +60,8 @@ class MapRoute {
     final routes = (json['routes'] as List<dynamic>? ?? const <dynamic>[]);
     if (routes.isEmpty) {
       final errorInfo = json['error'] as Map<String, dynamic>?;
-      final apiMessage = errorInfo?['message'] as String? ??
+      final apiMessage =
+          errorInfo?['message'] as String? ??
           'empty response (is Directions API enabled on the API key?)';
       throw StateError(
         'No routes were returned by the routing service: $apiMessage',

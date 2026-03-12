@@ -1,12 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
-import 'package:mq_navigation/core/config/env_config.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart' as latlong;
+import 'package:mq_navigation/app/theme/mq_colors.dart';
+import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
-import 'package:mq_navigation/shared/widgets/mq_card.dart';
+import 'package:mq_navigation/features/map/domain/services/map_polyline_codec.dart';
+import 'package:mq_navigation/features/map/presentation/widgets/map_view_helpers.dart';
 
 class CampusMapView extends StatefulWidget {
   const CampusMapView({
@@ -31,13 +31,7 @@ class CampusMapView extends StatefulWidget {
 }
 
 class _CampusMapViewState extends State<CampusMapView> {
-  GoogleMapController? _controller;
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
+  final MapController _controller = MapController();
 
   @override
   void didUpdateWidget(covariant CampusMapView oldWidget) {
@@ -49,172 +43,197 @@ class _CampusMapViewState extends State<CampusMapView> {
       final target = widget.selectedBuilding!;
       final latitude = target.routingLatitude;
       final longitude = target.routingLongitude;
-      if (_controller != null && latitude != null && longitude != null) {
-        unawaited(
-          _controller!.animateCamera(
-            CameraUpdate.newLatLngZoom(LatLng(latitude, longitude), 17),
-          ),
-        );
+      if (latitude != null && longitude != null) {
+        _controller.move(latlong.LatLng(latitude, longitude), 17);
       }
       return;
     }
 
-    // Animate to the user's current location when it first appears or changes.
     final newLoc = widget.currentLocation;
     final oldLoc = oldWidget.currentLocation;
-    if (_controller != null &&
-        newLoc != null &&
+    if (newLoc != null &&
         (oldLoc == null ||
             newLoc.latitude != oldLoc.latitude ||
             newLoc.longitude != oldLoc.longitude)) {
-      unawaited(
-        _controller!.animateCamera(
-          CameraUpdate.newLatLng(
-            LatLng(newLoc.latitude, newLoc.longitude),
-          ),
-        ),
-      );
+      _controller.move(latlong.LatLng(newLoc.latitude, newLoc.longitude), 17);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    if (!EnvConfig.hasGoogleMapsApiKey) {
-      return MqCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.mapFailedToLoad,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(widget.selectedBuilding?.name ?? l10n.mapLoadErrorDescription),
-          ],
+    final visibleBuildings = resolveVisibleBuildings(
+      searchResults: widget.searchResults,
+      searchQuery: widget.searchQuery,
+      selectedBuilding: widget.selectedBuilding,
+    );
+    final routePoints = widget.route == null
+        ? const <latlong.LatLng>[]
+        : MapPolylineCodec.decode(widget.route!.encodedPolyline)
+              .map((point) => latlong.LatLng(point.latitude, point.longitude))
+              .toList();
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: Theme.of(context).brightness == Brightness.dark
+              ? const [MqColors.charcoal950, MqColors.charcoal850]
+              : const [MqColors.sand100, MqColors.alabaster],
         ),
-      );
-    }
-
-    // Determine which buildings to show as markers:
-    // • No search query & no selection → clean map, no markers
-    // • Search query active → show all matching results (azure markers)
-    // • Single building selected → show only that building (red marker)
-    final List<Building> visibleBuildings;
-    if (widget.selectedBuilding != null) {
-      // A specific building is selected — show only that one.
-      final sel = widget.selectedBuilding!;
-      if (sel.latitude != null && sel.longitude != null) {
-        visibleBuildings = [sel];
-      } else {
-        visibleBuildings = [];
-      }
-      // Also add search results if a query is active so category searches
-      // still show all matching buildings alongside the selected one.
-      if (widget.searchQuery.trim().length >= 2) {
-        final others = widget.searchResults.where((b) {
-          return b.latitude != null &&
-              b.longitude != null &&
-              b.id != sel.id;
-        });
-        visibleBuildings.addAll(others);
-      }
-    } else if (widget.searchQuery.trim().length >= 2) {
-      // Search query is active — show all matching results.
-      visibleBuildings = widget.searchResults.where((b) {
-        return b.latitude != null && b.longitude != null;
-      }).toList();
-    } else {
-      // Default — clean map, no markers.
-      visibleBuildings = [];
-    }
-
-    return GoogleMap(
-      initialCameraPosition: const CameraPosition(
-        target: LatLng(-33.7738, 151.1130),
-        zoom: 15.5,
       ),
-      onMapCreated: (controller) {
-        _controller = controller;
-      },
-      mapToolbarEnabled: false,
-      zoomControlsEnabled: false,
-      myLocationEnabled: widget.currentLocation != null,
-      myLocationButtonEnabled: false,
-      markers: visibleBuildings
-          .map(
-            (building) {
-              final isSelected =
-                  widget.selectedBuilding?.id == building.id;
-              return Marker(
-                markerId: MarkerId(building.id),
-                position: LatLng(building.latitude!, building.longitude!),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueRed,
+      child: FlutterMap(
+        mapController: _controller,
+        options: const MapOptions(
+          initialCenter: latlong.LatLng(-33.7738, 151.1130),
+          initialZoom: 15.9,
+          minZoom: 14.2,
+          maxZoom: 18.8,
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'io.mqnavigation.mq_navigation',
+          ),
+          if (routePoints.isNotEmpty)
+            PolylineLayer(
+              polylines: [
+                Polyline(
+                  points: routePoints,
+                  strokeWidth: 5,
+                  color: _colorFor(widget.route!.travelMode),
+                  borderStrokeWidth: 2,
+                  borderColor: Colors.white.withValues(alpha: 0.45),
                 ),
-                alpha: isSelected ? 1.0 : 0.55,
-                zIndexInt: isSelected ? 1 : 0,
-                infoWindow: InfoWindow(
-                  title: building.name,
-                  snippet: building.id,
+              ],
+            ),
+          MarkerLayer(
+            markers: [
+              ...visibleBuildings.map((building) {
+                final latitude = building.latitude!;
+                final longitude = building.longitude!;
+                return Marker(
+                  point: latlong.LatLng(latitude, longitude),
+                  width: 110,
+                  height: widget.selectedBuilding?.id == building.id ? 74 : 54,
+                  alignment: Alignment.topCenter,
+                  child: _CampusBuildingMarker(
+                    building: building,
+                    isSelected: widget.selectedBuilding?.id == building.id,
+                    onTap: () => widget.onSelectBuilding(building),
+                  ),
+                );
+              }),
+              if (widget.currentLocation case final currentLocation?)
+                Marker(
+                  point: latlong.LatLng(
+                    currentLocation.latitude,
+                    currentLocation.longitude,
+                  ),
+                  width: 28,
+                  height: 28,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: MqColors.mapUserLocation,
+                      border: Border.all(color: Colors.white, width: 3),
+                      boxShadow: [
+                        BoxShadow(
+                          color: MqColors.mapUserLocation.withValues(
+                            alpha: 0.4,
+                          ),
+                          blurRadius: 14,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                onTap: () => widget.onSelectBuilding(building),
-              );
-            },
-          )
-          .toSet(),
-      polylines: widget.route == null || widget.route!.encodedPolyline.isEmpty
-          ? const <Polyline>{}
-          : {
-              Polyline(
-                polylineId: const PolylineId('campus_route'),
-                points: _decodePolyline(widget.route!.encodedPolyline),
-                width: 5,
-                color: _colorFor(widget.route!.travelMode),
-              ),
-            },
+            ],
+          ),
+          const RichAttributionWidget(
+            attributions: [TextSourceAttribution('OpenStreetMap contributors')],
+          ),
+        ],
+      ),
     );
   }
 
   Color _colorFor(TravelMode travelMode) {
     return switch (travelMode) {
-      TravelMode.walk => const Color(0xFF005AA9),
+      TravelMode.walk => MqColors.red,
       TravelMode.drive => const Color(0xFF6C757D),
       TravelMode.bike => const Color(0xFF2E8B57),
       TravelMode.transit => const Color(0xFFF57C00),
     };
   }
-
-  List<LatLng> _decodePolyline(String encoded) {
-    final coordinates = <LatLng>[];
-    var index = 0;
-    var latitude = 0;
-    var longitude = 0;
-
-    while (index < encoded.length) {
-      var result = 0;
-      var shift = 0;
-      int byte;
-      do {
-        byte = encoded.codeUnitAt(index++) - 63;
-        result |= (byte & 0x1f) << shift;
-        shift += 5;
-      } while (byte >= 0x20);
-      latitude += (result & 1) != 0 ? ~(result >> 1) : result >> 1;
-
-      result = 0;
-      shift = 0;
-      do {
-        byte = encoded.codeUnitAt(index++) - 63;
-        result |= (byte & 0x1f) << shift;
-        shift += 5;
-      } while (byte >= 0x20);
-      longitude += (result & 1) != 0 ? ~(result >> 1) : result >> 1;
-
-      coordinates.add(LatLng(latitude / 1e5, longitude / 1e5));
-    }
-
-    return coordinates;
-  }
 }
 
+class _CampusBuildingMarker extends StatelessWidget {
+  const _CampusBuildingMarker({
+    required this.building,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final Building building;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final backgroundColor = isSelected ? MqColors.red : Colors.white;
+    final foregroundColor = isSelected ? Colors.white : MqColors.charcoal900;
+
+    return Semantics(
+      button: true,
+      label: building.name,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: MqSpacing.space3,
+                vertical: MqSpacing.space2,
+              ),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
+                border: Border.all(
+                  color: isSelected
+                      ? MqColors.red
+                      : MqColors.charcoal900.withValues(alpha: 0.12),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Text(
+                building.id,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: foregroundColor,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            const SizedBox(height: 2),
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

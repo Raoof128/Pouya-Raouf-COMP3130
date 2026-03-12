@@ -17,6 +17,7 @@ void main() {
       'tags': ['services', 'administration', 'study'],
       'aliases': ['Central Hub', 'Wally\'s Walk'],
       'gridRef': 'N16',
+      'campusLocation': {'x': 128, 'y': 256},
     };
 
     test('fromJson parses all fields correctly', () {
@@ -36,6 +37,9 @@ void main() {
       expect(building.tags, hasLength(3));
       expect(building.aliases, hasLength(2));
       expect(building.gridRef, 'N16');
+      expect(building.campusX, 128);
+      expect(building.campusY, 256);
+      expect(building.campusPoint, isNotNull);
     });
 
     test('fromJson handles missing optional fields', () {
@@ -61,6 +65,7 @@ void main() {
       expect(json['category'], 'services');
       expect((json['location'] as Map)['lat'], -33.7739781);
       expect((json['entranceLocation'] as Map)['lat'], -33.77388);
+      expect((json['campusLocation'] as Map)['x'], 128);
     });
 
     test('routingLatitude prefers entrance over building center', () {

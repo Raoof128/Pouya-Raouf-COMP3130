@@ -1,0 +1,170 @@
+import 'dart:async';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mq_navigation/features/map/data/datasources/location_source.dart';
+import 'package:mq_navigation/features/map/data/repositories/map_repository_impl.dart';
+import 'package:mq_navigation/features/map/domain/entities/building.dart';
+import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
+import 'package:mq_navigation/features/map/domain/entities/nav_instruction.dart';
+import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
+import 'package:mq_navigation/features/map/presentation/controllers/map_controller.dart';
+
+void main() {
+  group('MapController', () {
+    final building = Building.fromJson({
+      'id': 'LIB',
+      'name': 'Waranara Library',
+      'location': {'lat': -33.7756994, 'lng': 151.1131306},
+      'entranceLocation': {'lat': -33.7754, 'lng': 151.11325},
+      'category': 'academic',
+    });
+    final secondBuilding = Building.fromJson({
+      'id': '18WW',
+      'name': '18 Wally\'s Walk',
+      'location': {'lat': -33.7739781, 'lng': 151.1126116},
+      'entranceLocation': {'lat': -33.77388, 'lng': 151.11275},
+      'category': 'services',
+    });
+
+    test(
+      'defaults to campus renderer and preserves selection when switching',
+      () async {
+        final repository = _FakeMapRepository(buildings: [building]);
+        final container = ProviderContainer(
+          overrides: [mapRepositoryProvider.overrideWithValue(repository)],
+        );
+        addTearDown(container.dispose);
+
+        final initialState = await container.read(mapControllerProvider.future);
+        expect(initialState.renderer, MapRendererType.campus);
+
+        final notifier = container.read(mapControllerProvider.notifier);
+        notifier.selectBuilding(building);
+        notifier.setRenderer(MapRendererType.google);
+
+        final state = container.read(mapControllerProvider).value!;
+        expect(state.renderer, MapRendererType.google);
+        expect(state.selectedBuilding, building);
+      },
+    );
+
+    test('passes active renderer through route loading', () async {
+      final repository = _FakeMapRepository(buildings: [building]);
+      final container = ProviderContainer(
+        overrides: [mapRepositoryProvider.overrideWithValue(repository)],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(mapControllerProvider.future);
+      final notifier = container.read(mapControllerProvider.notifier);
+
+      notifier.selectBuilding(building);
+      notifier.setRenderer(MapRendererType.google);
+      await notifier.loadRoute();
+
+      expect(repository.lastRenderer, MapRendererType.google);
+      expect(container.read(mapControllerProvider).value!.isNavigating, isTrue);
+    });
+
+    test('ignores stale route responses after destination changes', () async {
+      final repository = _FakeMapRepository(
+        buildings: [building, secondBuilding],
+      );
+      final completer = Completer<MapRoute>();
+      repository.pendingRouteCompleter = completer;
+
+      final container = ProviderContainer(
+        overrides: [mapRepositoryProvider.overrideWithValue(repository)],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(mapControllerProvider.future);
+      final notifier = container.read(mapControllerProvider.notifier);
+
+      notifier.selectBuilding(building);
+      final loadRouteFuture = notifier.loadRoute();
+
+      notifier.selectBuilding(secondBuilding);
+      completer.complete(
+        MapRoute(
+          travelMode: TravelMode.walk,
+          distanceMeters: 220,
+          durationSeconds: 180,
+          encodedPolyline: '_p~iF~ps|U_ulLnnqC_mqNvxq`@',
+          instructions: const [
+            NavInstruction(text: 'Head north', distanceMeters: 80),
+          ],
+        ),
+      );
+      await loadRouteFuture;
+
+      final state = container.read(mapControllerProvider).value!;
+      expect(state.selectedBuilding, secondBuilding);
+      expect(state.route, isNull);
+      expect(state.isLoadingRoute, isFalse);
+      expect(state.isNavigating, isFalse);
+    });
+  });
+}
+
+class _FakeMapRepository implements MapRepository {
+  _FakeMapRepository({required this.buildings});
+
+  final List<Building> buildings;
+  MapRendererType? lastRenderer;
+  Completer<MapRoute>? pendingRouteCompleter;
+
+  @override
+  Future<void> openAppSettings() async {}
+
+  @override
+  Future<void> openLocationSettings() async {}
+
+  @override
+  Future<LocationPermissionState> ensureLocationPermission() async {
+    return LocationPermissionState.granted;
+  }
+
+  @override
+  Future<List<Building>> getBuildings({bool forceRefresh = false}) async {
+    return buildings;
+  }
+
+  @override
+  Future<LocationSample?> getCurrentLocation() async {
+    return const LocationSample(
+      latitude: -33.77388,
+      longitude: 151.11275,
+      accuracy: 8,
+    );
+  }
+
+  @override
+  Future<MapRoute> getRoute({
+    required MapRendererType renderer,
+    required LocationSample origin,
+    required Building destination,
+    required TravelMode travelMode,
+  }) async {
+    lastRenderer = renderer;
+    final pending = pendingRouteCompleter;
+    if (pending != null) {
+      pendingRouteCompleter = null;
+      return pending.future;
+    }
+    return MapRoute(
+      travelMode: travelMode,
+      distanceMeters: 220,
+      durationSeconds: 180,
+      encodedPolyline: '_p~iF~ps|U_ulLnnqC_mqNvxq`@',
+      instructions: const [
+        NavInstruction(text: 'Head north', distanceMeters: 80),
+      ],
+    );
+  }
+
+  @override
+  Stream<LocationSample> watchLocation() =>
+      const Stream<LocationSample>.empty();
+}
