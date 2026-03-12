@@ -118,7 +118,7 @@ features/<name>/
 - The 6 high-traffic buildings carry explicit `entranceLocation` and `googlePlaceId` enrichments for routing parity.
 - The map now uses a shared controller state with two renderer targets: `flutter_map` for campus mode and `google_maps_flutter` for Google mode.
 - `MapRendererType` decides how the map is drawn; search, selected building, route state, travel mode, and location state stay shared.
-- The campus renderer now consumes the exported web raster image (`assets/maps/mq-campus.png`) plus shared overlay metadata and pixel-space building coordinates.
+- The campus renderer now consumes the exported web raster image (`assets/maps/mq-campus.png`) plus shared overlay metadata, calibrated GPS projection coefficients, and pixel-space building coordinates.
 - Both renderers route through the `maps-routes` Supabase Edge Function, which normalizes Google Routes and campus walking responses into the same `MapRoute` contract.
 - Client-side location uses `geolocator`, with renderer-specific drawing handled by `GoogleMapView` and `CampusMapView`.
 

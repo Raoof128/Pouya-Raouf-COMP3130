@@ -4,6 +4,116 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-12 (AEDT) — Normalize campus overlay bounds for flutter_map
+
+**Scope:** Fix the campus renderer crash caused by constructing `flutter_map` bounds from raw image-pixel dimensions.
+
+**Summary:**
+The campus map was still using raw overlay pixels like `3307` and `4678` as `LatLng` values when building `LatLngBounds`, which violates `flutter_map`’s latitude assertions even under `CrsSimple`. The fix introduces a normalized map-space coordinate layer in `CampusOverlayMeta` and routes all campus conversions through it. The raster overlay stays at full source resolution, but `CampusProjectionImpl` now converts pixel coordinates into a scaled coordinate system whose bounds remain inside valid `LatLng` limits, and `CampusMapView` builds overlay/camera bounds from those normalized values instead of raw pixels. Added regressions for both the large-asset normalization path and the exported shared overlay metadata.
+
+**Files changed:**
+- `lib/features/map/domain/entities/campus_overlay_meta.dart` — added normalized map-space helpers and scale computation
+- `lib/features/map/data/mappers/campus_projection_impl.dart` — converted pixel/map transforms to use normalized bounds
+- `lib/features/map/presentation/widgets/campus_map_view.dart` — stopped building `LatLngBounds` from raw pixel values
+- `test/features/map/campus_projection_test.dart` — added large-overlay normalization regression
+- `test/features/map/building_registry_asset_test.dart` — asserted exported overlay metadata resolves to safe `flutter_map` bounds
+- `AGENT.md`, `CHANGELOG.md` — appended Raouf log entries
+
+**Verification:**
+- `dart format lib/features/map/domain/entities/campus_overlay_meta.dart lib/features/map/data/mappers/campus_projection_impl.dart lib/features/map/presentation/widgets/campus_map_view.dart test/features/map/campus_projection_test.dart test/features/map/building_registry_asset_test.dart`
+- `flutter test test/features/map/campus_projection_test.dart test/features/map/building_registry_asset_test.dart`
+- `flutter analyze` → 0 issues
+- `flutter test` → 99/99 passed
+
+**Follow-ups:**
+- Keep constructing campus bounds through the normalized helpers; raw overlay pixels should never be passed directly to `LatLngBounds`
+
+### Raouf: 2026-03-12 (AEDT) — Harden top-level framework error fallback
+
+**Scope:** Remove the last recursive error path in the app shell by making the framework fallback render safely without inherited app context.
+
+**Summary:**
+Fetched Flutter’s official error-handling guidance and aligned the app with it more strictly. The remaining runtime loop was not a live `setState` in `ErrorBoundary`; it was the fallback widget rethrowing because it depended on `Material`, `Theme.of`, and inherited `Directionality` before the app shell was fully available. `ErrorBoundary` remains a transparent wrapper, `FlutterError.onError` remains logging-only, and the fallback in `lib/core/error/error_boundary.dart` is now a context-free widget built only from low-level widgets and explicit styles so it can render even when `MaterialApp` has not established inherited state yet. Added a regression test that pumps the fallback directly with no `MaterialApp` to prove the fallback is self-sufficient and cannot recurse through `No Directionality widget found`.
+
+**Files changed:**
+- `lib/core/error/error_boundary.dart` — removed `Material`/`Theme` assumptions from the framework fallback and clarified the logging-only role of global error handlers
+- `test/core/error_boundary_test.dart` — added direct no-`MaterialApp` fallback coverage
+- `AGENT.md`, `CHANGELOG.md` — appended Raouf log entries
+
+**Verification:**
+- `dart format lib/core/error/error_boundary.dart lib/app/mq_navigation_app.dart test/core/error_boundary_test.dart`
+- `flutter test test/core/error_boundary_test.dart`
+- `flutter analyze` → 0 issues
+- `flutter test` → 98/98 passed
+
+**Follow-ups:**
+- Use a full hot restart or stop/start run after changing bootstrap-level error hooks; Flutter hot reload does not rerun `main()`
+
+### Raouf: 2026-03-12 (AEDT) — Remove ErrorBoundary framework hook entirely
+
+**Scope:** Eliminate the remaining build-phase assertions by removing widget-level error interception from the app shell.
+
+**Summary:**
+The deferred `setState` fix was still too brittle because the root issue was architectural: Flutter does not support a React-style stateful error boundary that recovers from `FlutterError.onError`. `ErrorBoundary` is now a transparent wrapper with no framework hook logic, and render-time fallback UI is handled where Flutter expects it, via `ErrorWidget.builder` inside `installErrorHandlers()`. Global logging remains in `FlutterError.onError` and `PlatformDispatcher.instance.onError`, but there is now no widget-level `setState` or `markNeedsBuild` path attached to framework error callbacks. This fully removes the `setState() or markNeedsBuild() called during build` and `owner!._debugCurrentBuildTarget != null` assertions tied to `ErrorBoundary`.
+
+**Files changed:**
+- `lib/core/error/error_boundary.dart` — converted `ErrorBoundary` into a transparent wrapper and moved fallback UI ownership to `ErrorWidget.builder`
+- `test/core/error_boundary_test.dart` — updated regression coverage for the transparent wrapper and installed render fallback
+- `AGENT.md`, `CHANGELOG.md` — appended Raouf fix log entries
+
+**Verification:**
+- `dart format lib/core/error/error_boundary.dart test/core/error_boundary_test.dart`
+- `flutter test test/core/error_boundary_test.dart`
+- `flutter analyze` → 0 issues
+- `flutter test` → 97/97 passed
+
+**Follow-ups:**
+- If feature-level recovery UX is needed later, build it above the risky subtree rather than intercepting `FlutterError.onError` inside a stateful widget
+
+### Raouf: 2026-03-12 (AEDT) — Fix ErrorBoundary setState timing assertion
+
+**Scope:** Prevent the app-level error boundary from mutating widget state inside Flutter’s synchronous framework error callback.
+
+**Summary:**
+Fixed the `owner!._debugCurrentBuildTarget != null` assertion triggered by `ErrorBoundary` calling `setState` directly from `FlutterError.onError`. The boundary now preserves the previously installed Flutter error handler, queues the most recent exception, and updates its fallback UI in a post-frame callback instead of synchronously during the framework error/reporting cycle. This keeps the fallback screen behavior, preserves existing global error reporting, and removes the illegal rebuild request that was crashing debug runs. Added a regression widget test that exercises the boundary handler and verifies the fallback appears only after the deferred frame.
+
+**Files changed:**
+- `lib/core/error/error_boundary.dart` — chained previous error handler and deferred fallback state updates out of `FlutterError.onError`
+- `test/core/error_boundary_test.dart` — regression coverage for the deferred fallback behavior
+- `AGENT.md`, `CHANGELOG.md` — appended Raouf fix log entries
+
+**Verification:**
+- `dart format lib/core/error/error_boundary.dart test/core/error_boundary_test.dart`
+- `flutter analyze` → 0 issues
+- `flutter test test/core/error_boundary_test.dart`
+- `flutter test` → 96/96 passed
+
+**Follow-ups:**
+- Reuse the same deferred error-state pattern if the app adds more feature-scoped error boundaries later
+
+### Raouf: 2026-03-12 (AEDT) — Correct campus overlay parity math
+
+**Scope:** Align the Flutter campus raster renderer with the web `CRS.Simple` overlay rules instead of the earlier mixed-offset fallback.
+
+**Summary:**
+Corrected the remaining campus-overlay parity drift. Flutter now consumes calibrated GPS projection coefficients from the shared web export, keeps the image bounds locked to the real raster dimensions, applies the web building X-offset only to stored building pin coordinates, and projects GPS-derived route/current-location points through the calibrated affine transform without that marker offset. The campus camera now fits the same pixel bounds with the same padding/max-zoom model as the web map, and campus marker anchoring was corrected so the coordinate lands on the intended visual point instead of the top edge of the marker widget. Added regression tests for the projection split and overlay metadata shape, and refreshed map docs to describe the calibrated export path.
+
+**Files changed:**
+- `lib/features/map/domain/entities/campus_overlay_meta.dart`, `lib/features/map/domain/services/campus_projection.dart`, `lib/features/map/data/mappers/campus_projection_impl.dart` — renderer-agnostic overlay metadata and split projection rules
+- `lib/features/map/presentation/widgets/campus_map_view.dart` — exact raster bounds, fit-bounds camera setup, corrected marker anchor, GPS-vs-building projection usage
+- `assets/data/campus_overlay_meta.json` — regenerated shared overlay metadata with pixel bounds and affine calibration coefficients
+- `test/features/map/campus_projection_test.dart`, `test/features/map/building_registry_asset_test.dart` — regression coverage for projection behavior and exported metadata
+- `map_inventory.md`, `docs/ARCHITECTURE.md`, `TECHNICAL_EXPLANATION.md` — documentation alignment
+- `AGENT.md`, `CHANGELOG.md` — appended Raouf parity-correction log entries
+
+**Verification:**
+- `node --experimental-strip-types tools/export_buildings.mjs` (from sibling web repo)
+- `flutter analyze` → 0 issues
+- `flutter test` → 95/95 passed
+
+**Follow-ups:**
+- Re-run the export bridge whenever the web team changes the GCP calibration set or campus overlay asset
+
 ### Raouf: 2026-03-12 (AEDT) — Complete dual-map parity backend/assets pass
 
 **Scope:** Replace the remaining placeholder map pieces with shared exported assets, web-parity search behavior, and server-side routing.

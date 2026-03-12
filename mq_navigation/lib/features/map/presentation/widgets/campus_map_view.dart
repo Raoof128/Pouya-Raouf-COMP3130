@@ -39,6 +39,7 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
   final MapController _controller = MapController();
   late final Future<CampusOverlayMeta> _metaFuture;
   CampusProjection? _projection;
+  double? _resolvedMinZoom;
 
   @override
   void initState() {
@@ -62,9 +63,9 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
 
     if (widget.selectedBuilding != null &&
         widget.selectedBuilding?.id != oldWidget.selectedBuilding?.id) {
-      _controller.move(
+      _moveMap(
         _resolveBuildingPoint(widget.selectedBuilding!, projection),
-        0,
+        zoom: 1,
       );
       return;
     }
@@ -75,11 +76,12 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
         (oldLocation == null ||
             newLocation.latitude != oldLocation.latitude ||
             newLocation.longitude != oldLocation.longitude)) {
-      final campusPoint = projection.gpsToPixel(
-        latitude: newLocation.latitude,
-        longitude: newLocation.longitude,
+      _moveMap(
+        projection.gpsToMapPoint(
+          latitude: newLocation.latitude,
+          longitude: newLocation.longitude,
+        ),
       );
-      _controller.move(projection.pixelToMapPoint(campusPoint), 0);
     }
   }
 
@@ -116,17 +118,15 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
             ? const <latlong.LatLng>[]
             : resolveRoutePoints(widget.route!)
                   .map(
-                    (point) => projection.pixelToMapPoint(
-                      projection.gpsToPixel(
-                        latitude: point.latitude,
-                        longitude: point.longitude,
-                      ),
+                    (point) => projection.gpsToMapPoint(
+                      latitude: point.latitude,
+                      longitude: point.longitude,
                     ),
                   )
                   .toList();
         final bounds = LatLngBounds(
-          const latlong.LatLng(0, 0),
-          latlong.LatLng(meta.height, meta.width + meta.pixelOffsetX),
+          latlong.LatLng(meta.mapSouth, meta.mapWest),
+          latlong.LatLng(meta.mapNorth, meta.mapEast),
         );
 
         return DecoratedBox(
@@ -144,13 +144,19 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
             options: MapOptions(
               crs: const CrsSimple(),
               initialCenter: latlong.LatLng(
-                meta.height / 2,
-                (meta.width + meta.pixelOffsetX) / 2,
+                meta.centerLatitude,
+                meta.centerLongitude,
               ),
-              initialZoom: meta.initialZoom,
-              minZoom: meta.minZoom,
+              initialZoom: 0,
+              initialCameraFit: CameraFit.bounds(
+                bounds: bounds,
+                padding: EdgeInsets.all(meta.initialFitPadding),
+                maxZoom: meta.maxZoom,
+              ),
+              minZoom: _resolvedMinZoom,
               maxZoom: meta.maxZoom,
-              cameraConstraint: CameraConstraint.containCenter(bounds: bounds),
+              cameraConstraint: CameraConstraint.contain(bounds: bounds),
+              onMapReady: () => _handleMapReady(meta, projection),
             ),
             children: [
               OverlayImageLayer(
@@ -182,7 +188,7 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
                       height: widget.selectedBuilding?.id == building.id
                           ? 74
                           : 54,
-                      alignment: Alignment.topCenter,
+                      alignment: Alignment.bottomCenter,
                       child: _CampusBuildingMarker(
                         building: building,
                         isSelected: widget.selectedBuilding?.id == building.id,
@@ -192,11 +198,9 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
                   }),
                   if (widget.currentLocation case final currentLocation?)
                     Marker(
-                      point: projection.pixelToMapPoint(
-                        projection.gpsToPixel(
-                          latitude: currentLocation.latitude,
-                          longitude: currentLocation.longitude,
-                        ),
+                      point: projection.gpsToMapPoint(
+                        latitude: currentLocation.latitude,
+                        longitude: currentLocation.longitude,
                       ),
                       width: 28,
                       height: 28,
@@ -231,15 +235,55 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
   ) {
     final campusPoint = building.campusPoint;
     if (campusPoint != null) {
-      return projection.pixelToMapPoint(campusPoint);
+      return projection.buildingPixelToMapPoint(campusPoint);
     }
 
-    return projection.pixelToMapPoint(
-      projection.gpsToPixel(
-        latitude: building.routingLatitude ?? building.latitude!,
-        longitude: building.routingLongitude ?? building.longitude!,
-      ),
+    return projection.gpsToMapPoint(
+      latitude: building.routingLatitude ?? building.latitude!,
+      longitude: building.routingLongitude ?? building.longitude!,
     );
+  }
+
+  void _handleMapReady(CampusOverlayMeta meta, CampusProjection projection) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      final nextMinZoom = _currentZoom(fallback: 0) - meta.minZoomOffset;
+      if (_resolvedMinZoom == null ||
+          (_resolvedMinZoom! - nextMinZoom).abs() > 0.01) {
+        setState(() {
+          _resolvedMinZoom = nextMinZoom;
+        });
+      }
+
+      if (widget.selectedBuilding case final selectedBuilding?) {
+        _moveMap(_resolveBuildingPoint(selectedBuilding, projection), zoom: 1);
+        return;
+      }
+
+      if (widget.currentLocation case final currentLocation?) {
+        _moveMap(
+          projection.gpsToMapPoint(
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+          ),
+        );
+      }
+    });
+  }
+
+  void _moveMap(latlong.LatLng point, {double? zoom}) {
+    _controller.move(point, zoom ?? _currentZoom(fallback: 0));
+  }
+
+  double _currentZoom({required double fallback}) {
+    try {
+      return _controller.camera.zoom;
+    } on StateError {
+      return fallback;
+    }
   }
 
   Color _colorFor(TravelMode travelMode) {

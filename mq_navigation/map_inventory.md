@@ -20,8 +20,9 @@ All map-related APIs, services, keys, and data sources used by the campus map su
 | Raster campus overlay | Leaflet `L.CRS.Simple` image overlay | `flutter_map` + `OverlayImageLayer` + `CrsSimple` |
 
 > **Note:** Campus mode now uses the exported web raster asset plus shared
-> overlay metadata (`assets/data/campus_overlay_meta.json`) and pixel-space
-> building coordinates exported from the web registry.
+> overlay metadata (`assets/data/campus_overlay_meta.json`), web-calibrated
+> GPS projection coefficients, and pixel-space building coordinates exported
+> from the web registry.
 
 ## Building Registry
 
@@ -39,10 +40,12 @@ All map-related APIs, services, keys, and data sources used by the campus map su
 | Campus raster width | 4678 px | Shared with web `L.CRS.Simple` configuration |
 | Campus raster height | 3307 px | Shared with web `L.CRS.Simple` configuration |
 | Building pixel offset X | 80 px | Required for marker alignment with the raster |
+| Campus fit padding | 20 px | Matches the web `fitBounds` padding |
+| Campus min zoom offset | 1.5 | Flutter derives this from the fitted zoom like the web map |
+| Campus max zoom | 3 | Matches the web `MapController` |
 | Fallback location lat | -33.77388 | 18 Wally's Walk entrance — used when GPS unavailable |
 | Fallback location lng | 151.11275 | 18 Wally's Walk entrance — used when GPS unavailable |
-| Overlay min zoom | -1.5 | Shared exported overlay metadata |
-| Overlay max zoom | 1.8 | Shared exported overlay metadata |
+| GPS overlay projection | GCP affine regression | Shared with the web geospatial calibration |
 
 ## Flutter Map Packages
 
@@ -53,7 +56,7 @@ All map-related APIs, services, keys, and data sources used by the campus map su
 | latlong2 | ^0.9.1 | `flutter_map` geometry types |
 | geolocator | ^14.0.2 | GPS location tracking |
 | permission_handler | ^12.0.1 | Location permission flow |
-| http | ^1.4.0 | Google Directions API HTTP calls |
+| http | ^1.4.0 | Supabase Edge Function route requests |
 
 ## Map Features (Implemented)
 

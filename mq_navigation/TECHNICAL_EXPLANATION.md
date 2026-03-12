@@ -731,7 +731,7 @@ This gives reasonable confidence around design tokens, data parsing, and several
 
 The largest remaining gap in the map feature is no longer routing security; that path is now aligned on the `maps-routes` Edge Function. The remaining tension is product parity depth:
 
-- campus mode now uses the real raster overlay asset and shared pixel metadata
+- campus mode now uses the real raster overlay asset, shared pixel metadata, and the same calibrated GPS projection data as the web overlay
 - campus routing can use OpenRouteService when configured, but still falls back to a generated demo route when `ORS_API_KEY` is absent
 - Street View / Pegman parity remains richer on the web app than in Flutter
 
@@ -745,4 +745,4 @@ Other notable observations:
 
 MQ Navigation is a well-structured Flutter project centered on campus navigation, notifications, and local preferences. The repository shows deliberate architectural cleanup, strong documentation habits, and a clear mobile-first implementation strategy. The map and notifications features are the technical core of the product, supported by a lightweight but competent infrastructure layer.
 
-From a technical perspective, the app is already beyond a default scaffold or coursework prototype. Its strongest qualities are structure, clarity, and operational completeness. Its biggest remaining issue is architectural consistency: the documented secure routing design exists on the backend, but the mobile client is not yet fully using it.
+From a technical perspective, the app is already beyond a default scaffold or coursework prototype. Its strongest qualities are structure, clarity, and operational completeness. Its biggest remaining issue is product-parity depth rather than backend architecture: Street View/Pegman depth still exceeds the Flutter implementation, even though the shared overlay assets, secure route backend, and calibrated campus projection are now aligned.
