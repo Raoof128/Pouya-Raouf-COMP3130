@@ -11,11 +11,12 @@ Maps web API routes to their Flutter equivalents. After auth/calendar/feed remov
 
 | Web Route | Method | Flutter Approach | Notes |
 |-----------|--------|-----------------|-------|
-| `/api/maps/routes` | POST | **Direct HTTP**: Google Directions API | Client-side call via `google_routes_remote_source.dart` |
+| `/api/maps/routes` | POST | **Direct HTTP** (mobile) / **EF: `directions-proxy`** (web) | Mobile calls Directions API directly; web routes through proxy to avoid CORS |
 
-> Routing was migrated from the `maps-routes` edge function to a direct
-> Google Directions API HTTP call.  The edge function still exists in
-> `supabase/functions/maps-routes/` but is unused by the Flutter client.
+> On **mobile**, routing calls the Google Directions API directly.
+> On **web**, direct calls are blocked by CORS, so the app uses the
+> `directions-proxy` Supabase Edge Function (no auth required).
+> The older `maps-routes` edge function (Routes API v2) still exists but is unused.
 
 ## Notifications (Used by Flutter)
 

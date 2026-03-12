@@ -1,8 +1,6 @@
 # Supabase Edge Functions configuration
 # https://supabase.com/docs/guides/functions
 
-[project]
-id = "mq-navigation"
 
 [api]
 enabled = true
@@ -24,6 +22,11 @@ enable_confirmations = true
 
 [auth.external.google]
 enabled = true
+client_id = "env(GOOGLE_CLIENT_ID)"
+secret = "env(GOOGLE_CLIENT_SECRET)"
+
+[functions.directions-proxy]
+verify_jwt = false
 
 [functions.maps-routes]
 verify_jwt = true

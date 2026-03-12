@@ -236,10 +236,10 @@ class MapController extends AsyncNotifier<MapState> {
     }
   }
 
-  /// Campus center fallback — used when real GPS is unavailable.
+  /// 18 Wally's Walk entrance — used when real GPS is unavailable.
   static const _campusFallback = LocationSample(
-    latitude: -33.7738,
-    longitude: 151.1130,
+    latitude: -33.77388,
+    longitude: 151.11275,
     accuracy: 100,
   );
 

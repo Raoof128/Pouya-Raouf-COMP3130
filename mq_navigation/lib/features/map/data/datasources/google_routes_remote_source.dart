@@ -13,6 +13,12 @@ class GoogleRoutesRemoteSource {
   static const _directionsUrl =
       'https://maps.googleapis.com/maps/api/directions/json';
 
+  /// Supabase Edge Function that proxies the Directions API.
+  /// Used on web because the browser cannot call the Directions API directly
+  /// (Google does not set CORS headers on that endpoint).
+  static String get _proxyUrl =>
+      '${EnvConfig.supabaseUrl}/functions/v1/directions-proxy';
+
   Future<MapRoute> getRoute({
     required LocationSample origin,
     required Building destination,
@@ -29,16 +35,42 @@ class GoogleRoutesRemoteSource {
       throw StateError('Google Maps API key is not configured.');
     }
 
-    final uri = Uri.parse(_directionsUrl).replace(queryParameters: {
-      'origin': '${origin.latitude},${origin.longitude}',
-      'destination': '$destinationLatitude,$destinationLongitude',
-      'mode': travelMode.directionsApiValue,
-      'language': 'en',
-      'units': 'metric',
-      'key': apiKey,
-    });
+    final originStr = '${origin.latitude},${origin.longitude}';
+    final destinationStr = '$destinationLatitude,$destinationLongitude';
+    final mode = travelMode.directionsApiValue;
 
-    final response = await http.get(uri).timeout(const Duration(seconds: 15));
+    late final http.Response response;
+
+    if (kIsWeb) {
+      // On web, route through the Supabase proxy to avoid CORS issues.
+      response = await http
+          .post(
+            Uri.parse(_proxyUrl),
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': EnvConfig.supabaseAnonKey,
+            },
+            body: jsonEncode({
+              'origin': originStr,
+              'destination': destinationStr,
+              'mode': mode,
+              'language': 'en',
+              'units': 'metric',
+            }),
+          )
+          .timeout(const Duration(seconds: 15));
+    } else {
+      // On mobile, call the Directions API directly (no CORS restrictions).
+      final uri = Uri.parse(_directionsUrl).replace(queryParameters: {
+        'origin': originStr,
+        'destination': destinationStr,
+        'mode': mode,
+        'language': 'en',
+        'units': 'metric',
+        'key': apiKey,
+      });
+      response = await http.get(uri).timeout(const Duration(seconds: 15));
+    }
 
     if (response.statusCode >= 400) {
       if (kDebugMode) {

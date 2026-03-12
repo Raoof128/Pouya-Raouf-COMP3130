@@ -13,11 +13,11 @@ enum LocationPermissionState {
   unsupported,
 }
 
-/// Macquarie University campus center — used as fallback when GPS is unavailable
+/// 18 Wally's Walk entrance — used as fallback when GPS is unavailable
 /// (e.g. emulators, web, or when location services fail).
 const _campusFallback = LocationSample(
-  latitude: -33.7738,
-  longitude: 151.1130,
+  latitude: -33.77388,
+  longitude: 151.11275,
   accuracy: 100,
 );
 

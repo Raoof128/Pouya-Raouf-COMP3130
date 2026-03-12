@@ -13,11 +13,13 @@ All map-related APIs, services, keys, and data sources used by the campus map su
 | Service | Web Usage | Flutter Usage |
 |---------|-----------|---------------|
 | Google Maps JavaScript API | Leaflet + GM JS API | google_maps_flutter (native SDK on Android/iOS, JS API on web) |
-| Google Directions API | Via Next.js API proxy | Direct HTTP call from client (`google_routes_remote_source.dart`) |
+| Google Directions API | Via Next.js API proxy | Direct HTTP on mobile; Supabase `directions-proxy` edge function on web (CORS) |
 
-> **Note:** Routing was migrated from the Supabase `maps-routes` edge function to a direct
-> Google Directions API HTTP call. The edge function is kept in `supabase/functions/maps-routes/`
-> but is no longer used by the Flutter app.
+> **Note:** On **mobile** (Android/iOS), the app calls the Google Directions API directly.
+> On **web**, direct calls are blocked by CORS, so the app routes through the
+> `directions-proxy` Supabase Edge Function which proxies the request server-side.
+> The older `maps-routes` edge function (Routes API v2) is kept in
+> `supabase/functions/maps-routes/` but is unused by the Flutter app.
 
 ## Building Registry
 
@@ -32,6 +34,8 @@ All map-related APIs, services, keys, and data sources used by the campus map su
 |--------|-------|-------|
 | Campus center lat | -33.7738 | Default camera target |
 | Campus center lng | 151.1130 | Default camera target |
+| Fallback location lat | -33.77388 | 18 Wally's Walk entrance — used when GPS unavailable |
+| Fallback location lng | 151.11275 | 18 Wally's Walk entrance — used when GPS unavailable |
 | Default zoom | 15.5 | |
 
 > Camera bounds and min/max zoom restrictions were removed so users can freely
