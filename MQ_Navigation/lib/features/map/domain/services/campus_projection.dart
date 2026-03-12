@@ -7,7 +7,11 @@ abstract interface class CampusProjection {
 
   CampusPoint gpsToPixel({required double latitude, required double longitude});
 
+  LatLng gpsToMapPoint({required double latitude, required double longitude});
+
   LatLng pixelToMapPoint(CampusPoint point);
+
+  LatLng buildingPixelToMapPoint(CampusPoint point);
 
   CampusPoint mapPointToPixel(LatLng point);
 }
