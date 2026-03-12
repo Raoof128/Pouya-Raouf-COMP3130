@@ -61,6 +61,8 @@ class _RoutePanelState extends State<RoutePanel> {
     if (widget.hasArrived) {
       return _ArrivalCard(
         buildingName: widget.selectedBuilding?.name ?? '',
+        arrivedLabel: l10n.youveArrived,
+        doneLabel: l10n.done,
         onDismiss: widget.onDismissArrival,
       );
     }
@@ -180,7 +182,7 @@ class _RoutePanelState extends State<RoutePanel> {
                     const SizedBox(width: MqSpacing.space2),
                     Semantics(
                       button: true,
-                      label: 'Open Street View',
+                      label: l10n.openStreetView,
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
@@ -218,7 +220,7 @@ class _RoutePanelState extends State<RoutePanel> {
                   const SizedBox(width: MqSpacing.space2),
                   Semantics(
                     button: true,
-                    label: 'Open in Google Maps',
+                    label: l10n.openInGoogleMaps,
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
@@ -290,7 +292,7 @@ class _RouteSummaryBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
-    final duration = _fmtDuration(route.durationSeconds);
+    final duration = _fmtDuration(route.durationSeconds, l10n);
     final eta = DateFormat('h:mm a').format(route.arrivalAt);
     final distance = _fmtDistance(route.distanceMeters, l10n);
 
@@ -338,9 +340,11 @@ class _RouteSummaryBar extends StatelessWidget {
     );
   }
 
-  static String _fmtDuration(int totalSeconds) {
+  static String _fmtDuration(int totalSeconds, AppLocalizations l10n) {
     final m = (totalSeconds / 60).ceil().clamp(1, 999999);
-    return m < 60 ? '$m min' : '${m ~/ 60}h ${m % 60}m';
+    return m < 60
+        ? l10n.durationMinutes(m)
+        : l10n.durationHoursMinutes(m ~/ 60, m % 60);
   }
 
   static String _fmtDistance(int meters, AppLocalizations l10n) {
@@ -419,6 +423,7 @@ class _ExpandableStepList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       children: [
@@ -437,7 +442,7 @@ class _ExpandableStepList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${instructions.length} step${instructions.length != 1 ? 's' : ''}',
+                    l10n.stepsCount(instructions.length),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: isDark
@@ -548,9 +553,16 @@ class _ExpandableStepList extends StatelessWidget {
 }
 
 class _ArrivalCard extends StatelessWidget {
-  const _ArrivalCard({required this.buildingName, required this.onDismiss});
+  const _ArrivalCard({
+    required this.buildingName,
+    required this.arrivedLabel,
+    required this.doneLabel,
+    required this.onDismiss,
+  });
 
   final String buildingName;
+  final String arrivedLabel;
+  final String doneLabel;
   final VoidCallback onDismiss;
 
   @override
@@ -584,7 +596,7 @@ class _ArrivalCard extends StatelessWidget {
           ),
           const SizedBox(height: MqSpacing.space2),
           Text(
-            "You've arrived!",
+            arrivedLabel,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: isDark ? const Color(0xFFbbf7d0) : const Color(0xFF166534),
@@ -603,7 +615,7 @@ class _ArrivalCard extends StatelessWidget {
             ),
           ],
           const SizedBox(height: MqSpacing.space3),
-          MqButton(label: 'Done', onPressed: onDismiss),
+          MqButton(label: doneLabel, onPressed: onDismiss),
         ],
       ),
     );

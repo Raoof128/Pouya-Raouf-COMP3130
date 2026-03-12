@@ -2015,5 +2015,36 @@
   "passkeyDefaultName": "Passkey",
   "authenticationFailed": "Authentication failed.",
   "contact_emailSubject": "{appName} Contact & Feedback",
-  "contact_notProvided": "Not provided"
+  "contact_notProvided": "Not provided",
+  "youveArrived": "You've arrived!",
+  "openStreetView": "Open Street View",
+  "nearbyPlaces": "Nearby places",
+  "campusOverlayUnavailable": "Campus overlay metadata is unavailable.",
+  "stepsCount": "{count, plural, =1{1 step} other{{count} steps}}",
+  "@stepsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationHoursMinutes": "{hours}h {minutes}m",
+  "@durationHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  }
 }

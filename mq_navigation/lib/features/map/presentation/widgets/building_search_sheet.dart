@@ -175,7 +175,7 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
                     top: MqSpacing.space1,
                   ),
                   child: Text(
-                    'Nearby places',
+                    l10n.nearbyPlaces,
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: isDark
