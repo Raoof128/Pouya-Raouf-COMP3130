@@ -37,6 +37,7 @@ class MapState {
     this.isNavigating = false,
     this.isLoadingRoute = false,
     this.hasArrived = false,
+    this.activeOverlayIds = const {},
     this.error,
   });
 
@@ -52,6 +53,7 @@ class MapState {
   final bool isNavigating;
   final bool isLoadingRoute;
   final bool hasArrived;
+  final Set<String> activeOverlayIds;
   final MapStateError? error;
 
   MapState copyWith({
@@ -70,6 +72,7 @@ class MapState {
     bool? isNavigating,
     bool? isLoadingRoute,
     bool? hasArrived,
+    Set<String>? activeOverlayIds,
     MapStateError? error,
     bool clearError = false,
   }) {
@@ -90,6 +93,7 @@ class MapState {
       isNavigating: isNavigating ?? this.isNavigating,
       isLoadingRoute: isLoadingRoute ?? this.isLoadingRoute,
       hasArrived: hasArrived ?? this.hasArrived,
+      activeOverlayIds: activeOverlayIds ?? this.activeOverlayIds,
       error: clearError ? null : error ?? this.error,
     );
   }
@@ -432,6 +436,28 @@ class MapController extends AsyncNotifier<MapState> {
       return;
     }
     state = AsyncData(current.copyWith(isNavigating: false, clearError: true));
+  }
+
+  void toggleOverlay(String id) {
+    final current = state.value;
+    if (current == null) {
+      return;
+    }
+    final ids = Set<String>.of(current.activeOverlayIds);
+    if (ids.contains(id)) {
+      ids.remove(id);
+    } else {
+      ids.add(id);
+    }
+    state = AsyncData(current.copyWith(activeOverlayIds: ids));
+  }
+
+  void clearOverlays() {
+    final current = state.value;
+    if (current == null) {
+      return;
+    }
+    state = AsyncData(current.copyWith(activeOverlayIds: const {}));
   }
 
   void dismissArrival() {

@@ -11,6 +11,7 @@ import 'package:mq_navigation/features/map/presentation/widgets/building_search_
 import 'package:mq_navigation/features/map/presentation/widgets/campus/campus_map_view.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/google/google_map_view.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/map_shell.dart';
+import 'package:mq_navigation/features/map/presentation/widgets/overlay_picker_sheet.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/route_panel.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
 import 'package:mq_navigation/shared/widgets/mq_app_bar.dart';
@@ -33,6 +34,21 @@ class _MapPageState extends ConsumerState<MapPage> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => const BuildingSearchSheet(),
+    );
+  }
+
+  void _openOverlayPicker() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? MqColors.charcoal850
+          : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(MqSpacing.radiusXl),
+        ),
+      ),
+      builder: (_) => const OverlayPickerSheet(),
     );
   }
 
@@ -85,6 +101,7 @@ class _MapPageState extends ConsumerState<MapPage> {
               currentLocation: mapState.currentLocation,
               isNavigating: mapState.isNavigating,
               onSelectBuilding: controller.selectBuilding,
+              activeOverlayIds: mapState.activeOverlayIds,
             ),
             MapRendererType.google => GoogleMapView(
               searchResults: mapState.searchResults,
@@ -110,6 +127,7 @@ class _MapPageState extends ConsumerState<MapPage> {
               onRendererChanged: controller.setRenderer,
               onCenterOnLocation: controller.centerOnCurrentLocation,
               onOpenSearch: _openSearchSheet,
+              onOpenOverlayPicker: _openOverlayPicker,
               banner: mapState.error == null
                   ? null
                   : _MapErrorBanner(
