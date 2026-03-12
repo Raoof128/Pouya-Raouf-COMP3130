@@ -75,6 +75,9 @@ Located in project root:
 
 See `CHANGELOG.md` for full development history.
 
+Raouf:
+2026-03-12: Web Google Maps teardown fix — resolved the Chrome crash triggered when `google_maps_flutter_web` asserted during widget disposal before the platform view finished building. `GoogleMapView` now keeps explicit controller disposal on native platforms only and lets the web widget lifecycle release the web view. Re-validated the dependency state with `flutter pub outdated`; all direct and dev dependencies are current and the remaining version notices are upstream-transitive constraints, not repo-owned drift. Files changed: `lib/features/map/presentation/widgets/google_map_view.dart`, `AGENT.md`, `CHANGELOG.md`. Verification: `dart format lib/features/map/presentation/widgets/google_map_view.dart`, `flutter analyze` (0 issues), `flutter test` (86/86 passed). Follow-ups: if a future upstream `google_maps_flutter_web` release fixes teardown ordering, reevaluate whether the native/web dispose split is still needed.
+
 Summary: The project was built through phases 0–5, originally including auth, calendar, event feed, profile management, and gamification features. These were subsequently removed to focus the Flutter app on campus navigation: 3-tab nav (Home/Map/Settings), local-only settings, FCM push + study prompt notifications, and Google Maps with building search and routing via Edge Function proxy.
 
 2026-03-12: Comprehensive audit fix batch — 30+ issues fixed across security (hardcoded keys removed, open redirect blocked), correctness (polyline decoder, didChangeDependencies→initState, location subscription leak, UTC timestamps), reliability (ErrorBoundary, Firebase background handler, HTTP timeout, onError handlers), and quality (MqColors tokens, MqAppBar, RouteNames, production log filter, variant-aware spinner, focusedErrorBorder). All tests pass (83/83), zero analyzer issues.

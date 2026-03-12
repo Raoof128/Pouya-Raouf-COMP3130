@@ -4,6 +4,26 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-12 (AEDT) — Fix Chrome Google Maps teardown crash
+
+**Scope:** Remove the web-only Google Maps dispose path that was crashing Chrome during renderer teardown.
+
+**Summary:**
+Fixed the Chrome assertion from `google_maps_flutter_web` (`"Maps cannot be retrieved before calling buildView!"`) that occurred when the Flutter widget disposed a `GoogleMapController` before the web platform view had fully completed its build lifecycle. `GoogleMapView` now performs explicit controller disposal on native platforms only, which preserves native cleanup while avoiding the broken web teardown path. Also re-checked the dependency graph with `flutter pub outdated`: all direct and dev dependencies in this repository are already current, and the repeated "newer versions incompatible with dependency constraints" message is coming from upstream-transitive packages outside this repo's direct constraints.
+
+**Files changed:**
+- `lib/features/map/presentation/widgets/google_map_view.dart` — skipped explicit controller disposal on web and documented the platform-specific reason
+- `AGENT.md`, `CHANGELOG.md` — appended Raouf fix log entries
+
+**Verification:**
+- `dart format lib/features/map/presentation/widgets/google_map_view.dart`
+- `flutter analyze` → 0 issues
+- `flutter test` → 86/86 passed
+- `flutter pub outdated` → direct dependencies up to date; remaining notices are transitive only
+
+**Follow-ups:**
+- Revisit the web-specific dispose guard if a future `google_maps_flutter_web` release fixes controller teardown ordering
+
 ### Raouf: 2026-03-12 (AEDT) — Audit fix dual-renderer race and UI inconsistencies
 
 **Scope:** Audit the new dual-renderer map implementation and fix correctness/state regressions.
