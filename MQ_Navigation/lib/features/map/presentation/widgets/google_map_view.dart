@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
@@ -37,7 +38,12 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   @override
   void dispose() {
-    _controller?.dispose();
+    // google_maps_flutter_web can assert during teardown if dispose runs before
+    // the platform view has fully built. The widget lifecycle already releases
+    // the web view; keep explicit controller disposal for native platforms only.
+    if (!kIsWeb) {
+      _controller?.dispose();
+    }
     super.dispose();
   }
 
