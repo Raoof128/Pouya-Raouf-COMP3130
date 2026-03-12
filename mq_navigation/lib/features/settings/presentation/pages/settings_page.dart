@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
-import 'package:mq_navigation/app/router/route_names.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
@@ -148,12 +146,10 @@ class SettingsPage extends ConsumerWidget {
                     _SectionHeader(title: l10n.settings_experience),
                     _SettingsCard(
                       children: [
-                        _TapRow(
+                        _InfoRow(
                           icon: Icons.map_outlined,
                           label: l10n.campusMapLabel,
-                          value: '',
-                          semanticLabel: l10n.campusMapLabel,
-                          onTap: () => context.goNamed(RouteNames.map),
+                          subtitle: l10n.campusMapDesc,
                         ),
                       ],
                     ),

@@ -100,6 +100,7 @@ class Building {
     final q = query.toLowerCase();
     return id.toLowerCase().contains(q) ||
         name.toLowerCase().contains(q) ||
+        category.name.toLowerCase().contains(q) ||
         (description?.toLowerCase().contains(q) ?? false) ||
         (address?.toLowerCase().contains(q) ?? false) ||
         aliases.any((a) => a.toLowerCase().contains(q)) ||

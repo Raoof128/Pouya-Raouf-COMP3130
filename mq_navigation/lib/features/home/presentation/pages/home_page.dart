@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mq_navigation/app/router/route_names.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
+import 'package:mq_navigation/features/map/presentation/controllers/map_controller.dart';
 import 'package:mq_navigation/shared/widgets/mq_app_bar.dart';
 
 /// Navigation-focused home screen for the Open Day app.
 ///
 /// Provides quick access to the campus map and key campus categories.
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     final subtitleColor = theme.colorScheme.onSurfaceVariant;
@@ -125,7 +127,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _QuickAccessCard extends StatelessWidget {
+class _QuickAccessCard extends ConsumerWidget {
   const _QuickAccessCard({
     required this.icon,
     required this.label,
@@ -139,16 +141,22 @@ class _QuickAccessCard extends StatelessWidget {
   final String searchQuery;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Semantics(
       button: true,
       label: label,
       child: Card(
         child: InkWell(
-          onTap: () => context.goNamed(
-            RouteNames.map,
-            queryParameters: {'q': searchQuery},
-          ),
+          onTap: () {
+            // Update the map controller state directly before switching tabs.
+            // This works because Riverpod state is shared across the widget tree,
+            // and StatefulShellRoute preserves the MapPage widget (initState
+            // only fires once), so we must update state imperatively.
+            ref
+                .read(mapControllerProvider.notifier)
+                .updateSearchQuery(searchQuery);
+            context.goNamed(RouteNames.map);
+          },
           borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
           child: Padding(
             padding: const EdgeInsets.all(MqSpacing.space3),

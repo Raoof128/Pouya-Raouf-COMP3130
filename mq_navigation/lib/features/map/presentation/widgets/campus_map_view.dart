@@ -150,9 +150,7 @@ class _CampusMapViewState extends State<CampusMapView> {
                 markerId: MarkerId(building.id),
                 position: LatLng(building.latitude!, building.longitude!),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
-                  isSelected
-                      ? BitmapDescriptor.hueRed
-                      : BitmapDescriptor.hueAzure,
+                  BitmapDescriptor.hueRed,
                 ),
                 alpha: isSelected ? 1.0 : 0.55,
                 zIndexInt: isSelected ? 1 : 0,

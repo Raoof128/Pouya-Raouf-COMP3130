@@ -291,6 +291,26 @@ class MapController extends AsyncNotifier<MapState> {
     );
   }
 
+  /// Fully resets the map: clears selected building, route, and search query.
+  void clearSelection() {
+    final current = state.value;
+    if (current == null) {
+      return;
+    }
+    _locationSubscription?.cancel();
+    _locationSubscription = null;
+    state = AsyncData(
+      current.copyWith(
+        clearSelectedBuilding: true,
+        clearRoute: true,
+        searchQuery: '',
+        searchResults: current.buildings.take(12).toList(),
+        mode: MapMode.campus,
+        clearError: true,
+      ),
+    );
+  }
+
   Future<void> openLocationSettings() {
     return ref.read(mapRepositoryProvider).openLocationSettings();
   }

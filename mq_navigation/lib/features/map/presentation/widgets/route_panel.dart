@@ -15,6 +15,7 @@ class RoutePanel extends StatelessWidget {
     required this.isLoading,
     required this.onLoadRoute,
     required this.onClearRoute,
+    required this.onClearSelection,
     required this.onTravelModeChanged,
   });
 
@@ -24,6 +25,7 @@ class RoutePanel extends StatelessWidget {
   final bool isLoading;
   final Future<void> Function() onLoadRoute;
   final VoidCallback onClearRoute;
+  final VoidCallback onClearSelection;
   final ValueChanged<TravelMode> onTravelModeChanged;
 
   @override
@@ -68,11 +70,22 @@ class RoutePanel extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           if (selectedBuilding != null)
-            Text(
-              selectedBuilding!.name,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    selectedBuilding!.name,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 20),
+                  tooltip: l10n.clear,
+                  onPressed: onClearSelection,
+                ),
+              ],
             ),
           if (route != null) ...[
             const SizedBox(height: 8),
@@ -101,9 +114,7 @@ class RoutePanel extends StatelessWidget {
           ] else ...[
             const SizedBox(height: 8),
             Text(
-              selectedBuilding == null
-                  ? l10n.routeReady
-                  : l10n.loadingRoute,
+              isLoading ? l10n.loadingRoute : l10n.routeReady,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 12),
