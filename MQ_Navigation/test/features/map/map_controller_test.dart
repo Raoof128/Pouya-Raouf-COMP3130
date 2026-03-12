@@ -64,6 +64,13 @@ void main() {
       await notifier.loadRoute();
 
       expect(repository.lastRenderer, MapRendererType.google);
+      // loadRoute() no longer auto-starts navigation; explicit startNavigation() required.
+      expect(
+        container.read(mapControllerProvider).value!.isNavigating,
+        isFalse,
+      );
+
+      notifier.startNavigation();
       expect(container.read(mapControllerProvider).value!.isNavigating, isTrue);
     });
 

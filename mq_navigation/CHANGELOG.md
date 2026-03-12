@@ -4,6 +4,46 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-12 (AEDT) — Full web-to-Flutter navigation parity
+
+**Scope:** Complete parity audit between the Next.js web map and Flutter map, then implement all missing navigation features.
+
+**Summary:**
+Audited the web map components (`GoogleMapController.tsx`, `GoogleMapCanvas.tsx`, `GoogleRoutePanel.tsx`, `CampusMap.tsx`) against the Flutter map feature. Identified 21 PASS items and 11 MISSING capabilities, then implemented all 11:
+
+1. **Arrival detection** — haversine check (≤30 m to destination) triggers `hasArrived` state with celebration card UI
+2. **Start/Stop navigation lifecycle** — separated `loadRoute()` (loads route without navigating) from `startNavigation()` (begins follow-user + arrival detection), matching the web's explicit two-step flow
+3. **Follow-user camera** — both renderers track user location during active navigation
+4. **Off-route detection** — flags when user is >50 m from last route-fetch point AND distance to destination exceeds route distance × 1.5
+5. **Route recalculation** — auto re-fetches route when user moves >80 m from last fetch origin or goes off-route
+6. **Open in Google Maps** — `url_launcher` deep-link to Google Maps directions with travel mode mapping
+7. **Expandable step directions** — numbered, collapsible instruction list (was previously limited to first 3 steps)
+8. **Travel mode persistence** — `SharedPreferences` stores selected travel mode across sessions
+9. **Route bounds fitting** — Google renderer fits camera to route bounding box on first route load
+10. **Walking dashed polyline** — Google renderer uses `PatternItem.dash(20)/gap(10)` for walking mode
+11. **Walked-portion dimming** — both renderers split polyline at closest point to user, dimming the walked segment
+
+**Files changed:**
+- `pubspec.yaml` — added `shared_preferences: ^2.5.0`, `url_launcher: ^6.3.1`
+- `lib/features/map/domain/services/geo_utils.dart` — new: haversine distance, closest-point finder
+- `lib/features/map/presentation/controllers/map_controller.dart` — navigation state machine, arrival/off-route detection, travel mode persistence, Google Maps handoff
+- `lib/features/map/presentation/widgets/route_panel.dart` — complete rewrite: arrival card, next instruction, expandable steps, Start/Stop buttons, Google Maps button
+- `lib/features/map/presentation/widgets/campus_map_view.dart` — follow-user camera, walked-portion polyline split
+- `lib/features/map/presentation/widgets/google_map_view.dart` — follow-user camera, dashed walking polyline, route bounds fitting, walked-portion split
+- `lib/features/map/presentation/pages/map_page.dart` — wired all new props to RoutePanel and both map views
+- `test/features/map/map_controller_test.dart` — updated for `loadRoute()` → `startNavigation()` two-step lifecycle
+
+**Verification:**
+- `dart format` — 0 issues (7 files formatted)
+- `flutter analyze` — 0 issues
+- `flutter test` — 101/101 passed
+
+**Follow-ups:**
+- Street View/Pegman, user accuracy circle with animated dot, and origin-dot marker are web-only visual polish not yet ported
+- Campus renderer walking-dashed-polyline parity requires `flutter_map` pattern support or a custom painter
+
+---
+
 ### Raouf: 2026-03-12 (AEDT) — Blueprint gap audit fixes
 
 **Scope:** Close the two remaining gaps from the full dual-map blueprint acceptance audit.

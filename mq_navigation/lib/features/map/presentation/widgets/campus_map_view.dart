@@ -10,6 +10,7 @@ import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/campus_overlay_meta.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/features/map/domain/services/campus_projection.dart';
+import 'package:mq_navigation/features/map/domain/services/geo_utils.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/map_view_helpers.dart';
 import 'package:mq_navigation/shared/widgets/mq_card.dart';
 
@@ -21,6 +22,7 @@ class CampusMapView extends ConsumerStatefulWidget {
     required this.selectedBuilding,
     required this.route,
     required this.currentLocation,
+    required this.isNavigating,
     required this.onSelectBuilding,
   });
 
@@ -29,6 +31,7 @@ class CampusMapView extends ConsumerStatefulWidget {
   final Building? selectedBuilding;
   final MapRoute? route;
   final LocationSample? currentLocation;
+  final bool isNavigating;
   final ValueChanged<Building> onSelectBuilding;
 
   @override
@@ -61,6 +64,24 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
       return;
     }
 
+    // Follow user during active navigation
+    if (widget.isNavigating) {
+      final newLocation = widget.currentLocation;
+      final oldLocation = oldWidget.currentLocation;
+      if (newLocation != null &&
+          (oldLocation == null ||
+              newLocation.latitude != oldLocation.latitude ||
+              newLocation.longitude != oldLocation.longitude)) {
+        _moveMap(
+          projection.gpsToMapPoint(
+            latitude: newLocation.latitude,
+            longitude: newLocation.longitude,
+          ),
+        );
+        return;
+      }
+    }
+
     if (widget.selectedBuilding != null &&
         widget.selectedBuilding?.id != oldWidget.selectedBuilding?.id) {
       _moveMap(
@@ -72,7 +93,8 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
 
     final newLocation = widget.currentLocation;
     final oldLocation = oldWidget.currentLocation;
-    if (newLocation != null &&
+    if (!widget.isNavigating &&
+        newLocation != null &&
         (oldLocation == null ||
             newLocation.latitude != oldLocation.latitude ||
             newLocation.longitude != oldLocation.longitude)) {
@@ -114,16 +136,17 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
           selectedBuilding: widget.selectedBuilding,
           requireCampusCoordinates: true,
         );
-        final routePoints = widget.route == null
-            ? const <latlong.LatLng>[]
-            : resolveRoutePoints(widget.route!)
-                  .map(
-                    (point) => projection.gpsToMapPoint(
-                      latitude: point.latitude,
-                      longitude: point.longitude,
-                    ),
-                  )
-                  .toList();
+        final rawRoutePoints = widget.route == null
+            ? const <LocationSample>[]
+            : resolveRoutePoints(widget.route!);
+        final routePoints = rawRoutePoints
+            .map(
+              (point) => projection.gpsToMapPoint(
+                latitude: point.latitude,
+                longitude: point.longitude,
+              ),
+            )
+            .toList();
         final bounds = LatLngBounds(
           latlong.LatLng(meta.mapSouth, meta.mapWest),
           latlong.LatLng(meta.mapNorth, meta.mapEast),
@@ -169,15 +192,7 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
               ),
               if (routePoints.isNotEmpty)
                 PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: routePoints,
-                      strokeWidth: 5,
-                      color: _colorFor(widget.route!.travelMode),
-                      borderStrokeWidth: 2,
-                      borderColor: Colors.white.withValues(alpha: 0.45),
-                    ),
-                  ],
+                  polylines: _buildCampusPolylines(routePoints, rawRoutePoints),
                 ),
               MarkerLayer(
                 markers: [
@@ -284,6 +299,58 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
     } on StateError {
       return fallback;
     }
+  }
+
+  List<Polyline> _buildCampusPolylines(
+    List<latlong.LatLng> mapPoints,
+    List<LocationSample> rawPoints,
+  ) {
+    final routeColor = _colorFor(widget.route!.travelMode);
+    final polylines = <Polyline>[];
+
+    if (widget.isNavigating &&
+        widget.currentLocation != null &&
+        rawPoints.length > 1) {
+      final splitIdx = findClosestPointIndex(
+        rawPoints,
+        widget.currentLocation!,
+      );
+
+      if (splitIdx > 0) {
+        polylines.add(
+          Polyline(
+            points: mapPoints.sublist(0, splitIdx + 1),
+            strokeWidth: 5,
+            color: const Color(0xFF94a3b8),
+            borderStrokeWidth: 2,
+            borderColor: Colors.white.withValues(alpha: 0.25),
+          ),
+        );
+      }
+
+      final remaining = splitIdx > 0 ? mapPoints.sublist(splitIdx) : mapPoints;
+      polylines.add(
+        Polyline(
+          points: remaining,
+          strokeWidth: 5,
+          color: routeColor,
+          borderStrokeWidth: 2,
+          borderColor: Colors.white.withValues(alpha: 0.45),
+        ),
+      );
+    } else {
+      polylines.add(
+        Polyline(
+          points: mapPoints,
+          strokeWidth: 5,
+          color: routeColor,
+          borderStrokeWidth: 2,
+          borderColor: Colors.white.withValues(alpha: 0.45),
+        ),
+      );
+    }
+
+    return polylines;
   }
 
   Color _colorFor(TravelMode travelMode) {

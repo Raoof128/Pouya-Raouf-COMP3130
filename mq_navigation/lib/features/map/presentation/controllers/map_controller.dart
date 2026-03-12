@@ -9,6 +9,9 @@ import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/features/map/domain/services/building_search.dart';
+import 'package:mq_navigation/features/map/domain/services/geo_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum MapStateError {
   routeUnavailable,
@@ -33,6 +36,7 @@ class MapState {
     this.permissionState = LocationPermissionState.denied,
     this.isNavigating = false,
     this.isLoadingRoute = false,
+    this.hasArrived = false,
     this.error,
   });
 
@@ -47,6 +51,7 @@ class MapState {
   final LocationPermissionState permissionState;
   final bool isNavigating;
   final bool isLoadingRoute;
+  final bool hasArrived;
   final MapStateError? error;
 
   MapState copyWith({
@@ -64,6 +69,7 @@ class MapState {
     LocationPermissionState? permissionState,
     bool? isNavigating,
     bool? isLoadingRoute,
+    bool? hasArrived,
     MapStateError? error,
     bool clearError = false,
   }) {
@@ -83,6 +89,7 @@ class MapState {
       permissionState: permissionState ?? this.permissionState,
       isNavigating: isNavigating ?? this.isNavigating,
       isLoadingRoute: isLoadingRoute ?? this.isLoadingRoute,
+      hasArrived: hasArrived ?? this.hasArrived,
       error: clearError ? null : error ?? this.error,
     );
   }
@@ -94,13 +101,20 @@ final mapControllerProvider = AsyncNotifierProvider<MapController, MapState>(
 
 class MapController extends AsyncNotifier<MapState> {
   static const _defaultVisibleBuildings = 15;
+  static const _arrivalThresholdMetres = 30.0;
+  static const _recalcThresholdMetres = 80.0;
+  static const _offRouteThresholdMetres = 50.0;
+  static const _travelModeKey = 'travelMode';
+
   StreamSubscription<LocationSample>? _locationSubscription;
   int _routeRequestVersion = 0;
+  LocationSample? _lastRouteFetchLocation;
 
   @override
   Future<MapState> build() async {
     ref.onDispose(() => _locationSubscription?.cancel());
     final buildings = await ref.read(mapRepositoryProvider).getBuildings();
+    final savedMode = await _loadTravelMode();
     return MapState(
       renderer: MapRendererType.campus,
       buildings: buildings,
@@ -108,6 +122,7 @@ class MapController extends AsyncNotifier<MapState> {
         buildings,
         '',
       ).take(_defaultVisibleBuildings).toList(),
+      travelMode: savedMode,
       permissionState: LocationPermissionState.denied,
     );
   }
@@ -164,15 +179,15 @@ class MapController extends AsyncNotifier<MapState> {
       return;
     }
     _invalidateRouteRequest();
-    if (current.isNavigating) {
-      _locationSubscription?.cancel();
-      _locationSubscription = null;
-    }
+    _locationSubscription?.cancel();
+    _locationSubscription = null;
+    _lastRouteFetchLocation = null;
     state = AsyncData(
       current.copyWith(
         selectedBuilding: building,
-        clearRoute: current.isNavigating,
+        clearRoute: true,
         isNavigating: false,
+        hasArrived: false,
         isLoadingRoute: false,
         clearError: true,
       ),
@@ -254,13 +269,13 @@ class MapController extends AsyncNotifier<MapState> {
       if (latest == null) {
         return;
       }
+      _lastRouteFetchLocation = location;
       await _startLocationTracking();
       state = AsyncData(
         latest.copyWith(
           currentLocation: location,
           permissionState: permissionState,
           route: route,
-          isNavigating: true,
           isLoadingRoute: false,
           clearError: true,
         ),
@@ -325,9 +340,15 @@ class MapController extends AsyncNotifier<MapState> {
     }
     _invalidateRouteRequest();
     state = AsyncData(
-      current.copyWith(travelMode: travelMode, isLoadingRoute: false),
+      current.copyWith(
+        travelMode: travelMode,
+        isLoadingRoute: false,
+        isNavigating: false,
+        hasArrived: false,
+      ),
     );
-    if (current.selectedBuilding != null) {
+    unawaited(_saveTravelMode(travelMode));
+    if (current.selectedBuilding != null && current.route != null) {
       await loadRoute();
     }
   }
@@ -356,10 +377,12 @@ class MapController extends AsyncNotifier<MapState> {
     _invalidateRouteRequest();
     _locationSubscription?.cancel();
     _locationSubscription = null;
+    _lastRouteFetchLocation = null;
     state = AsyncData(
       current.copyWith(
         clearRoute: true,
         isNavigating: false,
+        hasArrived: false,
         isLoadingRoute: false,
         clearError: true,
       ),
@@ -375,6 +398,7 @@ class MapController extends AsyncNotifier<MapState> {
     _invalidateRouteRequest();
     _locationSubscription?.cancel();
     _locationSubscription = null;
+    _lastRouteFetchLocation = null;
     state = AsyncData(
       current.copyWith(
         clearSelectedBuilding: true,
@@ -385,10 +409,65 @@ class MapController extends AsyncNotifier<MapState> {
           '',
         ).take(_defaultVisibleBuildings).toList(),
         isNavigating: false,
+        hasArrived: false,
         isLoadingRoute: false,
         clearError: true,
       ),
     );
+  }
+
+  void startNavigation() {
+    final current = state.value;
+    if (current == null || current.route == null) {
+      return;
+    }
+    state = AsyncData(
+      current.copyWith(isNavigating: true, hasArrived: false, clearError: true),
+    );
+  }
+
+  void stopNavigation() {
+    final current = state.value;
+    if (current == null) {
+      return;
+    }
+    state = AsyncData(current.copyWith(isNavigating: false, clearError: true));
+  }
+
+  void dismissArrival() {
+    clearSelection();
+  }
+
+  Future<void> openInGoogleMaps() async {
+    final current = state.value;
+    if (current == null) {
+      return;
+    }
+    final destination = current.selectedBuilding;
+    if (destination == null) {
+      return;
+    }
+    final destLat = destination.routingLatitude;
+    final destLng = destination.routingLongitude;
+    if (destLat == null || destLng == null) {
+      return;
+    }
+
+    final origin = current.currentLocation;
+    final modeStr = switch (current.travelMode) {
+      TravelMode.walk => 'walking',
+      TravelMode.drive => 'driving',
+      TravelMode.bike => 'bicycling',
+      TravelMode.transit => 'transit',
+    };
+
+    final uri = Uri.parse(
+      'https://www.google.com/maps/dir/?api=1'
+      '${origin != null ? '&origin=${origin.latitude},${origin.longitude}' : ''}'
+      '&destination=$destLat,$destLng'
+      '&travelmode=$modeStr',
+    );
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   Future<void> openLocationSettings() {
@@ -411,11 +490,97 @@ class MapController extends AsyncNotifier<MapState> {
               return;
             }
             state = AsyncData(current.copyWith(currentLocation: location));
+
+            if (current.isNavigating && current.selectedBuilding != null) {
+              _checkNavigationState(location);
+            }
           },
           onError: (Object error, StackTrace stackTrace) {
             AppLogger.warning('Location stream error', error, stackTrace);
           },
         );
+  }
+
+  void _checkNavigationState(LocationSample location) {
+    final current = state.value;
+    if (current == null || !current.isNavigating) {
+      return;
+    }
+    final destination = current.selectedBuilding;
+    if (destination == null) {
+      return;
+    }
+    final destLat = destination.routingLatitude;
+    final destLng = destination.routingLongitude;
+    if (destLat == null || destLng == null) {
+      return;
+    }
+
+    final distToDestination = haversineMetres(
+      lat1: location.latitude,
+      lng1: location.longitude,
+      lat2: destLat,
+      lng2: destLng,
+    );
+
+    // Arrival detection
+    if (distToDestination <= _arrivalThresholdMetres) {
+      _locationSubscription?.cancel();
+      _locationSubscription = null;
+      state = AsyncData(
+        current.copyWith(
+          currentLocation: location,
+          isNavigating: false,
+          hasArrived: true,
+        ),
+      );
+      return;
+    }
+
+    // Off-route detection + route recalculation
+    final lastFetch = _lastRouteFetchLocation;
+    if (lastFetch == null) {
+      return;
+    }
+    final distFromLastFetch = haversineMetres(
+      lat1: location.latitude,
+      lng1: location.longitude,
+      lat2: lastFetch.latitude,
+      lng2: lastFetch.longitude,
+    );
+
+    var isOffRoute = false;
+    if (current.route != null && distFromLastFetch > _offRouteThresholdMetres) {
+      if (distToDestination > current.route!.distanceMeters * 1.5) {
+        isOffRoute = true;
+      }
+    }
+
+    if (distFromLastFetch > _recalcThresholdMetres || isOffRoute) {
+      unawaited(loadRoute());
+    }
+  }
+
+  static Future<TravelMode> _loadTravelMode() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final stored = prefs.getString(_travelModeKey);
+      return TravelMode.values.firstWhere(
+        (m) => m.name == stored,
+        orElse: () => TravelMode.walk,
+      );
+    } catch (_) {
+      return TravelMode.walk;
+    }
+  }
+
+  static Future<void> _saveTravelMode(TravelMode mode) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_travelModeKey, mode.name);
+    } catch (_) {
+      // Ignore — preference persistence is best-effort.
+    }
   }
 
   int _beginRouteRequest() {

@@ -1,0 +1,45 @@
+import 'dart:math';
+
+import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
+
+/// Haversine distance in metres between two GPS coordinates.
+double haversineMetres({
+  required double lat1,
+  required double lng1,
+  required double lat2,
+  required double lng2,
+}) {
+  const r = 6371000.0;
+  final dLat = _toRadians(lat2 - lat1);
+  final dLng = _toRadians(lng2 - lng1);
+  final sinLat = sin(dLat / 2);
+  final sinLng = sin(dLng / 2);
+  final h =
+      sinLat * sinLat +
+      cos(_toRadians(lat1)) * cos(_toRadians(lat2)) * sinLng * sinLng;
+  return r * 2 * atan2(sqrt(h), sqrt(1 - h));
+}
+
+double _toRadians(double degrees) => degrees * pi / 180;
+
+/// Returns the index of the point in [points] closest to [location].
+int findClosestPointIndex(
+  List<LocationSample> points,
+  LocationSample location,
+) {
+  var closestIdx = 0;
+  var minDist = double.infinity;
+  for (var i = 0; i < points.length; i++) {
+    final dist = haversineMetres(
+      lat1: location.latitude,
+      lng1: location.longitude,
+      lat2: points[i].latitude,
+      lng2: points[i].longitude,
+    );
+    if (dist < minDist) {
+      minDist = dist;
+      closestIdx = i;
+    }
+  }
+  return closestIdx;
+}
