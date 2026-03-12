@@ -8,7 +8,7 @@ import 'package:mq_navigation/core/logging/app_logger.dart';
 /// Flutter does not support React-style widget error boundaries that recover by
 /// calling `setState` from `FlutterError.onError`. Framework build/layout/paint
 /// failures are instead surfaced through [ErrorWidget.builder], which is
-/// configured from the app shell.
+/// configured from the app shell. This widget simply passes its child through.
 class ErrorBoundary extends StatelessWidget {
   const ErrorBoundary({super.key, required this.child});
 

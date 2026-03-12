@@ -7,6 +7,11 @@ import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/map_mode_toggle.dart';
 
+/// Scaffold overlay for the map screen.
+///
+/// Wraps the underlying map renderer in a `Stack` to provide floating glass-styled
+/// UI components like the search bar, mode toggle, error banners, and the
+/// interactive bottom footer (routing panel or search results).
 class MapShell extends StatelessWidget {
   const MapShell({
     super.key,
@@ -215,10 +220,7 @@ class GlassPane extends StatelessWidget {
 
 /// Private alias for internal use.
 class _GlassPane extends GlassPane {
-  const _GlassPane({
-    required super.isDark,
-    required super.child,
-  });
+  const _GlassPane({required super.isDark, required super.child});
 }
 
 class _GlassIconButton extends StatelessWidget {
@@ -251,10 +253,7 @@ class _GlassIconButton extends StatelessWidget {
             ),
           ),
           child: IconButton(
-            icon: Icon(
-              icon,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
+            icon: Icon(icon, color: isDark ? Colors.white : Colors.black87),
             tooltip: tooltip,
             onPressed: onPressed,
           ),

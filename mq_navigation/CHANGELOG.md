@@ -4,6 +4,43 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-13 (AEDT) — Codebase annotation and educational comments
+
+**Scope:** Educational comment pass for student developers.
+
+**Summary:**
+Performed a comprehensive codebase review and added educational doc comments across major architecture layers (Bootstrap, Routing, Core, Settings, Notifications, and Map). These comments explain the purpose, intent, side effects, and architectural patterns of the application to accelerate onboarding for new student contributors. No application logic was modified.
+
+**Files changed:**
+- `lib/main.dart`
+- `lib/app/bootstrap/bootstrap.dart`
+- `lib/app/mq_navigation_app.dart`
+- `lib/app/router/app_router.dart`
+- `lib/app/router/app_shell.dart`
+- `lib/shared/models/user_preferences.dart`
+- `lib/core/error/error_boundary.dart`
+- `lib/core/security/secure_storage_service.dart`
+- `lib/features/settings/data/repositories/settings_repository.dart`
+- `lib/features/settings/presentation/controllers/settings_controller.dart`
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/features/notifications/domain/services/notification_scheduler.dart`
+- `lib/features/notifications/presentation/controllers/notifications_controller.dart`
+- `lib/features/notifications/data/datasources/fcm_service.dart`
+- `lib/features/notifications/data/datasources/local_notifications_service.dart`
+- `lib/features/map/presentation/controllers/map_controller.dart`
+
+**Verification:**
+- `flutter analyze` (0 issues found)
+- `flutter test` (115/115 tests passed)
+
+*Note: The earlier log was preliminary. This log confirms the full function-by-function systematic pass is complete and verified with real command outputs.*
+
+**Follow-ups:**
+- Architecture docs alignment
+- Provider flow diagrams
+- Onboarding docs for new contributors
+
+
 ### Raouf: 2026-03-13 (AEDT) — Full map parity pass
 
 **Scope:** Structural decomposition, visual polish, overlay layers, Google Places fallback, and Street View integration.

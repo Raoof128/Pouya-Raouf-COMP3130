@@ -41,6 +41,8 @@ class BuildingRegistrySource {
       if (cached != null && cached.isNotEmpty) {
         return cached;
       }
+      // If network fails and no secure storage cache exists (e.g. fresh install
+      // without internet), fall back to the bundled JSON asset exported at build time.
       return _loadFromAsset();
     }
   }

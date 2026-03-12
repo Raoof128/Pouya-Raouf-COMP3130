@@ -11,6 +11,12 @@ import 'package:mq_navigation/features/map/domain/services/geo_utils.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/map_view_helpers.dart';
 import 'package:mq_navigation/shared/widgets/mq_card.dart';
 
+/// The native `google_maps_flutter` renderer.
+///
+/// Uses the Google Maps SDK to provide an alternative top-down vector map.
+/// Manages its own internal `GoogleMapController` for programmatic camera
+/// animations (like fitting route bounds or following the user's location)
+/// while maintaining parity with the visual state of [CampusMapView].
 class GoogleMapView extends StatefulWidget {
   const GoogleMapView({
     super.key,

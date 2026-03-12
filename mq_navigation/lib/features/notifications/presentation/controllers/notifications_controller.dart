@@ -72,6 +72,12 @@ final unreadNotificationsCountProvider = Provider<int>((ref) {
   return notifications.where((notification) => !notification.isRead).length;
 });
 
+/// Orchestrates all notification logic including permissions, remote FCM
+/// token syncing, local reminders, and the user's inbox state.
+///
+/// This controller is watched by the root app widget so its initialisation
+/// side-effects (syncing tokens, scheduling reminders) run even if the user
+/// never visits the notifications tab.
 class NotificationsController extends AsyncNotifier<NotificationsState> {
   @override
   Future<NotificationsState> build() async {
@@ -268,6 +274,8 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
   ];
 
   Future<void> _openLink(String link) async {
+    // Security boundary: only allow navigation to trusted internal paths
+    // so malicious push payloads cannot execute arbitrary deep links.
     final path = link.startsWith('/') ? link : '/$link';
     final isAllowed = _allowedPrefixes.any((prefix) => path.startsWith(prefix));
     if (!isAllowed) {

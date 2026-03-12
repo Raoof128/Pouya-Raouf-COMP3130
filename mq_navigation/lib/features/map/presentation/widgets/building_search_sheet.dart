@@ -13,6 +13,12 @@ import 'package:mq_navigation/features/map/presentation/controllers/map_controll
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// Draggable bottom sheet for finding campus buildings or nearby places.
+///
+/// Combines a local fuzzy-search of the campus building registry with a
+/// debounced remote call to Google Places. When the user selects a remote place,
+/// the app automatically switches to the Google Maps renderer and deep-links
+/// out for directions, as campus data doesn't cover off-campus spots.
 class BuildingSearchSheet extends ConsumerStatefulWidget {
   const BuildingSearchSheet({super.key});
 

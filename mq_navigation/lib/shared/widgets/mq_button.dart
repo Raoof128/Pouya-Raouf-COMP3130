@@ -69,6 +69,8 @@ class MqButton extends StatelessWidget {
     }
 
     if (isExpanded) {
+      // Force minimum tap target height (48dp) to meet accessibility guidelines
+      // while expanding width to fill the available container.
       return SizedBox(
         width: double.infinity,
         height: MqSpacing.minTapTarget,

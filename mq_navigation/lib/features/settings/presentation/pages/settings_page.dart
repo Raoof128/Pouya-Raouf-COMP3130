@@ -6,6 +6,11 @@ import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
 
+/// Main settings screen for managing app-wide preferences.
+///
+/// Reacts to changes in [SettingsController]. Uses custom styled widgets
+/// rather than standard Material tiles to match the MQ design system,
+/// including a red radial gradient background in dark mode.
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 

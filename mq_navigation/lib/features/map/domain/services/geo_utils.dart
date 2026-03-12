@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 
-/// Haversine distance in metres between two GPS coordinates.
+/// Calculates the shortest distance over the earth's surface between two points.
+///
+/// Used extensively in navigation to detect arrival, off-route deviations,
+/// and splitting walked vs remaining route segments.
 double haversineMetres({
   required double lat1,
   required double lng1,

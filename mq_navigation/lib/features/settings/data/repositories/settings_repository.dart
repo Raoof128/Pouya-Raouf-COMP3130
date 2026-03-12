@@ -8,6 +8,11 @@ const _themeModeKey = 'settings.theme_mode';
 const _localeCodeKey = 'settings.locale_code';
 const _notificationsEnabledKey = 'settings.notifications_enabled';
 
+/// Data source for persisting and retrieving user settings.
+///
+/// Uses secure storage under the hood. Fails safely on read by returning
+/// defaults, but throws on write so the UI controller can show an error
+/// and revert any optimistic updates.
 abstract interface class SettingsRepository {
   Future<UserPreferences> loadPreferences();
   Future<UserPreferences> savePreferences(UserPreferences preferences);
@@ -27,6 +32,8 @@ class LocalSettingsRepository implements SettingsRepository {
   @override
   Future<UserPreferences> loadPreferences() async {
     try {
+      // Keys are read individually rather than as a JSON blob so that
+      // failure to parse one key doesn't corrupt the entire preference state.
       final themeModeString = await _storage.read(_themeModeKey);
       final localeCode = await _storage.read(_localeCodeKey);
       final notificationsEnabled = await _storage.read(

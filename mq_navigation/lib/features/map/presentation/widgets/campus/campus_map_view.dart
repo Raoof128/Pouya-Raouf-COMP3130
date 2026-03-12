@@ -18,6 +18,12 @@ import 'package:mq_navigation/features/map/presentation/widgets/campus/campus_ov
 import 'package:mq_navigation/features/map/presentation/widgets/map_view_helpers.dart';
 import 'package:mq_navigation/shared/widgets/mq_card.dart';
 
+/// The primary `flutter_map` renderer for the 2D illustrated campus map.
+///
+/// Orchestrates several specialized layers (overlays, markers, routes) and
+/// handles the lifecycle of the map projection. It blocks rendering until
+/// [CampusOverlayMeta] is loaded from assets, ensuring the map is always
+/// correctly calibrated to real-world GPS coordinates.
 class CampusMapView extends ConsumerStatefulWidget {
   const CampusMapView({
     super.key,
@@ -94,7 +100,6 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
       );
       return;
     }
-
   }
 
   @override

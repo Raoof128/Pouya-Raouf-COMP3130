@@ -103,6 +103,14 @@ final mapControllerProvider = AsyncNotifierProvider<MapController, MapState>(
   MapController.new,
 );
 
+/// Central state controller for the Map feature.
+///
+/// This controller bridges the presentation layer and the map repository.
+/// It holds the unified state for both map renderers (Google and Campus),
+/// managing building selection, search results, routing, and live navigation.
+///
+/// It uses a versioning system (`_routeRequestVersion`) to drop stale async
+/// route responses if the user changes their selection or renderer mid-flight.
 class MapController extends AsyncNotifier<MapState> {
   static const _defaultVisibleBuildings = 15;
   static const _arrivalThresholdMetres = 30.0;

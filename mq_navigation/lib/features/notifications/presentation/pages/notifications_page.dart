@@ -11,6 +11,11 @@ import 'package:mq_navigation/shared/widgets/mq_app_bar.dart';
 import 'package:mq_navigation/shared/widgets/mq_button.dart';
 import 'package:mq_navigation/shared/widgets/mq_card.dart';
 
+/// Screen displaying the user's notification inbox and preference toggles.
+///
+/// Handles missing permissions by offering a prominent "Enable Notifications"
+/// prompt at the top of the feed. Interacts with [NotificationsController]
+/// to manage read states and clear items.
 class NotificationsPage extends ConsumerWidget {
   const NotificationsPage({super.key});
 

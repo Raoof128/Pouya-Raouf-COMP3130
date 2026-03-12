@@ -7,16 +7,31 @@ import 'package:mq_navigation/core/error/error_boundary.dart';
 import 'package:mq_navigation/features/notifications/presentation/controllers/notifications_controller.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 
+/// The root Flutter application widget.
+///
+/// Composes global app state including routing, theme, and localization.
+/// Also observes the notifications controller so that push notification
+/// setup side-effects execute immediately upon app startup.
 class MqNavigationApp extends ConsumerWidget {
   const MqNavigationApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch global navigation state.
     final router = ref.watch(appRouterProvider);
+
+    // Watch global preferences (theme, locale) loaded from local storage.
     final preferences = ref.watch(settingsControllerProvider).value;
+
+    // Explicitly watch the notifications controller to keep it alive.
+    // This triggers FCM permission requests and token sync side effects
+    // independently of whether the user is on the notifications page.
     ref.watch(notificationsControllerProvider);
 
     return MaterialApp.router(
+      // The builder is used to wrap the entire app with a custom error widget.
+      // If a widget fails to build, this prevents the grey "red screen of death"
+      // and shows a friendlier fallback UI instead.
       builder: (context, child) {
         ErrorWidget.builder = (details) {
           final error = buildFrameworkErrorFallback(details.exception);

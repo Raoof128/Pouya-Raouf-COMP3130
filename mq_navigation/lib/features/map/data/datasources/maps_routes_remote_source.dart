@@ -11,6 +11,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Calls the `maps-routes` Supabase Edge Function to compute a route.
 ///
+/// This architecture keeps the Google Maps/Routes billing API keys strictly
+/// server-side. The mobile app never sees the real Google Routes API key.
+///
 /// Authentication is optional by design — the app has no login requirement
 /// (see AGENT.md: "No auth: App starts directly at /home"). Unauthenticated
 /// requests are rate-limited by client IP (60 req / 60 s); authenticated

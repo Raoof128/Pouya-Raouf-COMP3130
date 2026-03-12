@@ -8,10 +8,15 @@ import 'package:mq_navigation/core/logging/app_logger.dart';
 enum ConnectivityStatus { online, offline }
 
 /// Monitors device network state and exposes a reactive stream.
+///
+/// Uses a broadcast `StreamController` so multiple subscribers can listen
+/// to network changes simultaneously without triggering multiple native checks.
 class ConnectivityService {
   ConnectivityService() {
     _subscription = Connectivity().onConnectivityChanged.listen(_update);
     // Perform an immediate check so status is accurate from the start.
+    // We unawait this because constructors cannot be async, but we need
+    // the initial state fast.
     unawaited(check());
   }
 

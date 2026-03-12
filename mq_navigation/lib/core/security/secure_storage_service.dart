@@ -4,6 +4,10 @@ import 'package:mq_navigation/core/error/app_exception.dart';
 import 'package:mq_navigation/core/logging/app_logger.dart';
 
 /// Encrypted key-value storage backed by Keychain (iOS) / Keystore (Android).
+///
+/// Used to persist sensitive settings and tokens. Every operation is wrapped
+/// in a try-catch that logs the native platform error and rethrows it as a
+/// [StorageException] to keep the caller agnostic of the underlying plugin.
 class SecureStorageService {
   SecureStorageService([FlutterSecureStorage? storage])
     : _storage = storage ?? const FlutterSecureStorage();

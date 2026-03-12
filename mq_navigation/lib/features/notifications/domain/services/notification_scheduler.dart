@@ -5,6 +5,11 @@ import 'package:mq_navigation/features/notifications/domain/entities/app_notific
 import 'package:mq_navigation/features/notifications/domain/entities/notification_preferences.dart';
 import 'package:mq_navigation/features/notifications/domain/entities/reminder_request.dart';
 
+/// Handles scheduling and unscheduling of local push notifications.
+///
+/// Currently, this only schedules the daily "Study prompt" based on
+/// user preferences. It calculates the next valid trigger time and cancels
+/// any stale reminders that no longer match the user's preference.
 class NotificationScheduler {
   NotificationScheduler(this._localNotificationsService);
 

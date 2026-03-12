@@ -29,6 +29,17 @@ List<Building> searchCampusBuildings(List<Building> buildings, String query) {
   return ranked.map((entry) => entry.building).toList();
 }
 
+/// Scores a building's relevance to a search query.
+///
+/// Returns a score from 0-120:
+/// - 120: Exact ID match
+/// - 110: Exact alias/token match
+/// - 100: Exact field match (name, description, etc.)
+/// - 90: Starts with ID
+/// - 80: Starts with alias
+/// - 70: Starts with any field
+/// - 50: Contains query in any field
+/// - 0: No match
 int scoreBuildingMatch(Building building, String normalizedQuery) {
   final searchableFields = <String>[
     building.id,

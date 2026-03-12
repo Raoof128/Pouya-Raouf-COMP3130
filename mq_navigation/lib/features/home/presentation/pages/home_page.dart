@@ -150,9 +150,10 @@ class _QuickAccessCard extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             // Update the map controller state directly before switching tabs.
-            // This works because Riverpod state is shared across the widget tree,
-            // and StatefulShellRoute preserves the MapPage widget (initState
-            // only fires once), so we must update state imperatively.
+            // This works because Riverpod state is shared globally across the
+            // widget tree. Since StatefulShellRoute preserves the MapPage
+            // widget (its initState only fires once), we must update the state
+            // imperatively rather than relying on route parameters.
             ref
                 .read(mapControllerProvider.notifier)
                 .updateSearchQuery(searchQuery);

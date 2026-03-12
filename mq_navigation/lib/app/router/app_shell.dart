@@ -17,6 +17,8 @@ class AppShell extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         onDestinationSelected: (index) {
+          // Navigate to the chosen branch. If the user taps the active tab,
+          // the branch's navigation stack pops back to its root.
           navigationShell.goBranch(
             index,
             initialLocation: index == navigationShell.currentIndex,

@@ -11,17 +11,22 @@ import 'package:mq_navigation/features/settings/presentation/pages/settings_page
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
+/// Central GoRouter configuration for the app.
+/// Uses a stateful shell so each bottom-tab branch keeps its own
+/// navigation stack instead of resetting when the user switches tabs.
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/home',
     debugLogDiagnostics: EnvConfig.isDevelopment,
     routes: [
+      // Notifications sits outside the shell so it covers the bottom nav bar.
       GoRoute(
         path: '/notifications',
         name: RouteNames.notifications,
         builder: (context, state) => const NotificationsPage(),
       ),
+      // The shell route handles the bottom navigation bar and nested routing.
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),

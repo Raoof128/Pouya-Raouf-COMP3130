@@ -7,6 +7,9 @@ import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 
+/// Core repository interface for all map-related data operations.
+/// Defines the contract for fetching buildings, handling location permissions,
+/// and requesting routes regardless of the underlying renderer.
 abstract interface class MapRepository {
   Future<List<Building>> getBuildings({bool forceRefresh = false});
   Future<LocationPermissionState> ensureLocationPermission();
@@ -31,6 +34,12 @@ final mapRepositoryProvider = Provider<MapRepository>((ref) {
   );
 });
 
+/// Implementation of [MapRepository] that acts as an orchestrator.
+///
+/// It delegates building fetching to [BuildingRegistrySource], location services
+/// to [LocationSource], and routes the `getRoute` call to the appropriate
+/// remote source depending on whether the user is in [MapRendererType.campus]
+/// or [MapRendererType.google] mode.
 class MapRepositoryImpl implements MapRepository {
   const MapRepositoryImpl({
     required BuildingRegistrySource buildingRegistrySource,

@@ -7,6 +7,9 @@ import 'package:flutter/foundation.dart';
 /// cause a [StateError] — you must supply them via `--dart-define` or
 /// `--dart-define-from-file=.env`.
 ///
+/// **Security Note:** Real `.env` files are ignored by git to prevent
+/// credential leaks. The fallbacks here are safe public identifiers.
+///
 /// Usage (release / CI):
 ///   flutter run --release \
 ///     --dart-define=SUPABASE_URL=https://xxx.supabase.co \

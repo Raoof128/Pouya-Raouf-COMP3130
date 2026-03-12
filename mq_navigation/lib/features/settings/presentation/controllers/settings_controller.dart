@@ -13,6 +13,12 @@ final settingsControllerProvider =
       SettingsController.new,
     );
 
+/// Manages the application's global preferences state.
+///
+/// This controller uses an optimistic update pattern: when a user changes
+/// a setting, the UI updates immediately. If the storage write fails in the
+/// background, the controller reverts the state and returns an error string
+/// which the UI can display as a SnackBar.
 class SettingsController extends AsyncNotifier<UserPreferences> {
   @override
   Future<UserPreferences> build() {

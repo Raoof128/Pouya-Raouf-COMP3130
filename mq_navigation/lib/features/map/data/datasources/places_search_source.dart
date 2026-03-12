@@ -12,6 +12,11 @@ class PlaceSuggestion {
 
 final placesSearchSourceProvider = Provider((ref) => PlacesSearchSource());
 
+/// Proxy client for Google Places Autocomplete.
+///
+/// Routes search queries through the Supabase `maps-places` Edge Function
+/// to keep the Google Places API key safely on the server while enabling
+/// global place fallback when a campus building search fails.
 class PlacesSearchSource {
   Future<List<PlaceSuggestion>> search(
     String query, {

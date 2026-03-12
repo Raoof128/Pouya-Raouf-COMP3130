@@ -29,6 +29,10 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   AppLogger.info('Handled background notification', message.messageId);
 }
 
+/// Wraps Firebase Cloud Messaging for remote push notifications.
+///
+/// Handles background handlers, permission requests, token acquisition,
+/// and token syncing to the Supabase backend.
 class FcmService {
   FcmService({
     required FirebaseMessaging messaging,

@@ -3,6 +3,11 @@ import 'package:mq_navigation/features/notifications/data/datasources/notificati
 import 'package:mq_navigation/features/notifications/domain/entities/app_notification.dart';
 import 'package:mq_navigation/features/notifications/domain/entities/notification_preferences.dart';
 
+/// Repository for managing push notifications and local inbox state.
+///
+/// Typically acts as a thin wrapper over [NotificationRemoteSource], but
+/// abstracts the network layer away from the UI controllers so that local
+/// caching or offline support can be added later without touching presentation.
 abstract interface class NotificationRepository {
   Stream<List<AppNotification>> watchNotifications(String userId);
   Future<List<NotificationPreference>> fetchPreferences(String userId);

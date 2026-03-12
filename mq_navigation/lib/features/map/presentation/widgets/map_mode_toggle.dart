@@ -95,8 +95,8 @@ class _PillSegment extends StatelessWidget {
               color: isSelected
                   ? Colors.white
                   : isDark
-                      ? Colors.white.withValues(alpha: 0.5)
-                      : Colors.black.withValues(alpha: 0.5),
+                  ? Colors.white.withValues(alpha: 0.5)
+                  : Colors.black.withValues(alpha: 0.5),
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),

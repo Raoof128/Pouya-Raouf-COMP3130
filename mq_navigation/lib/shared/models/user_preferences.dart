@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Immutable local data model representing a user's app-wide preferences.
+///
+/// This object is persisted in secure storage and read during app startup
+/// to configure the root theme and localization delegates.
 @immutable
 class UserPreferences {
   const UserPreferences({

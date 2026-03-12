@@ -10,6 +10,11 @@ import 'package:mq_navigation/features/map/domain/entities/nav_instruction.dart'
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
 
+/// Floating bottom sheet displaying routing instructions and status.
+///
+/// Reacts dynamically to state changes during active navigation (e.g., showing
+/// the next immediate turn, updating distance/ETA, or displaying the arrival
+/// celebration card).
 class RoutePanel extends StatefulWidget {
   const RoutePanel({
     super.key,
@@ -174,8 +179,9 @@ class _RoutePanelState extends State<RoutePanel> {
                                   vertical: 3,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: MqColors.vividRed
-                                      .withValues(alpha: 0.15),
+                                  color: MqColors.vividRed.withValues(
+                                    alpha: 0.15,
+                                  ),
                                   borderRadius: BorderRadius.circular(
                                     MqSpacing.radiusFull,
                                   ),
@@ -216,11 +222,7 @@ class _RoutePanelState extends State<RoutePanel> {
               // Route info row (when route is loaded)
               if (widget.route != null) ...[
                 const SizedBox(height: MqSpacing.space4),
-                _RouteInfoRow(
-                  route: widget.route!,
-                  l10n: l10n,
-                  isDark: isDark,
-                ),
+                _RouteInfoRow(route: widget.route!, l10n: l10n, isDark: isDark),
               ],
 
               // Travel mode selector (hidden during navigation)
@@ -455,15 +457,15 @@ class _TravelModePills extends StatelessWidget {
                     color: isSelected
                         ? MqColors.vividRed.withValues(alpha: 0.15)
                         : isDark
-                            ? Colors.white.withValues(alpha: 0.06)
-                            : Colors.black.withValues(alpha: 0.04),
+                        ? Colors.white.withValues(alpha: 0.06)
+                        : Colors.black.withValues(alpha: 0.04),
                     borderRadius: BorderRadius.circular(MqSpacing.radiusFull),
                     border: Border.all(
                       color: isSelected
                           ? MqColors.vividRed.withValues(alpha: 0.4)
                           : isDark
-                              ? Colors.white.withValues(alpha: 0.08)
-                              : Colors.black.withValues(alpha: 0.08),
+                          ? Colors.white.withValues(alpha: 0.08)
+                          : Colors.black.withValues(alpha: 0.08),
                     ),
                   ),
                   child: Row(
@@ -475,21 +477,22 @@ class _TravelModePills extends StatelessWidget {
                         color: isSelected
                             ? MqColors.vividRed
                             : isDark
-                                ? Colors.white.withValues(alpha: 0.5)
-                                : MqColors.contentTertiary,
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : MqColors.contentTertiary,
                       ),
                       const SizedBox(width: 6),
                       Text(
                         _labelFor(mode),
                         style: TextStyle(
                           fontSize: 13,
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w500,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
                           color: isSelected
                               ? MqColors.vividRed
                               : isDark
-                                  ? Colors.white.withValues(alpha: 0.6)
-                                  : MqColors.contentSecondary,
+                              ? Colors.white.withValues(alpha: 0.6)
+                              : MqColors.contentSecondary,
                         ),
                       ),
                     ],
@@ -525,10 +528,7 @@ class _TravelModePills extends StatelessWidget {
 // ── Next instruction card (during navigation) ──────────────
 
 class _NextInstructionCard extends StatelessWidget {
-  const _NextInstructionCard({
-    required this.instruction,
-    required this.isDark,
-  });
+  const _NextInstructionCard({required this.instruction, required this.isDark});
 
   final NavInstruction instruction;
   final bool isDark;
@@ -703,9 +703,7 @@ class _ExpandableStepList extends StatelessWidget {
                                   step.distanceMeters >= 1000
                                       ? '${(step.distanceMeters / 1000).toStringAsFixed(1)} km'
                                       : '${step.distanceMeters} m',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall
+                                  style: Theme.of(context).textTheme.labelSmall
                                       ?.copyWith(
                                         color: isDark
                                             ? Colors.white.withValues(
@@ -938,9 +936,7 @@ class _ArrivalCard extends StatelessWidget {
                 : const Color(0xFFf0fdf4).withValues(alpha: 0.92),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: isDark
-                  ? const Color(0xFF166534)
-                  : const Color(0xFFbbf7d0),
+              color: isDark ? const Color(0xFF166534) : const Color(0xFFbbf7d0),
             ),
             boxShadow: [
               BoxShadow(
@@ -985,10 +981,7 @@ class _ArrivalCard extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: MqSpacing.space4),
-              _BrandActionButton(
-                label: doneLabel,
-                onPressed: onDismiss,
-              ),
+              _BrandActionButton(label: doneLabel, onPressed: onDismiss),
             ],
           ),
         ),

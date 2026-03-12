@@ -18,6 +18,11 @@ import 'package:mq_navigation/features/map/presentation/widgets/route_panel.dart
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
 import 'package:mq_navigation/shared/widgets/mq_button.dart';
 
+/// Main screen for the campus map feature.
+///
+/// Serves as the orchestration layer that watches [MapController] and passes
+/// its unified state down to the active renderer ([CampusMapView] or
+/// [GoogleMapView]). Also manages bottom sheets for search and overlays.
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key, this.initialBuildingId, this.initialSearchQuery});
 
@@ -141,24 +146,24 @@ class _MapPageState extends ConsumerState<MapPage> {
                     onClear: controller.clearSelection,
                   )
                 : mapState.selectedBuilding != null
-                    ? RoutePanel(
-                        selectedBuilding: mapState.selectedBuilding,
-                        route: mapState.route,
-                        travelMode: mapState.travelMode,
-                        isLoading: mapState.isLoadingRoute,
-                        isNavigating: mapState.isNavigating,
-                        hasArrived: mapState.hasArrived,
-                        onLoadRoute: controller.loadRoute,
-                        onClearRoute: controller.clearRoute,
-                        onClearSelection: controller.clearSelection,
-                        onTravelModeChanged: controller.setTravelMode,
-                        onStartNavigation: controller.startNavigation,
-                        onStopNavigation: controller.stopNavigation,
-                        onDismissArrival: controller.dismissArrival,
-                        onOpenInGoogleMaps: controller.openInGoogleMaps,
-                        onOpenStreetView: controller.openStreetView,
-                      )
-                    : null,
+                ? RoutePanel(
+                    selectedBuilding: mapState.selectedBuilding,
+                    route: mapState.route,
+                    travelMode: mapState.travelMode,
+                    isLoading: mapState.isLoadingRoute,
+                    isNavigating: mapState.isNavigating,
+                    hasArrived: mapState.hasArrived,
+                    onLoadRoute: controller.loadRoute,
+                    onClearRoute: controller.clearRoute,
+                    onClearSelection: controller.clearSelection,
+                    onTravelModeChanged: controller.setTravelMode,
+                    onStartNavigation: controller.startNavigation,
+                    onStopNavigation: controller.stopNavigation,
+                    onDismissArrival: controller.dismissArrival,
+                    onOpenInGoogleMaps: controller.openInGoogleMaps,
+                    onOpenStreetView: controller.openStreetView,
+                  )
+                : null,
           );
         },
         error: (error, _) => Center(
@@ -378,7 +383,9 @@ class _CategoryBuildingList extends StatelessWidget {
             children: [
               // Handle bar
               Padding(
-                padding: const EdgeInsetsDirectional.only(top: MqSpacing.space3),
+                padding: const EdgeInsetsDirectional.only(
+                  top: MqSpacing.space3,
+                ),
                 child: Center(
                   child: Container(
                     width: 48,
@@ -406,10 +413,13 @@ class _CategoryBuildingList extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '${searchQuery[0].toUpperCase()}${searchQuery.substring(1)} (${validBuildings.length})',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.white : MqColors.contentPrimary,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: isDark
+                                  ? Colors.white
+                                  : MqColors.contentPrimary,
+                            ),
                       ),
                     ),
                     IconButton(
@@ -451,17 +461,20 @@ class _CategoryBuildingList extends StatelessWidget {
                         building.name,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w500,
-                          color: isDark ? Colors.white : MqColors.contentPrimary,
+                          color: isDark
+                              ? Colors.white
+                              : MqColors.contentPrimary,
                         ),
                       ),
                       subtitle: building.address != null
                           ? Text(
                               building.address!,
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.4)
-                                    : MqColors.charcoal600,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: isDark
+                                        ? Colors.white.withValues(alpha: 0.4)
+                                        : MqColors.charcoal600,
+                                  ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             )

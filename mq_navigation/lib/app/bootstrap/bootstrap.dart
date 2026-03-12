@@ -12,6 +12,10 @@ import 'package:mq_navigation/core/logging/app_logger.dart';
 import 'package:mq_navigation/features/notifications/data/datasources/fcm_service.dart';
 
 /// Initialises all critical services before the widget tree mounts.
+///
+/// Uses [runZonedGuarded] to catch any asynchronous errors that escape the
+/// normal Flutter framework boundaries. This ensures errors during early startup
+/// or background processes are logged correctly rather than crashing silently.
 Future<void> bootstrap(Widget Function() appBuilder) async {
   // Catch errors outside the Flutter framework.
   await runZonedGuarded(
@@ -25,6 +29,8 @@ Future<void> bootstrap(Widget Function() appBuilder) async {
 
       if (!kIsWeb) {
         try {
+          // Native platforms require Firebase for push notifications.
+          // This must happen before any FCM services are initialized.
           await Firebase.initializeApp();
           FirebaseMessaging.onBackgroundMessage(
             firebaseMessagingBackgroundHandler,
@@ -40,6 +46,8 @@ Future<void> bootstrap(Widget Function() appBuilder) async {
       }
 
       // Initialise Supabase.
+      // This is the primary backend connection for map routing and notifications.
+      // We use PKCE auth flow for better security on mobile clients.
       await Supabase.initialize(
         url: EnvConfig.supabaseUrl,
         anonKey: EnvConfig.supabaseAnonKey,
@@ -50,6 +58,8 @@ Future<void> bootstrap(Widget Function() appBuilder) async {
 
       AppLogger.info('Supabase initialised', EnvConfig.appEnv);
 
+      // Start the app wrapped in Riverpod's ProviderScope for state management
+      // and a top-level ErrorBoundary to catch rendering exceptions.
       runApp(ProviderScope(child: ErrorBoundary(child: appBuilder())));
     },
     (error, stack) {

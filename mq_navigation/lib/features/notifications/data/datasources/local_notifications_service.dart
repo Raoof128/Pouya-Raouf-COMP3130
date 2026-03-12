@@ -10,6 +10,11 @@ import 'package:mq_navigation/core/logging/app_logger.dart';
 import 'package:mq_navigation/features/notifications/domain/entities/app_notification.dart';
 import 'package:mq_navigation/features/notifications/domain/entities/reminder_request.dart';
 
+/// Wraps `flutter_local_notifications` to schedule and display notifications
+/// generated locally by the device rather than sent from the server.
+///
+/// Responsible for Android channel creation, timezone initialization,
+/// and handling taps on locally-scheduled reminders.
 class LocalNotificationsService {
   LocalNotificationsService([FlutterLocalNotificationsPlugin? plugin])
     : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
@@ -107,6 +112,9 @@ class LocalNotificationsService {
   }
 
   Future<void> cancelManagedNotificationsExcept(Set<int> retainedIds) async {
+    // We only cancel notifications created by this app (tagged in payload).
+    // This allows other plugins or modules to use the local notifications
+    // system without us accidentally clearing their scheduled items.
     final pending = await _plugin.pendingNotificationRequests();
     for (final request in pending) {
       final payload = _decodePayload(request.payload);

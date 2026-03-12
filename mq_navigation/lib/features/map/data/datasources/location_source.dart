@@ -22,9 +22,16 @@ const _campusFallback = LocationSample(
   accuracy: 100,
 );
 
+/// Native location service wrapper powered by `geolocator`.
+///
+/// Handles Android/iOS permission flows, current position retrieval, and
+/// live coordinate streaming during active navigation.
 class LocationSource {
   const LocationSource();
 
+  // We explicitly disable native location services on unsupported platforms
+  // (like Web or Desktop) to avoid crashes when calling platform channels.
+  // Instead, these platforms transparently use the [_campusFallback] mock data.
   bool get _isSupported =>
       !kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.android ||
