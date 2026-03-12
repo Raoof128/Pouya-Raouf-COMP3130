@@ -169,8 +169,8 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: MqSpacing.space4,
+                  padding: const EdgeInsetsDirectional.only(
+                    start: MqSpacing.space4,
                     bottom: MqSpacing.space2,
                     top: MqSpacing.space1,
                   ),

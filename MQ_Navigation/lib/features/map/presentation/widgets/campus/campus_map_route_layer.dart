@@ -41,6 +41,10 @@ class CampusMapRouteLayer extends StatelessWidget {
     List<LocationSample> rawPoints,
   ) {
     final routeColor = _colorFor(route.travelMode);
+    final isWalking = route.travelMode == TravelMode.walk;
+    final StrokePattern pattern = isWalking
+        ? StrokePattern.dashed(segments: const [12, 8])
+        : const StrokePattern.solid();
     final polylines = <Polyline>[];
 
     if (isNavigating && currentLocation != null && rawPoints.length > 1) {
@@ -54,6 +58,7 @@ class CampusMapRouteLayer extends StatelessWidget {
             color: const Color(0xFF94a3b8),
             borderStrokeWidth: 2,
             borderColor: Colors.white.withValues(alpha: 0.25),
+            pattern: pattern,
           ),
         );
       }
@@ -66,6 +71,7 @@ class CampusMapRouteLayer extends StatelessWidget {
           color: routeColor,
           borderStrokeWidth: 2,
           borderColor: Colors.white.withValues(alpha: 0.45),
+          pattern: pattern,
         ),
       );
     } else {
@@ -76,6 +82,7 @@ class CampusMapRouteLayer extends StatelessWidget {
           color: routeColor,
           borderStrokeWidth: 2,
           borderColor: Colors.white.withValues(alpha: 0.45),
+          pattern: pattern,
         ),
       );
     }
