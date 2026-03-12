@@ -4,6 +4,34 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-13 (AEDT) — Full map parity pass
+
+**Scope:** Structural decomposition, visual polish, overlay layers, Google Places fallback, and Street View integration.
+
+**Summary:**
+Decomposed the monolithic campus renderer into 5 focused layer widgets under `campus/` subdirectory and moved the Google renderer into `google/` subdirectory. Added visual polish: GPS accuracy circle (translucent blue, cos-lat corrected), green origin dot at route start in both renderers. Built complete overlay layer system with 4 campus overlays (parking, water, accessibility, permits) using real overlay images from the web repo, with toggle UI in a bottom sheet picker. Created `maps-places` Supabase Edge Function for Google Places Autocomplete proxy, integrated into the search sheet with 300ms debounce fallback when no strong campus match. Added Street View deep-link button to route panel.
+
+**Changes:**
+1. **Campus decomposition** — split into CampusMapOverlay, CampusMapMarkerLayer, CampusMapRouteLayer, CampusMapLocationLayer, and CampusMapView orchestrator
+2. **Google restructure** — moved to `google/` subdirectory, added green origin-dot marker
+3. **Accuracy circle** — translucent blue circle behind user dot, sized from GPS accuracy metres via cos-lat corrected conversion
+4. **Origin dot** — green circle at first point of route polyline (both renderers)
+5. **Overlay system** — MapOverlay entity, OverlayRegistry (4 overlays), controller toggle state, CampusOverlayLayers renderer, OverlayPickerSheet UI, layers button in MapShell (campus mode only)
+6. **Google Places fallback** — maps-places Edge Function, PlacesSearchSource, BuildingSearchSheet integration with debounce
+7. **Street View** — deep-link button launching Google Street View at building coordinates
+
+**Files created:** 19 new files (5 campus layer widgets, 2 overlay system, 1 Places data source, 1 Edge Function, 4 overlay images, 3 test files, 1 plan doc)
+**Files modified:** 7 files (controller, map page, map shell, route panel, search sheet, supabase config, controller test)
+**Files deleted:** 2 files (old campus_map_view.dart, old google_map_view.dart — moved to subdirectories)
+
+**Verification:** `dart format` (0 issues), `flutter analyze` (0 issues), `flutter test` (115/115 passed, up from 101)
+
+**Follow-ups:**
+- Street View is deep-link only — no embedded view due to flutter platform limitations
+- Overlay images are full-resolution from web repo — consider optimizing for mobile bundle size
+- Google Places fallback requires `GOOGLE_ROUTES_API_KEY` on the maps-places Edge Function
+- Campus walking dashed polyline requires custom `flutter_map` painter (not yet ported)
+
 ### Raouf: 2026-03-12 (AEDT) — Full web-to-Flutter navigation parity
 
 **Scope:** Complete parity audit between the Next.js web map and Flutter map, then implement all missing navigation features.
