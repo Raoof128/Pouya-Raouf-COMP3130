@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
+import 'package:mq_navigation/shared/widgets/glass_pane.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/map_mode_toggle.dart';
@@ -176,47 +177,6 @@ class MapShell extends StatelessWidget {
 }
 
 // ── Shared glass-effect components ──────────────────────────
-
-/// Frosted-glass container matching the reference web design.
-///
-/// Uses backdrop blur + semi-transparent background for the
-/// characteristic frosted-glass overlay look.
-class GlassPane extends StatelessWidget {
-  const GlassPane({
-    super.key,
-    required this.isDark,
-    required this.child,
-    this.borderRadius = MqSpacing.radiusXl,
-  });
-
-  final bool isDark;
-  final Widget child;
-  final double borderRadius;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: isDark
-                ? MqColors.charcoal850.withValues(alpha: 0.85)
-                : Colors.white.withValues(alpha: 0.8),
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.black.withValues(alpha: 0.08),
-            ),
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
 
 /// Private alias for internal use.
 class _GlassPane extends GlassPane {

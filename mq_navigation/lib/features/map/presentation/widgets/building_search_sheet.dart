@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
+import 'package:mq_navigation/app/theme/mq_animations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/map/data/datasources/places_search_source.dart';
@@ -67,7 +68,7 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
       return;
     }
 
-    _placesDebounce = Timer(const Duration(milliseconds: 300), () {
+    _placesDebounce = Timer(MqAnimations.slow, () {
       _fetchPlaceSuggestions(query);
     });
   }

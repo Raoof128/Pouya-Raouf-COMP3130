@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
+import 'package:mq_navigation/app/theme/mq_animations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
@@ -82,7 +83,7 @@ class _PillSegment extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: MqAnimations.normal,
           curve: Curves.easeInOut,
           padding: const EdgeInsets.symmetric(horizontal: MqSpacing.space6, vertical: MqSpacing.space2),
           decoration: BoxDecoration(

@@ -2049,5 +2049,6 @@
   },
   "errorApplication": "خطأ في التطبيق",
   "errorSomethingWentWrong": "حدث خطأ ما أثناء بناء واجهة المستخدم.",
-  "about_theTeam_desc": "رؤوف عابديني وبويا علوي\nCOMP3130، جامعة ماكواري"
+  "about_theTeam_desc": "رؤوف عابديني وبويا علوي\nCOMP3130، جامعة ماكواري",
+  "noSearchResults": "لم يتم العثور على نتائج"
 }

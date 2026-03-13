@@ -2049,5 +2049,6 @@
   },
   "errorApplication": "Application error",
   "errorSomethingWentWrong": "Something went wrong while building the UI.",
-  "about_theTeam_desc": "Raouf Abedini & Pouya Alavi\nCOMP3130, Macquarie University"
+  "about_theTeam_desc": "Raouf Abedini & Pouya Alavi\nCOMP3130, Macquarie University",
+  "noSearchResults": "Nessun risultato trovato"
 }

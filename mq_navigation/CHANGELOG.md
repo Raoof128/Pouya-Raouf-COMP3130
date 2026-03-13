@@ -4,6 +4,40 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-14 (AEDT) — UI/UX Follow-up: Splash, Animations, GlassPane, i18n
+
+**Scope:** Branded splash screens, animation token system, shared widget extraction, i18n key addition.
+
+**Summary:**
+Closed the 4 follow-up items from the UI/UX production readiness audit.
+
+**Key changes:**
+1. **Branded splash screens** — Replaced default white Android splash and iOS LaunchScreen with MQ Red (#A6192E) backgrounds. Android status bar now matches the splash color. iOS LaunchScreen storyboard uses custom sRGB color.
+2. **Animation duration tokens** — Created `MqAnimations` abstract final class with `fast` (150ms), `normal` (200ms), `slow` (300ms), `sheet` (350ms) duration tokens and `defaultCurve`/`sheetCurve` curve tokens. Replaced hardcoded `Duration(milliseconds: ...)` in travel mode pills, map mode toggle, and search debounce timer.
+3. **GlassPane extraction** — Moved `GlassPane` from `map_shell.dart` to `lib/shared/widgets/glass_pane.dart` for app-wide reuse. Private `_GlassPane` alias in map_shell continues to work via import.
+4. **noSearchResults i18n** — Added `noSearchResults` key to all 35 ARB files. 12 locales have native translations (ar, zh, es, fr, de, ja, ko, hi, pt, ru, tr, it); remaining 22 use English fallback.
+
+**Files changed:**
+- `android/app/src/main/res/drawable/launch_background.xml`
+- `android/app/src/main/res/drawable-v21/launch_background.xml`
+- `android/app/src/main/res/values/styles.xml`
+- `ios/Runner/Base.lproj/LaunchScreen.storyboard`
+- `lib/app/theme/mq_animations.dart` (new)
+- `lib/shared/widgets/glass_pane.dart` (new)
+- `lib/features/map/presentation/widgets/route_panel.dart`
+- `lib/features/map/presentation/widgets/map_mode_toggle.dart`
+- `lib/features/map/presentation/widgets/building_search_sheet.dart`
+- `lib/features/map/presentation/widgets/map_shell.dart`
+- `lib/app/l10n/app_*.arb` (35 files)
+
+**Verification:**
+- `flutter gen-l10n` → Success
+- `dart analyze` → 0 issues
+- `flutter test` → 115/115 passed
+
+**Follow-ups:**
+- None — all follow-up items from the UI/UX audit are now closed.
+
 ### Raouf: 2026-03-14 (AEDT) — Full UI/UX Production Readiness Audit
 
 **Scope:** Comprehensive UI/UX audit and remediation for production readiness.
