@@ -52,7 +52,7 @@ class EnvConfig {
       'cm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMjkwNTEsImV4cCI6MjA4MjYwNTA1MX0.'
       '5OXdkYfflYE27WRhw2PKf-up3UYctGKn3w2RQbTZrWw';
   static const String _fallbackGoogleMapsApiKey =
-      'AIzaSyD9WlnjQntUsWNzHR2oa-P-8zG3l60D2SA';
+      'AIzaSyCwI7XmkparxuCaiDkUDmPCjpIDoMRsS00';
 
   /// Supabase project URL. Falls back to dev env var → hardcoded fallback in debug mode.
   static String get supabaseUrl {

@@ -69,5 +69,43 @@ void main() {
       expect(route.instructions, hasLength(2));
       expect(route.instructions.last.text, 'Turn right');
     });
+
+    test('parses Routes API duration strings from normalized responses', () {
+      final route = MapRoute.fromJson({
+        'renderer': 'google',
+        'mode': 'WALK',
+        'distanceMeters': 540,
+        'duration': '420s',
+        'encodedPolyline': 'abc123',
+        'points': const [
+          {'lat': -33.774, 'lng': 151.111},
+        ],
+        'steps': const [
+          {
+            'instruction': 'Head north',
+            'distanceMeters': 100,
+            'durationSeconds': 60,
+          },
+        ],
+      }, TravelMode.walk);
+
+      expect(route.durationSeconds, 420);
+    });
+
+    test('throws a helpful error when legacy Directions status is not OK', () {
+      expect(
+        () => MapRoute.fromJson({
+          'status': 'ZERO_RESULTS',
+          'routes': const [],
+        }, TravelMode.walk),
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            contains('ZERO_RESULTS'),
+          ),
+        ),
+      );
+    });
   });
 }

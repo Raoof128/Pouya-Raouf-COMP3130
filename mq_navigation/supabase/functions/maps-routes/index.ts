@@ -55,6 +55,16 @@ type NormalizedRoute = {
   arrivalEstimate: string;
 };
 
+class RequestValidationError extends Error {
+  status: number;
+
+  constructor(message: string, status = 400) {
+    super(message);
+    this.name = "RequestValidationError";
+    this.status = status;
+  }
+}
+
 function jsonResponse(payload: unknown, status = 200): Response {
   return new Response(JSON.stringify(payload), {
     status,
@@ -107,7 +117,10 @@ async function maybeUser(
 }
 
 function parseRenderer(value: unknown): RouteRenderer {
-  return value === "campus" ? "campus" : "google";
+  if (value === "campus" || value === "google") {
+    return value;
+  }
+  throw new RequestValidationError("renderer must be campus or google");
 }
 
 function parseCoordinate(value: unknown, label: string): CoordinatePayload {
@@ -133,9 +146,19 @@ function parseTravelMode(value: unknown): string {
   const normalized = typeof value === "string" ? value.toUpperCase() : "WALK";
   const allowed = new Set(["WALK", "DRIVE", "BICYCLE", "TRANSIT"]);
   if (!allowed.has(normalized)) {
-    throw new Error("travelMode must be WALK, DRIVE, BICYCLE, or TRANSIT");
+    throw new RequestValidationError(
+      "travelMode must be WALK, DRIVE, BICYCLE, or TRANSIT",
+    );
   }
   return normalized;
+}
+
+function assertCampusTravelModeSupported(travelMode: string): void {
+  if (travelMode !== "WALK") {
+    throw new RequestValidationError(
+      "Campus routing currently supports WALK only. Switch to the Google renderer for drive, bicycle, or transit routes.",
+    );
+  }
 }
 
 async function enforceRateLimit(
@@ -542,6 +565,10 @@ Deno.serve(async (req) => {
       ? body.languageCode
       : "en-AU";
 
+    if (renderer === "campus") {
+      assertCampusTravelModeSupported(travelMode);
+    }
+
     const route = renderer === "campus"
       ? await fetchCampusRoute(origin, destination, travelMode)
       : await fetchGoogleRoute(
@@ -554,7 +581,7 @@ Deno.serve(async (req) => {
 
     return jsonResponse(route);
   } catch (err) {
-    const message = (err as Error).message;
-    return jsonResponse({ error: message }, 500);
+    const error = err as Error & { status?: number };
+    return jsonResponse({ error: error.message }, error.status ?? 500);
   }
 });

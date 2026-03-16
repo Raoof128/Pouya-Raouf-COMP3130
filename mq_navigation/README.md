@@ -56,9 +56,9 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full architecture overv
 ### Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/Raoof128/Pouya-Raouf-COMP3130.git
-cd Pouya-Raouf-COMP3130/MQ_Navigation
+# Clone the repository and enter the Flutter app
+git clone <repo-url>
+cd mq_navigation
 
 # Install dependencies
 flutter pub get
@@ -66,12 +66,10 @@ flutter pub get
 # Generate localisation files
 flutter gen-l10n
 
-# Sync the shared campus map assets from the web repo
-cd ../syllabus-sync
-npm run export:flutter-map-assets
+# Refresh the bundled building registry when backend map data changes
+dart run tools/sync_buildings.dart
 
-# Run the app — debug mode "just works" with hardcoded dev defaults
-cd ../mq_navigation
+# Run the app — debug mode uses committed development fallbacks
 flutter run                     # Android emulator (default)
 flutter run -d chrome           # Web (Chrome)
 ./scripts/run.sh chrome         # Web (alternative — loads .env overrides)
@@ -125,6 +123,9 @@ flutter run --release \
 > Route requests no longer use the client-side Google Directions flow.
 > Both renderers call the `maps-routes` Supabase Edge Function, which keeps
 > server-side routing keys out of the Flutter binary.
+
+> Campus mode currently supports walking routes only. For driving, cycling, or
+> transit directions, switch to the Google renderer.
 
 ## Development
 
@@ -183,9 +184,10 @@ The MQ Design System maps Macquarie University's brand tokens to Flutter:
 
 GitHub Actions runs on every push and PR to `main`:
 
-1. **Analyze & Test** -- format check, static analysis, 83 unit/widget tests with coverage
-2. **Build Android** -- release APK with secrets injection (main branch only)
-3. **Build iOS** -- release build without code signing (main branch only)
+1. **Analyze & Test** -- format check, static analysis, Flutter test suite with coverage, and `deno check` for `maps-routes`/`maps-places`
+2. **Build Android Smoke** -- debug APK build on pull requests
+3. **Build Android** -- release APK with secrets injection (main branch only)
+4. **Build iOS** -- release build without code signing (main branch only)
 
 ## Documentation
 

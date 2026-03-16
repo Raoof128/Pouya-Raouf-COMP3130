@@ -34,6 +34,7 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
   List<PlaceSuggestion> _placeSuggestions = const [];
   bool _isLoadingPlaces = false;
   late final FocusNode _searchFocusNode;
+  int _placesRequestVersion = 0;
 
   @override
   void initState() {
@@ -61,6 +62,7 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
     _placesDebounce?.cancel();
 
     if (query.trim().length < 3) {
+      _placesRequestVersion += 1;
       setState(() {
         _placeSuggestions = const [];
         _isLoadingPlaces = false;
@@ -69,11 +71,12 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
     }
 
     _placesDebounce = Timer(MqAnimations.slow, () {
-      _fetchPlaceSuggestions(query);
+      final requestId = ++_placesRequestVersion;
+      _fetchPlaceSuggestions(query, requestId);
     });
   }
 
-  Future<void> _fetchPlaceSuggestions(String query) async {
+  Future<void> _fetchPlaceSuggestions(String query, int requestId) async {
     final state = ref.read(mapControllerProvider).value;
     final results = state?.searchResults ?? const <Building>[];
     final normalized = normalizeMapSearch(query);
@@ -83,6 +86,9 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
       (building) => isStrongCampusMatch(building, normalized),
     );
     if (hasStrongMatch) {
+      if (requestId != _placesRequestVersion || !mounted) {
+        return;
+      }
       setState(() {
         _placeSuggestions = const [];
         _isLoadingPlaces = false;
@@ -101,7 +107,11 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
           longitude: location?.longitude,
         );
 
-    if (!mounted) return;
+    if (!mounted ||
+        requestId != _placesRequestVersion ||
+        normalizeMapSearch(_controller.text) != normalized) {
+      return;
+    }
 
     setState(() {
       _placeSuggestions = suggestions;
@@ -143,7 +153,9 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
       snapSizes: const <double>[0.15, 0.5, 0.9],
       builder: (context, scrollController) {
         return Material(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(MqSpacing.space6)),
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(MqSpacing.space6),
+          ),
           child: ListView(
             controller: scrollController,
             padding: const EdgeInsets.all(MqSpacing.space4),
@@ -176,7 +188,9 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
               ),
               if (results.isEmpty && query.isNotEmpty && !_isLoadingPlaces)
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: MqSpacing.space8),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: MqSpacing.space8,
+                  ),
                   child: Center(
                     child: Text(
                       l10n.noBuildingsFound(query),

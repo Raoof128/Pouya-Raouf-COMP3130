@@ -181,7 +181,9 @@ Build-time injection via `--dart-define`:
 | `GOOGLE_MAPS_API_KEY` | No | Google Maps SDK key for the embedded map |
 | `APP_ENV` | No | `development` / `staging` / `production` |
 
-`EnvConfig.validate()` throws `StateError` in all build modes if required vars are missing.
+`EnvConfig.validate()` throws `StateError` in release builds if required vars are missing.
+Debug builds fall back to committed development values so `flutter run` works
+without extra flags during local onboarding.
 
 ## CI/CD Pipeline
 
@@ -193,6 +195,11 @@ Push/PR to main
      -> format check
      -> flutter analyze
      -> flutter test --coverage
+     -> deno check maps-routes/maps-places
+
+Pull request only
+  -> Build Android Smoke (ubuntu)
+     -> flutter build apk --debug
 
 Push to main only
   -> Build Android (ubuntu, Java 17)

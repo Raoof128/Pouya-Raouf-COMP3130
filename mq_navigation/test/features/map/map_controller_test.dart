@@ -112,6 +112,100 @@ void main() {
       expect(state.isLoadingRoute, isFalse);
       expect(state.isNavigating, isFalse);
     });
+
+    test(
+      'surfaces permission errors when route loading has no location',
+      () async {
+        final repository = _FakeMapRepository(
+          buildings: [building],
+          permissionState: LocationPermissionState.denied,
+          currentLocation: null,
+        );
+        final container = ProviderContainer(
+          overrides: [mapRepositoryProvider.overrideWithValue(repository)],
+        );
+        addTearDown(container.dispose);
+
+        await container.read(mapControllerProvider.future);
+        final notifier = container.read(mapControllerProvider.notifier);
+
+        notifier.selectBuilding(building);
+        await notifier.loadRoute();
+
+        final state = container.read(mapControllerProvider).value!;
+        expect(state.error, MapStateError.locationPermissionRequired);
+        expect(state.isLoadingRoute, isFalse);
+        expect(state.route, isNull);
+      },
+    );
+
+    test(
+      'marks arrival and stops navigation when user reaches destination',
+      () async {
+        final locationStream = StreamController<LocationSample>.broadcast();
+        addTearDown(locationStream.close);
+        final repository = _FakeMapRepository(
+          buildings: [building],
+          locationStream: locationStream.stream,
+        );
+        final container = ProviderContainer(
+          overrides: [mapRepositoryProvider.overrideWithValue(repository)],
+        );
+        addTearDown(container.dispose);
+
+        await container.read(mapControllerProvider.future);
+        final notifier = container.read(mapControllerProvider.notifier);
+
+        notifier.selectBuilding(building);
+        await notifier.loadRoute();
+        notifier.startNavigation();
+
+        locationStream.add(
+          const LocationSample(
+            latitude: -33.7754,
+            longitude: 151.11325,
+            accuracy: 5,
+          ),
+        );
+        await Future<void>.delayed(Duration.zero);
+
+        final state = container.read(mapControllerProvider).value!;
+        expect(state.hasArrived, isTrue);
+        expect(state.isNavigating, isFalse);
+      },
+    );
+
+    test('recalculates when navigation goes sufficiently off route', () async {
+      final locationStream = StreamController<LocationSample>.broadcast();
+      addTearDown(locationStream.close);
+      final repository = _FakeMapRepository(
+        buildings: [building],
+        locationStream: locationStream.stream,
+      );
+      final container = ProviderContainer(
+        overrides: [mapRepositoryProvider.overrideWithValue(repository)],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(mapControllerProvider.future);
+      final notifier = container.read(mapControllerProvider.notifier);
+
+      notifier.selectBuilding(building);
+      await notifier.loadRoute();
+      notifier.startNavigation();
+      final initialRouteCalls = repository.routeCallCount;
+
+      locationStream.add(
+        const LocationSample(
+          latitude: -33.7700,
+          longitude: 151.1200,
+          accuracy: 5,
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(repository.routeCallCount, greaterThan(initialRouteCalls));
+    });
   });
 
   group('MapState', () {
@@ -139,11 +233,24 @@ void main() {
 }
 
 class _FakeMapRepository implements MapRepository {
-  _FakeMapRepository({required this.buildings});
+  _FakeMapRepository({
+    required this.buildings,
+    this.permissionState = LocationPermissionState.granted,
+    this.currentLocation = const LocationSample(
+      latitude: -33.77388,
+      longitude: 151.11275,
+      accuracy: 8,
+    ),
+    Stream<LocationSample>? locationStream,
+  }) : _locationStream = locationStream ?? const Stream<LocationSample>.empty();
 
   final List<Building> buildings;
+  final LocationPermissionState permissionState;
+  final LocationSample? currentLocation;
+  final Stream<LocationSample> _locationStream;
   MapRendererType? lastRenderer;
   Completer<MapRoute>? pendingRouteCompleter;
+  int routeCallCount = 0;
 
   @override
   Future<void> openAppSettings() async {}
@@ -153,7 +260,7 @@ class _FakeMapRepository implements MapRepository {
 
   @override
   Future<LocationPermissionState> ensureLocationPermission() async {
-    return LocationPermissionState.granted;
+    return permissionState;
   }
 
   @override
@@ -163,11 +270,7 @@ class _FakeMapRepository implements MapRepository {
 
   @override
   Future<LocationSample?> getCurrentLocation() async {
-    return const LocationSample(
-      latitude: -33.77388,
-      longitude: 151.11275,
-      accuracy: 8,
-    );
+    return currentLocation;
   }
 
   @override
@@ -177,6 +280,7 @@ class _FakeMapRepository implements MapRepository {
     required Building destination,
     required TravelMode travelMode,
   }) async {
+    routeCallCount += 1;
     lastRenderer = renderer;
     final pending = pendingRouteCompleter;
     if (pending != null) {
@@ -195,6 +299,5 @@ class _FakeMapRepository implements MapRepository {
   }
 
   @override
-  Stream<LocationSample> watchLocation() =>
-      const Stream<LocationSample>.empty();
+  Stream<LocationSample> watchLocation() => _locationStream;
 }

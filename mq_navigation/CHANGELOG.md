@@ -4,6 +4,55 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-17 (AEDT) — Google Maps Client Key Rotation
+
+**Scope:** Replace the committed Google Maps client API key across Flutter runtime configuration.
+
+**Summary:**
+Updated the repo’s Google Maps client key everywhere the app currently reads it in local and debug flows so Android, iOS, `.env` runs, and `EnvConfig` fallback behavior remain consistent.
+
+**Files changed:**
+- `.env`
+- `android/gradle.properties`
+- `ios/Flutter/Debug.xcconfig`
+- `ios/Flutter/Release.xcconfig`
+- `lib/core/config/env_config.dart`
+
+### Raouf: 2026-03-17 (AEDT) — Campus Map Audit Hardening
+
+**Scope:** Campus map correctness, search-race hardening, CI coverage, and documentation accuracy.
+
+**Summary:**
+Performed a focused production audit of the campus map stack and fixed the highest-risk gaps found across the Flutter client, Supabase routing function, tests, CI, and project docs.
+
+**Key changes:**
+1. **Routing contract hardening** — `maps-routes` now rejects invalid `renderer` values instead of silently defaulting to Google, and campus routing now fails fast for non-walking travel modes rather than returning walking geometry labeled as drive/bike/transit.
+2. **Places race fix** — `BuildingSearchSheet` now versions Places requests so out-of-order async responses cannot overwrite the latest query’s suggestions after rapid typing.
+3. **Verification expansion** — Added controller coverage for permission-denied route loading, arrival detection, and off-route recalculation, plus route parsing regressions for normalized duration strings and non-OK Directions responses.
+4. **CI map-path validation** — GitHub Actions now runs `deno check` against `supabase/functions/maps-routes/index.ts` and `supabase/functions/maps-places/index.ts`, pull requests now perform an Android debug APK smoke build, and release/debug APK artifact uploads now use the correct job and output paths.
+5. **Docs refresh** — Updated README and architecture docs to describe the supported local setup, the current campus walking-only limitation, and the real CI pipeline.
+
+**Files changed:**
+- `lib/features/map/presentation/widgets/building_search_sheet.dart`
+- `supabase/functions/maps-routes/index.ts`
+- `.github/workflows/ci.yml`
+- `test/features/map/map_controller_test.dart`
+- `test/features/map/map_route_test.dart`
+- `README.md`
+- `docs/ARCHITECTURE.md`
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Verification:**
+- `dart analyze`
+- `flutter test`
+- `deno check supabase/functions/maps-routes/index.ts`
+- `deno check supabase/functions/maps-places/index.ts`
+
+**Follow-ups:**
+- Add server-side rate limiting to `maps-places` to close the remaining Google Places quota-exhaustion path.
+- Consider disabling non-walking travel modes in the campus renderer UI instead of surfacing the limitation only at request time.
+
 ### Raouf: 2026-03-14 (AEDT) — UI/UX Follow-up: Splash, Animations, GlassPane, i18n
 
 **Scope:** Branded splash screens, animation token system, shared widget extraction, i18n key addition.
