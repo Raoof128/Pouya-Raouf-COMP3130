@@ -182,8 +182,8 @@ Build-time injection via `--dart-define`:
 | `APP_ENV` | No | `development` / `staging` / `production` |
 
 `EnvConfig.validate()` throws `StateError` in release builds if required vars are missing.
-Debug builds fall back to committed development values so `flutter run` works
-without extra flags during local onboarding.
+Debug builds still fall back to committed Supabase development values, but the
+Google Maps client key must be supplied locally and is not committed to the repo.
 
 ## CI/CD Pipeline
 

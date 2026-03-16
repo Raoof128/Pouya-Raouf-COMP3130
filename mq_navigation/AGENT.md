@@ -76,6 +76,9 @@ Located in project root:
 See `CHANGELOG.md` for full development history.
 
 Raouf:
+2026-03-17: Secret exposure remediation — removed committed Google Maps client keys from tracked runtime files after a GitHub secret alert. Cleared the key from `android/gradle.properties` and `ios/Flutter/*.xcconfig`, removed the committed debug fallback from `EnvConfig`, and deleted the hardcoded Google Maps JavaScript API script key from `web/index.html`. Updated repo docs/inventories to state that the Google Maps client key must be supplied locally via `--dart-define` or `.env` and is no longer committed.
+
+Raouf:
 2026-03-17: Google Maps client key rotation — updated the committed Google Maps client key across the local Flutter runtime paths so Android manifest injection, iOS build settings, `.env`-driven runs, and the debug fallback in `EnvConfig` all stay aligned. Files changed: `.env`, `android/gradle.properties`, `ios/Flutter/Debug.xcconfig`, `ios/Flutter/Release.xcconfig`, `lib/core/config/env_config.dart`.
 
 Raouf:

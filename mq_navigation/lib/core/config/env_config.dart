@@ -2,10 +2,11 @@ import 'package:flutter/foundation.dart';
 
 /// Environment configuration loaded from --dart-define at build time.
 ///
-/// In **debug mode**, falls back to development defaults so that a bare
-/// `flutter run` works without flags. In **release mode**, missing values
-/// cause a [StateError] — you must supply them via `--dart-define` or
-/// `--dart-define-from-file=.env`.
+/// In **debug mode**, Supabase falls back to development defaults to keep local
+/// onboarding simple. The Google Maps client key does not have a committed
+/// fallback and must be supplied via `--dart-define` or
+/// `--dart-define-from-file=.env` when the Google renderer is needed.
+/// In **release mode**, missing required values cause a [StateError].
 ///
 /// **Security Note:** Real `.env` files are ignored by git to prevent
 /// credential leaks. The fallbacks here are safe public identifiers.
@@ -51,9 +52,6 @@ class EnvConfig {
       'eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4c3FsZ3Zid3RldmtrbGp6b2xnIiwi'
       'cm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMjkwNTEsImV4cCI6MjA4MjYwNTA1MX0.'
       '5OXdkYfflYE27WRhw2PKf-up3UYctGKn3w2RQbTZrWw';
-  static const String _fallbackGoogleMapsApiKey =
-      'AIzaSyCwI7XmkparxuCaiDkUDmPCjpIDoMRsS00';
-
   /// Supabase project URL. Falls back to dev env var → hardcoded fallback in debug mode.
   static String get supabaseUrl {
     if (_supabaseUrl.isNotEmpty) return _supabaseUrl;
@@ -68,11 +66,11 @@ class EnvConfig {
     return kDebugMode ? _fallbackSupabaseAnonKey : '';
   }
 
-  /// Google Maps client-side API key. Falls back to dev env var → hardcoded fallback in debug mode.
+  /// Google Maps client-side API key. Must come from dart-define or local env.
   static String get googleMapsApiKey {
     if (_googleMapsApiKey.isNotEmpty) return _googleMapsApiKey;
     if (_devGoogleMapsApiKey.isNotEmpty) return _devGoogleMapsApiKey;
-    return kDebugMode ? _fallbackGoogleMapsApiKey : '';
+    return '';
   }
 
   /// App environment. Defaults to 'development'.

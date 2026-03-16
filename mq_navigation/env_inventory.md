@@ -8,11 +8,13 @@ All environment variables used by MQ Navigation, categorised by client/server ex
 |----------|----------|---------|-------|
 | `SUPABASE_URL` | Release only | Hardcoded dev fallback | Supabase project URL |
 | `SUPABASE_ANON_KEY` | Release only | Hardcoded dev fallback | Public anon key (RLS enforced) |
-| `GOOGLE_MAPS_API_KEY` | No | Hardcoded dev fallback | Client-side Google Maps renderer key |
+| `GOOGLE_MAPS_API_KEY` | No | None | Client-side Google Maps renderer key |
 | `APP_ENV` | No | `development` | development / staging / production |
 
-> In **debug mode** a bare `flutter run` works without `--dart-define-from-file=.env`
-> because `env_config.dart` falls back to hardcoded development defaults.
+> In **debug mode** a bare `flutter run` works for Supabase without
+> `--dart-define-from-file=.env` because `env_config.dart` falls back to
+> development defaults.
+> The Google Maps client key must still be supplied locally.
 > In **release mode** you must supply at least `SUPABASE_URL` and `SUPABASE_ANON_KEY`.
 
 ## Server-Only (Edge Functions env / Supabase dashboard)

@@ -4,6 +4,29 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-17 (AEDT) — Secret Exposure Remediation
+
+**Scope:** Remove committed Google Maps client API keys from tracked source and config files.
+
+**Summary:**
+Resolved the repo’s tracked Google Maps client key exposure by removing committed keys from Flutter runtime config and web assets. The app now expects the client key to be provided locally via `--dart-define` or `.env` instead of relying on checked-in defaults.
+
+**Files changed:**
+- `lib/core/config/env_config.dart`
+- `android/gradle.properties`
+- `ios/Flutter/Debug.xcconfig`
+- `ios/Flutter/Release.xcconfig`
+- `web/index.html`
+- `README.md`
+- `docs/ARCHITECTURE.md`
+- `env_inventory.md`
+- `map_inventory.md`
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Follow-ups:**
+- Rotate or revoke the exposed Google Maps keys in Google Cloud because git history and previous pushes already exposed them.
+
 ### Raouf: 2026-03-17 (AEDT) — Google Maps Client Key Rotation
 
 **Scope:** Replace the committed Google Maps client API key across Flutter runtime configuration.

@@ -69,7 +69,7 @@ flutter gen-l10n
 # Refresh the bundled building registry when backend map data changes
 dart run tools/sync_buildings.dart
 
-# Run the app — debug mode uses committed development fallbacks
+# Run the app
 flutter run                     # Android emulator (default)
 flutter run -d chrome           # Web (Chrome)
 ./scripts/run.sh chrome         # Web (alternative — loads .env overrides)
@@ -88,11 +88,12 @@ flutter run --release \
 |----------|----------|---------|-------------|
 | `SUPABASE_URL` | Release only | Dev fallback | Supabase project URL |
 | `SUPABASE_ANON_KEY` | Release only | Dev fallback | Supabase anonymous API key |
-| `GOOGLE_MAPS_API_KEY` | No | Dev fallback | Google Maps SDK key for the Google renderer |
+| `GOOGLE_MAPS_API_KEY` | No | None | Google Maps SDK key for the Google renderer |
 | `APP_ENV` | No | `development` | `development`, `staging`, or `production` |
 
-> In **debug mode**, `env_config.dart` uses hardcoded development defaults so a
-> bare `flutter run` works out-of-the-box on any platform (Android, iOS, web).
+> In **debug mode**, Supabase uses development fallbacks, but the Google Maps
+> client key must still come from local environment config when you want the
+> Google renderer or web Google Maps integration.
 
 ### Mobile Platform Setup
 
