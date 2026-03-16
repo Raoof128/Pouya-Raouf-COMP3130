@@ -120,6 +120,7 @@ flutter run --release \
 | `ORS_API_KEY` | `maps-routes` campus routing | Optional; when omitted, campus mode falls back to a generated demo route |
 | `FIREBASE_SERVICE_ACCOUNT_JSON` | `notify` | FCM HTTP v1 service account JSON |
 | `CRON_SECRET` | `cleanup-cron` | Protects scheduled cron endpoints |
+| `ALLOWED_WEB_ORIGINS` | `maps-routes`, `maps-places` | Optional comma-separated browser origin allowlist for Flutter web / hosted web |
 
 > Route requests no longer use the client-side Google Directions flow.
 > Both renderers call the `maps-routes` Supabase Edge Function, which keeps
@@ -127,6 +128,10 @@ flutter run --release \
 
 > Campus mode currently supports walking routes only. For driving, cycling, or
 > transit directions, switch to the Google renderer.
+
+> `maps-places` is now rate-limited and server-cached. For browser deployments,
+> set `ALLOWED_WEB_ORIGINS` so only your own web origins can call the map Edge
+> Functions with an `Origin` header.
 
 ## Development
 

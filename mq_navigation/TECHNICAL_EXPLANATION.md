@@ -565,7 +565,7 @@ The repo contains server-side TypeScript functions under `supabase/functions`.
 
 ### Shared CORS
 
-[`supabase/functions/_shared/cors.ts`](supabase/functions/_shared/cors.ts) defines permissive CORS headers and a helper for `OPTIONS` preflight responses.
+[`supabase/functions/_shared/cors.ts`](supabase/functions/_shared/cors.ts) defines shared CORS handling. By default functions remain permissive for non-browser clients, but map functions can enforce an `ALLOWED_WEB_ORIGINS` allowlist when browser `Origin` headers are present.
 
 ### `maps-routes`
 
@@ -574,9 +574,20 @@ The repo contains server-side TypeScript functions under `supabase/functions`.
 - accepts anon requests and upgrades to user-aware throttling when a valid bearer token is present
 - validates renderer, coordinates, and travel mode
 - rate limits requests by user ID or client IP
+- optionally enforces a browser-origin allowlist via `ALLOWED_WEB_ORIGINS`
 - calls Google Routes API with a server-side API key for Google mode
 - calls OpenRouteService for campus mode when configured, with a generated demo fallback when it is not
 - returns one normalized route payload for both renderers
+
+### `maps-places`
+
+[`supabase/functions/maps-places/index.ts`](supabase/functions/maps-places/index.ts) is the Google Places autocomplete proxy for off-campus fallback search. It:
+
+- accepts anonymous requests from mobile and web clients
+- rate limits requests per client IP
+- optionally enforces a browser-origin allowlist via `ALLOWED_WEB_ORIGINS`
+- caches normalized suggestion payloads in `edge_response_cache` to reduce repeated Google API spend
+- calls Google Places Autocomplete with a server-side API key
 
 ### `notify`
 
@@ -601,6 +612,7 @@ It supports two delivery strategies:
 [`supabase/functions/cleanup-cron/index.ts`](supabase/functions/cleanup-cron/index.ts) deletes:
 
 - expired `rate_limits` rows
+- expired `edge_response_cache` rows
 - old `audit_logs` rows
 
 It is protected by a cron secret and intended for scheduled maintenance.

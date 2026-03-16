@@ -37,6 +37,12 @@ Deno.serve(async (req) => {
       .delete()
       .lt("reset_time_ms", nowMs);
 
+    // Clean expired edge-response cache entries
+    const { count: edgeCacheCount } = await supabase
+      .from("edge_response_cache")
+      .delete()
+      .lt("expires_at", now);
+
     // Clean audit logs older than 180 days
     const retentionDate = new Date(Date.now() - 180 * 86400_000).toISOString();
     const { count: auditCount } = await supabase
@@ -48,6 +54,7 @@ Deno.serve(async (req) => {
       JSON.stringify({
         cleaned: {
           rate_limits: rateLimitCount ?? 0,
+          edge_response_cache: edgeCacheCount ?? 0,
           audit_logs: auditCount ?? 0,
         },
         timestamp: now,

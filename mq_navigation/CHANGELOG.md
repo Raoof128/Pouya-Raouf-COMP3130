@@ -4,6 +4,29 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-03-17 (AEDT) — Anonymous Map API Hardening
+
+**Scope:** Harden anonymous map endpoints without introducing user auth.
+
+**Summary:**
+Applied the anonymous-API protections that fit the repo’s current Supabase Edge Function architecture. `maps-places` now has IP-based throttling and server-side response caching, while both map edge functions can enforce browser-origin allowlisting through `ALLOWED_WEB_ORIGINS`. This keeps the anonymous client model intact while reducing abuse and Google API spend.
+
+**Files changed:**
+- `supabase/functions/_shared/cors.ts`
+- `supabase/functions/maps-places/index.ts`
+- `supabase/functions/maps-routes/index.ts`
+- `supabase/functions/cleanup-cron/index.ts`
+- `supabase/migrations/20260317_add_edge_response_cache.sql`
+- `README.md`
+- `env_inventory.md`
+- `TECHNICAL_EXPLANATION.md`
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Follow-ups:**
+- If you want app-instance verification beyond origin/IP controls, add Firebase App Check or a similar attestation system as a separate mobile/web integration project.
+- Remove the stale legacy `directions-proxy` function if it is no longer used anywhere.
+
 ### Raouf: 2026-03-17 (AEDT) — Secret Exposure Remediation
 
 **Scope:** Remove committed Google Maps client API keys from tracked source and config files.

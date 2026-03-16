@@ -76,6 +76,9 @@ Located in project root:
 See `CHANGELOG.md` for full development history.
 
 Raouf:
+2026-03-17: Map API anonymous-endpoint hardening — applied the parts of the anonymous API security playbook that fit this repo’s current architecture. Hardened `maps-places` with IP-based rate limiting (30/minute), cached repeated Places responses in a new `edge_response_cache` table, and added browser-origin allowlisting support for both `maps-places` and `maps-routes` via `ALLOWED_WEB_ORIGINS` without breaking mobile clients that send no `Origin` header. Updated `cleanup-cron` to purge expired cache rows and refreshed the docs/env inventory to document the new controls. Deliberately did not add Firebase App Check in this pass because the repo has no existing App Attestation/App Check verification pipeline and forcing it in would be a separate cross-platform integration project.
+
+Raouf:
 2026-03-17: Secret exposure remediation — removed committed Google Maps client keys from tracked runtime files after a GitHub secret alert. Cleared the key from `android/gradle.properties` and `ios/Flutter/*.xcconfig`, removed the committed debug fallback from `EnvConfig`, and deleted the hardcoded Google Maps JavaScript API script key from `web/index.html`. Updated repo docs/inventories to state that the Google Maps client key must be supplied locally via `--dart-define` or `.env` and is no longer committed.
 
 Raouf:

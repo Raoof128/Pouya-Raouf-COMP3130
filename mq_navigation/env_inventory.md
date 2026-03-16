@@ -26,6 +26,7 @@ All environment variables used by MQ Navigation, categorised by client/server ex
 | `ORS_API_KEY` | `maps-routes` EF | Optional OpenRouteService key for campus routing |
 | `FIREBASE_SERVICE_ACCOUNT_JSON` | `notify` EF | Firebase service account JSON for FCM HTTP v1 |
 | `CRON_SECRET` | `cleanup-cron` EF | Protects cron endpoints |
+| `ALLOWED_WEB_ORIGINS` | `maps-routes`, `maps-places` EF | Optional comma-separated browser origin allowlist |
 
 > **Note:** Route computation is now server-side again. Flutter only needs the
 > client Maps SDK key for rendering; route secrets stay in Supabase Edge

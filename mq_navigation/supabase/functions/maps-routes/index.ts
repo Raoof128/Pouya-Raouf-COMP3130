@@ -7,7 +7,11 @@ import {
   createClient,
   type User,
 } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders, handleCors } from "../_shared/cors.ts";
+import {
+  corsHeaders,
+  handleCors,
+  jsonCorsHeaders,
+} from "../_shared/cors.ts";
 
 const GOOGLE_ROUTES_URL =
   "https://routes.googleapis.com/directions/v2:computeRoutes";
@@ -65,19 +69,19 @@ class RequestValidationError extends Error {
   }
 }
 
-function jsonResponse(payload: unknown, status = 200): Response {
-  return new Response(JSON.stringify(payload), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-}
-
 function requireEnv(name: string): string {
   const value = Deno.env.get(name);
   if (!value) {
     throw new Error(`${name} is not configured`);
   }
   return value;
+}
+
+function getAllowedWebOrigins(): string[] {
+  return (Deno.env.get("ALLOWED_WEB_ORIGINS") ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0);
 }
 
 function getAdminClient() {
@@ -537,7 +541,8 @@ async function fetchCampusRoute(
 }
 
 Deno.serve(async (req) => {
-  const cors = handleCors(req);
+  const allowedOrigins = getAllowedWebOrigins();
+  const cors = handleCors(req, { allowedOrigins });
   if (cors) return cors;
 
   try {
@@ -547,12 +552,19 @@ Deno.serve(async (req) => {
       : `ip:${getClientIp(req)}`;
     const rateLimit = await enforceRateLimit(identity);
     if (!rateLimit.allowed) {
-      return jsonResponse(
-        {
+      return new Response(
+        JSON.stringify({
           error: "Rate limit exceeded",
           retryAfterSeconds: rateLimit.retryAfterSeconds,
+        }),
+        {
+          status: 429,
+          headers: {
+            ...jsonCorsHeaders(req, { allowedOrigins }),
+            "Content-Type": "application/json",
+            "Retry-After": String(rateLimit.retryAfterSeconds),
+          },
         },
-        429,
       );
     }
 
@@ -579,9 +591,20 @@ Deno.serve(async (req) => {
         languageCode,
       );
 
-    return jsonResponse(route);
+    return new Response(JSON.stringify(route), {
+      headers: {
+        ...jsonCorsHeaders(req, { allowedOrigins }),
+        "Content-Type": "application/json",
+      },
+    });
   } catch (err) {
     const error = err as Error & { status?: number };
-    return jsonResponse({ error: error.message }, error.status ?? 500);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: error.status ?? 500,
+      headers: {
+        ...jsonCorsHeaders(req, { allowedOrigins }),
+        "Content-Type": "application/json",
+      },
+    });
   }
 });
