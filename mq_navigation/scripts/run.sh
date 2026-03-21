@@ -27,7 +27,7 @@ trap cleanup EXIT
 if grep -q '^GOOGLE_MAPS_API_KEY=' "$ENV_FILE"; then
   GOOGLE_MAPS_API_KEY_VALUE="$(grep '^GOOGLE_MAPS_API_KEY=' "$ENV_FILE" | head -1 | cut -d= -f2-)"
   cat > "$WEB_MAPS_CONFIG" <<EOF
-window.GOOGLE_MAPS_API_KEY = ${GOOGLE_MAPS_API_KEY_VALUE@Q};
+window.GOOGLE_MAPS_API_KEY = "${GOOGLE_MAPS_API_KEY_VALUE}";
 EOF
 fi
 
