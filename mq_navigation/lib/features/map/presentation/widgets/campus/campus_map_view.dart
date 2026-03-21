@@ -149,6 +149,12 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
           latlong.LatLng(meta.mapNorth, meta.mapEast),
         );
 
+        // Sanity check bounds to avoid 'Invalid argument: 0' (log(0)) in flutter_map
+        // if bounds width/height is effectively zero.
+        final bool isValidBounds =
+            (meta.mapNorth - meta.mapSouth).abs() > 0.000001 &&
+            (meta.mapEast - meta.mapWest).abs() > 0.000001;
+
         return LayoutBuilder(
           builder: (context, constraints) {
             // Guard against invalid constraints (e.g., during initial layout pass or zero-sized parent)
@@ -160,10 +166,10 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
             // If constraints are infinite (e.g. inside unconstrained parent), fall back to safe constant.
             final double horizontalPadding = constraints.hasInfiniteWidth
                 ? MqSpacing.space4
-                : constraints.maxWidth * 0.1;
+                : constraints.maxWidth * 0.15;
             final double verticalPadding = constraints.hasInfiniteHeight
                 ? MqSpacing.space4
-                : constraints.maxHeight * 0.1;
+                : constraints.maxHeight * 0.15;
 
             return DecoratedBox(
               decoration: BoxDecoration(
@@ -183,20 +189,21 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
                     meta.centerLatitude,
                     meta.centerLongitude,
                   ),
-                  initialZoom: -2,
-                  initialCameraFit: CameraFit.bounds(
-                    bounds: bounds,
-                    // Dynamic padding (10% of screen) to frame the campus,
-                    // ensuring it doesn't touch edges or crash on small screens.
-                    padding: EdgeInsets.symmetric(
-                      horizontal: horizontalPadding,
-                      vertical: verticalPadding,
-                    ),
-                    // Cap the initial fit zoom low so the full campus is visible
-                    // and the raster image stays crisp on first load.
-                    // Lowering this forces a "zoomed out" perspective.
-                    maxZoom: -2.0,
-                  ),
+                  initialZoom: isValidBounds ? -3 : -3,
+                  initialCameraFit: isValidBounds
+                      ? CameraFit.bounds(
+                          bounds: bounds,
+                          // Dynamic padding (15% of screen) to frame the campus,
+                          // ensuring it doesn't touch edges or crash on small screens.
+                          padding: EdgeInsets.symmetric(
+                            horizontal: horizontalPadding,
+                            vertical: verticalPadding,
+                          ),
+                          // Cap the initial fit zoom lower than before so first load
+                          // is about 2x more zoomed out (one additional zoom level).
+                          maxZoom: -3.0,
+                        )
+                      : null,
                   // Allow zooming out further than the default (-3) to ensure
                   // users can see the whole map if needed.
                   minZoom: -5.0,

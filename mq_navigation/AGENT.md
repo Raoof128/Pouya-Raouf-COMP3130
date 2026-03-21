@@ -176,3 +176,41 @@ Raouf:
 Raouf:
 2026-03-21: Campus Map Bounds Stability & Zoom — Fixed a crash in `flutter_map` caused by invalid layout constraints on small or unconstrained parent widgets (`Invalid argument: 0`). Switched to a robust `LayoutBuilder` pattern that validates constraints before calculating padding. If constraints are invalid or infinite, it falls back to a safe minimal padding (`MqSpacing.space4`). Otherwise, it uses dynamic padding (10% of screen size) to ensure a zoomed-out perspective. Re-added `MqSpacing` import. Files changed: `lib/features/map/presentation/widgets/campus/campus_map_view.dart`, `AGENT.md`, `CHANGELOG.md`.
 
+
+Raouf:
+2026-03-22: Campus Map Zoom & Build Fix — Addressed persistent map zoom issues and build stability. Increased initial campus map padding to 15% of screen dimensions (up from 10%) to ensure a more zoomed-out initial view as requested. Added defensive bounds validation in `campus_map_view.dart` to prevent `flutter_map` crashes (`Invalid argument: 0`) when bounds are effectively zero or layout constraints are invalid. Updated `scripts/run.sh` to explicitly export `MACOSX_DEPLOYMENT_TARGET=11.0` to resolve conflicting deployment target errors in the local environment. Files changed: `lib/features/map/presentation/widgets/campus/campus_map_view.dart`, `scripts/run.sh`, `AGENT.md`, `CHANGELOG.md`. Verification: `./scripts/check.sh` passed (format, analyze, test, build apk).
+
+Raouf: 2026-03-22 AEDT — macOS deployment-target conflict fix
+
+- Summary:
+  - Fixed `flutter run/build` on macOS failing with `clang: conflicting deployment targets` and `targeting 'XR'` during `debug_macos_framework`.
+  - Sanitized Flutter macOS assemble build phases to remove non-macOS deployment target env vars before invoking `macos_assemble.sh`.
+- Rationale:
+  - Xcode 26.x exported cross-platform deployment vars (notably `XROS_DEPLOYMENT_TARGET`) into Flutter’s assemble subprocess, causing clang to target visionOS/XR while using the macOS SDK.
+- Files:
+  - `macos/Runner.xcodeproj/project.pbxproj` — updated both Flutter shell script phases to `unset` iOS/tvOS/watchOS/DriverKit/XROS target vars and force `MACOSX_DEPLOYMENT_TARGET`.
+  - `AGENT.md` — appended this entry.
+  - `CHANGELOG.md` — appended matching changelog entry.
+- Verification:
+  - `flutter build macos --debug --dart-define-from-file=.env` → success (`build/macos/Build/Products/Debug/mq_navigation.app`).
+  - `./scripts/run.sh macos --no-resident` → app built/launched; original clang deployment conflict no longer reproduced.
+  - `./scripts/check.sh` → Passed 6, Failed 0.
+- Follow-ups:
+  - Keep this env-sanitization if upgrading Xcode/Flutter until upstream tooling stops exporting conflicting non-macOS deployment vars into macOS assemble steps.
+
+Raouf: 2026-03-22 AEDT — Campus default load zoom-out tuning
+
+- Summary:
+  - Adjusted campus map initial camera to load approximately 2x more zoomed out than the previous setting.
+  - Lowered initial zoom cap from `-2.0` to `-3.0` and aligned fallback `initialZoom` to `-3`.
+- Rationale:
+  - User feedback confirmed default load was still too zoomed in; one extra zoom level in `CrsSimple` halves scale for a clearly wider initial campus view.
+- Files:
+  - `lib/features/map/presentation/widgets/campus/campus_map_view.dart` — changed initial zoom and `CameraFit.bounds` max zoom.
+  - `AGENT.md` — appended this entry.
+  - `CHANGELOG.md` — appended matching entry.
+- Verification:
+  - `./scripts/check.sh --quick` → Passed 5, Failed 0.
+  - `flutter test test/features/map/map_controller_test.dart` → all tests passed.
+- Follow-ups:
+  - If you want even wider default framing after visual check, next safe step is `maxZoom: -3.5` with current bounds guards unchanged.

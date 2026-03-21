@@ -38,4 +38,5 @@ if [[ -n "${1:-}" ]]; then
 fi
 
 echo "Launching with dart-defines from .env..."
+export MACOSX_DEPLOYMENT_TARGET=11.0
 flutter run $DEVICE_ARG --dart-define-from-file="$ENV_FILE" "$@"
