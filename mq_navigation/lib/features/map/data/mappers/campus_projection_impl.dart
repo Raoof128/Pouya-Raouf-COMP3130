@@ -48,10 +48,7 @@ class CampusProjectionImpl implements CampusProjection {
 
     // Safety check for zero-span (invalid metadata)
     if (latSpan == 0 || lngSpan == 0) {
-      return CampusPoint(
-        x: meta.pixelBounds.west,
-        y: meta.pixelBounds.south,
-      );
+      return CampusPoint(x: meta.pixelBounds.west, y: meta.pixelBounds.south);
     }
 
     final xNorm = (longitude - meta.gpsWest) / lngSpan;

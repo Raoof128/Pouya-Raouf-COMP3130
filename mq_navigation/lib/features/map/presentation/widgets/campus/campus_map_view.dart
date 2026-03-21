@@ -172,8 +172,9 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
                 bounds: bounds,
                 // Substantial padding to prevent the map from hugging the screen edges,
                 // resolving RTL if necessary.
-                padding: EdgeInsetsDirectional.all(MqSpacing.space12)
-                    .resolve(Directionality.of(context)),
+                padding: const EdgeInsetsDirectional.all(
+                  MqSpacing.space12,
+                ).resolve(Directionality.of(context)),
                 // Cap the initial fit zoom low so the full campus is visible
                 // and the raster image stays crisp on first load.
                 maxZoom: 0.5,
