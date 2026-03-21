@@ -42,7 +42,7 @@ All map-related APIs, services, keys, and data sources used by the campus map su
 | Building pixel offset X | 80 px | Required for marker alignment with the raster |
 | Campus fit padding | 20 px | Matches the web `fitBounds` padding |
 | Campus min zoom offset | 1.5 | Flutter derives this from the fitted zoom like the web map |
-| Campus max zoom | 3 | Matches the web `MapController` |
+| Campus max zoom | 1.5 | Reduced from 3 to preserve raster image quality |
 | Fallback location lat | -33.77388 | 18 Wally's Walk entrance — used when GPS unavailable |
 | Fallback location lng | 151.11275 | 18 Wally's Walk entrance — used when GPS unavailable |
 | GPS overlay projection | GCP affine regression | Shared with the web geospatial calibration |
