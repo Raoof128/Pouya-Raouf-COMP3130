@@ -1659,3 +1659,5 @@ Implemented Phase 0 (Foundation Sprint) and Phase 1 (App Shell) of the Flutter M
 - Deploy AASA + assetlinks.json for deep links
 - Add Supabase mobile redirect URLs
 \nRaouf:\n2026-03-21: Architecture and UI quality audit — Fixed map renderer desync logic leak, replaced magic numbers with design tokens in route_panel and map_page, and added missing documentation to MapController. Ensured AsyncValue correctness in map pages.\n
+Raouf:
+2026-03-21: Campus Map Bounds Stability & Zoom — Fixed a crash in `flutter_map` caused by invalid layout constraints on small or unconstrained parent widgets (`Invalid argument: 0`). Switched to a robust `LayoutBuilder` pattern that validates constraints before calculating padding. If constraints are invalid or infinite, it falls back to a safe minimal padding (`MqSpacing.space4`). Otherwise, it uses dynamic padding (10% of screen size) to ensure a zoomed-out perspective. Re-added `MqSpacing` import. Files changed: `lib/features/map/presentation/widgets/campus/campus_map_view.dart`, `AGENT.md`, `CHANGELOG.md`.

@@ -149,72 +149,92 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
           latlong.LatLng(meta.mapNorth, meta.mapEast),
         );
 
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: Theme.of(context).brightness == Brightness.dark
-                  ? const [MqColors.charcoal950, MqColors.charcoal850]
-                  : const [MqColors.sand100, MqColors.alabaster],
-            ),
-          ),
-          child: FlutterMap(
-            mapController: _controller,
-            options: MapOptions(
-              crs: const CrsSimple(),
-              initialCenter: latlong.LatLng(
-                meta.centerLatitude,
-                meta.centerLongitude,
-              ),
-              initialZoom: -2,
-              initialCameraFit: CameraFit.bounds(
-                bounds: bounds,
-                // Substantial padding to prevent the map from hugging the screen edges,
-                // resolving RTL if necessary.
-                padding: const EdgeInsetsDirectional.all(
-                  MqSpacing.space12,
-                ).resolve(Directionality.of(context)),
-                // Cap the initial fit zoom low so the full campus is visible
-                // and the raster image stays crisp on first load.
-                maxZoom: 0.5,
-              ),
-              // Allow zooming out further than the default (-3) to ensure
-              // users can see the whole map if needed.
-              minZoom: -5.0,
-              maxZoom: meta.maxZoom,
-              // Constrain the camera to the campus bounds so users don't pan into the void.
-              cameraConstraint: CameraConstraint.contain(bounds: bounds),
-              onMapReady: () => _handleMapReady(meta, projection),
-            ),
-            children: [
-              CampusMapOverlay(meta: meta),
-              CampusOverlayLayers(
-                activeOverlayIds: widget.activeOverlayIds,
-                meta: meta,
-              ),
-              if (routePoints.isNotEmpty)
-                CampusMapRouteLayer(
-                  route: widget.route!,
-                  routePoints: routePoints,
-                  rawRoutePoints: rawRoutePoints,
-                  isNavigating: widget.isNavigating,
-                  currentLocation: widget.currentLocation,
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            // Guard against invalid constraints (e.g., during initial layout pass or zero-sized parent)
+            if (constraints.maxWidth <= 0 || constraints.maxHeight <= 0) {
+              return const SizedBox.shrink();
+            }
+
+            // Calculate safe padding.
+            // If constraints are infinite (e.g. inside unconstrained parent), fall back to safe constant.
+            final double horizontalPadding = constraints.hasInfiniteWidth
+                ? MqSpacing.space4
+                : constraints.maxWidth * 0.1;
+            final double verticalPadding = constraints.hasInfiniteHeight
+                ? MqSpacing.space4
+                : constraints.maxHeight * 0.1;
+
+            return DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: Theme.of(context).brightness == Brightness.dark
+                      ? const [MqColors.charcoal950, MqColors.charcoal850]
+                      : const [MqColors.sand100, MqColors.alabaster],
                 ),
-              CampusMapMarkerLayer(
-                visibleBuildings: visibleBuildings,
-                selectedBuilding: widget.selectedBuilding,
-                projection: projection,
-                onSelectBuilding: widget.onSelectBuilding,
               ),
-              CampusMapLocationLayer(
-                currentLocation: widget.currentLocation,
-                projection: projection,
-                route: widget.route,
-                routePoints: routePoints,
+              child: FlutterMap(
+                mapController: _controller,
+                options: MapOptions(
+                  crs: const CrsSimple(),
+                  initialCenter: latlong.LatLng(
+                    meta.centerLatitude,
+                    meta.centerLongitude,
+                  ),
+                  initialZoom: -2,
+                  initialCameraFit: CameraFit.bounds(
+                    bounds: bounds,
+                    // Dynamic padding (10% of screen) to frame the campus,
+                    // ensuring it doesn't touch edges or crash on small screens.
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding,
+                      vertical: verticalPadding,
+                    ),
+                    // Cap the initial fit zoom low so the full campus is visible
+                    // and the raster image stays crisp on first load.
+                    // Lowering this forces a "zoomed out" perspective.
+                    maxZoom: -2.0,
+                  ),
+                  // Allow zooming out further than the default (-3) to ensure
+                  // users can see the whole map if needed.
+                  minZoom: -5.0,
+                  maxZoom: meta.maxZoom,
+                  // Constrain the camera to the campus bounds so users don't pan into the void.
+                  cameraConstraint: CameraConstraint.contain(bounds: bounds),
+                  onMapReady: () => _handleMapReady(meta, projection),
+                ),
+                children: [
+                  CampusMapOverlay(meta: meta),
+                  CampusOverlayLayers(
+                    activeOverlayIds: widget.activeOverlayIds,
+                    meta: meta,
+                  ),
+                  if (routePoints.isNotEmpty)
+                    CampusMapRouteLayer(
+                      route: widget.route!,
+                      routePoints: routePoints,
+                      rawRoutePoints: rawRoutePoints,
+                      isNavigating: widget.isNavigating,
+                      currentLocation: widget.currentLocation,
+                    ),
+                  CampusMapMarkerLayer(
+                    visibleBuildings: visibleBuildings,
+                    selectedBuilding: widget.selectedBuilding,
+                    projection: projection,
+                    onSelectBuilding: widget.onSelectBuilding,
+                  ),
+                  CampusMapLocationLayer(
+                    currentLocation: widget.currentLocation,
+                    projection: projection,
+                    route: widget.route,
+                    routePoints: routePoints,
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
