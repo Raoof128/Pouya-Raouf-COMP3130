@@ -47,7 +47,8 @@ The following endpoints exist in the web app but are not used by the Flutter app
 | Edge Function | Purpose |
 |---------------|---------|
 | `maps-routes` | Shared campus/google route proxy with server-side Google/ORS keys |
+| `maps-places` | Google Places autocomplete proxy with rate limiting and caching |
 | `notify` | FCM push notification dispatcher |
-| `cleanup-cron` | Rate-limit record cleanup |
+| `cleanup-cron` | Rate-limit and cache record cleanup |
 
 Web-only functions (`auth-email`, `auth-cleanup`, `routes-proxy`, `places-proxy`, `weather-proxy`, `security-utils`) were removed from this repo.

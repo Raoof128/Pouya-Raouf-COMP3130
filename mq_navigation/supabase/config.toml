@@ -25,8 +25,6 @@ enabled = true
 client_id = "env(GOOGLE_CLIENT_ID)"
 secret = "env(GOOGLE_CLIENT_SECRET)"
 
-[functions.directions-proxy]
-verify_jwt = false
 
 [functions.maps-places]
 verify_jwt = false

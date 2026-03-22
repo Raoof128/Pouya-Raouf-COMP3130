@@ -541,7 +541,7 @@ When navigation starts, the controller also starts a location subscription and u
 
 [`lib/features/map/presentation/widgets/building_search_sheet.dart`](lib/features/map/presentation/widgets/building_search_sheet.dart) is a bottom-sheet search UI backed by map controller state.
 
-[`lib/features/map/presentation/widgets/campus_map_view.dart`](lib/features/map/presentation/widgets/campus_map_view.dart) wraps `GoogleMap` and handles:
+[`lib/features/map/presentation/widgets/campus/campus_map_view.dart`](lib/features/map/presentation/widgets/campus/campus_map_view.dart) wraps `FlutterMap` and handles:
 
 - initial campus camera
 - camera bounds
@@ -704,7 +704,7 @@ The repository includes a broad documentation set:
 - `CONTRIBUTING.md`
 - `CODE_OF_CONDUCT.md`
 - `docs/ARCHITECTURE.md`
-- `Flutter_Migration_Plan.md`
+- `TECHNICAL_EXPLANATION.md`
 - `entity_inventory.md`
 - `endpoint_inventory.md`
 - `env_inventory.md`
@@ -712,9 +712,8 @@ The repository includes a broad documentation set:
 - `route_matrix.md`
 - `map_inventory.md`
 - `key_inventory.md`
-- `auth_matrix.md`
 
-These documents collectively describe product scope, architecture, backend schema, routing, notifications, environment variables, and migration history.
+These documents collectively describe product scope, architecture, backend schema, routing, notifications, and environment variables.
 
 ## Testing Strategy
 
