@@ -335,4 +335,4 @@ fi
 echo ""
 echo "Launching with dart-defines from .env..."
 export MACOSX_DEPLOYMENT_TARGET=11.0
-flutter run $DEVICE_ARG --dart-define-from-file="$ENV_FILE" "${EXTRA_ARGS[@]}"
+flutter run $DEVICE_ARG --dart-define-from-file="$ENV_FILE" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
