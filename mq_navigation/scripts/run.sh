@@ -14,6 +14,8 @@
 #   ./scripts/run.sh 00008150-000E7C6A1EF0401C  # specific device
 #   ./scripts/run.sh chrome
 #   ./scripts/run.sh macos
+#   ./scripts/run.sh android                    # attempts to launch default android emulator
+#   ./scripts/run.sh ios                        # attempts to launch default ios simulator
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -33,11 +35,19 @@ if grep -q '^GOOGLE_MAPS_API_KEY=' "$ENV_FILE"; then
 fi
 
 # ── Platform config paths ───────────────────────────────────────────────────
+ANDROID_PROPS="android/gradle.properties"
 IOS_SECRETS_XCCONFIG="ios/Flutter/Secrets.xcconfig"
 WEB_MAPS_CONFIG="web/google_maps_config.js"
 
 # ── Cleanup: remove generated secret files on exit ──────────────────────────
 cleanup() {
+  # Remove key from android/gradle.properties (if added)
+  if [[ -f "$ANDROID_PROPS" ]]; then
+    # Use temp file to safely remove the key line
+    grep -v "^GOOGLE_MAPS_API_KEY=" "$ANDROID_PROPS" > "${ANDROID_PROPS}.tmp" || true
+    mv "${ANDROID_PROPS}.tmp" "$ANDROID_PROPS"
+  fi
+
   rm -f "$IOS_SECRETS_XCCONFIG"
   rm -f "$WEB_MAPS_CONFIG"
 }
@@ -47,8 +57,13 @@ trap cleanup EXIT
 if [[ -n "$GOOGLE_MAPS_API_KEY_VALUE" ]]; then
   echo "  ✔ GOOGLE_MAPS_API_KEY found in .env"
 
-  # Android – export env var → build.gradle.kts reads via System.getenv()
-  export GOOGLE_MAPS_API_KEY="$GOOGLE_MAPS_API_KEY_VALUE"
+  # Android – Append to gradle.properties (safe for running Gradle daemons)
+  # (Env vars for Gradle can be flaky if the daemon is already started)
+  if [[ -f "$ANDROID_PROPS" ]]; then
+    # Ensure newline before appending
+    echo "" >> "$ANDROID_PROPS"
+    echo "GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY_VALUE}" >> "$ANDROID_PROPS"
+  fi
 
   # iOS – write gitignored Secrets.xcconfig → #include?'d by Debug/Release.xcconfig
   #        → resolved as $(GOOGLE_MAPS_API_KEY) in Info.plist → AppDelegate
@@ -68,8 +83,30 @@ fi
 # ── Parse device argument ───────────────────────────────────────────────────
 DEVICE_ARG=""
 if [[ -n "${1:-}" ]]; then
-  DEVICE_ARG="-d $1"
+  TARGET="$1"
   shift
+
+  # Smart aliases for emulators
+  if [[ "$TARGET" == "ios" ]]; then
+    # Try to find an iOS simulator
+    SIM_ID=$(flutter emulators 2>/dev/null | grep "ios" | head -1 | awk -F '•' '{print $1}' | xargs)
+    if [[ -n "$SIM_ID" ]]; then
+      TARGET="$SIM_ID"
+      echo "  ℹ Auto-detected iOS simulator: $TARGET"
+    else
+      echo "  ⚠ No iOS simulator found. Running 'flutter emulators --launch apple_ios_simulator' might work."
+      TARGET="apple_ios_simulator" # Fallback
+    fi
+  elif [[ "$TARGET" == "android" ]]; then
+    # Try to find an Android emulator
+    EMU_ID=$(flutter emulators 2>/dev/null | grep "android" | head -1 | awk -F '•' '{print $1}' | xargs)
+    if [[ -n "$EMU_ID" ]]; then
+      TARGET="$EMU_ID"
+      echo "  ℹ Auto-detected Android emulator: $TARGET"
+    fi
+  fi
+
+  DEVICE_ARG="-d $TARGET"
 fi
 
 echo "Launching with dart-defines from .env..."
