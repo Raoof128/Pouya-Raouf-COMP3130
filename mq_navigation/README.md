@@ -1,63 +1,82 @@
-# MQ Navigation - Flutter Mobile App
+# MQ Navigation
 
-A cross-platform mobile client for Macquarie University's campus navigation, built with Flutter. Part of a **two frontends, one backend** architecture sharing a Supabase backend with the existing [Next.js web application](https://github.com/Raoof128/Pouya-Raouf-COMP3130).
+A cross-platform mobile client for Macquarie University's campus navigation platform, built with Flutter. Part of a **two frontends, one backend** architecture sharing a Supabase backend with the existing [Next.js web application](https://github.com/Raoof128/Pouya-Raouf-COMP3130).
+
+## Architecture
+
+```
+┌──────────────────┐     ┌──────────────────┐
+│  Flutter Mobile   │     │  Next.js Web App  │
+│  mq_navigation    │     │  (production)     │
+│                   │     │                   │
+└────────┬─────────┘     └────────┬─────────┘
+         │                        │
+         └───────┐    ┌───────────┘
+                 │    │
+           ┌─────▼────▼─────┐
+           │    Supabase     │
+           │  Postgres · RLS │
+           │  Realtime       │
+           │  Edge Functions │
+           └─────────────────┘
+```
+
+The mobile app shares a single Supabase backend with the web product — Postgres with Row-Level Security, Realtime subscriptions, and Edge Functions. The Flutter app is a presentation-layer-only client with no server logic in the binary.
+
+## Project Structure
+
+```
+Pouya-Raouf-COMP3130/
+└── mq_navigation/                  # Flutter mobile app
+    ├── lib/
+    │   ├── app/                    # Bootstrap, router, theme, l10n
+    │   ├── core/                   # Config, errors, logging, security, network
+    │   ├── shared/                 # Design system widgets, providers, extensions
+    │   └── features/              # Feature modules (home, map, settings, notifications)
+    ├── test/                       # 83 unit and widget tests
+    ├── supabase/functions/         # 9 Edge Functions (Deno/TypeScript)
+    ├── scripts/                    # Quality gate scripts
+    ├── tools/                      # i18n conversion utilities
+    ├── assets/data/                # 153-building campus registry
+    ├── docs/                       # Architecture documentation
+    └── .github/workflows/          # CI/CD pipeline
+```
 
 ## Features
 
-- **Home** -- welcome hub for Macquarie University campus navigation
-- **Dual-Renderer Map** -- raster campus overlay via `flutter_map` plus live Google basemap via `google_maps_flutter`
-- **Shared Map State** -- one building registry, search flow, selection model, and route state across both map modes
-- **Settings** -- theme preferences, language selection, notification controls
-- **Notifications** -- FCM push notifications and local study prompt scheduling
-- **35-Language Support** -- full i18n with RTL support (Arabic, Farsi, Hebrew, Urdu)
-- **Dark Mode** -- system-aware light and dark themes using MQ design tokens
+- **Home** -- campus dashboard with time-of-day greeting, building category grid, popular destinations carousel
+- **Campus Map** -- interactive Google Maps with 153 building entries, search, and server-proxied routing
+- **Notifications** -- Supabase inbox, FCM push, and local study-prompt scheduling
+- **Settings** -- theme preferences, notification controls, locale selection
+- **35-Language Support** -- full i18n including RTL (Arabic, Farsi, Hebrew, Urdu)
+- **Dark Mode** -- system-aware light and dark themes using Macquarie University design tokens
 - **Offline Awareness** -- connectivity monitoring with graceful degradation
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Flutter 3.11+ (Dart 3.11+) |
+| Framework | Flutter 3.11+ / Dart 3.11+ |
 | State Management | Riverpod 3.2 |
 | Routing | GoRouter 17.1 (StatefulShellRoute, 3-tab bottom nav) |
-| Backend | Supabase (Postgres, Realtime, Edge Functions) |
-| Maps | google_maps_flutter 2.15 + flutter_map 8.2 |
+| Backend | Supabase (Postgres, RLS, Realtime, Edge Functions) |
+| Maps | Google Maps Flutter 2.14 |
 | Security | flutter_secure_storage |
-| Push Notifications | Firebase Cloud Messaging |
-| CI/CD | GitHub Actions (analyze, test, build Android + iOS) |
-| Localisation | Flutter ARB (35 locales) |
-
-## Architecture
-
-Feature-first clean architecture with three layers per module:
-
-```
-lib/
-  app/          # Bootstrap, router, theme, l10n
-  core/         # Config, error handling, logging, security, networking
-  shared/       # Design system widgets, providers, extensions
-  features/     # home, map, notifications, settings
-    <feature>/
-      data/           # Data sources + repositories
-      domain/         # Entities, value objects, interfaces
-      presentation/   # Pages, widgets, controllers
-```
-
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full architecture overview.
+| Notifications | Firebase Cloud Messaging |
+| CI/CD | GitHub Actions |
+| Localisation | Flutter ARB (35 locales, 1,995 keys each) |
 
 ## Getting Started
 
 ### Prerequisites
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) ^3.11.0 (stable channel)
-- [Android Studio](https://developer.android.com/studio) or [Xcode](https://developer.apple.com/xcode/) for platform builds
-- A Supabase project (shared with the web app)
+- [Android Studio](https://developer.android.com/studio) or [Xcode](https://developer.apple.com/xcode/)
+- A Supabase project
 
 ### Setup
 
 ```bash
-# Clone the repository and enter the Flutter app
-git clone <repo-url>
 cd mq_navigation
 
 # Install dependencies
@@ -66,65 +85,22 @@ flutter pub get
 # Generate localisation files
 flutter gen-l10n
 
-# Refresh the bundled building registry when backend map data changes
-dart run tools/sync_buildings.dart
-
 # Run the app
-flutter run                     # Android emulator (default)
-flutter run -d chrome           # Web (Chrome)
-./scripts/run.sh chrome         # Web (alternative — loads .env overrides)
-
-# For release builds, supply secrets via --dart-define or .env:
-flutter run --release \
+flutter run \
   --dart-define=SUPABASE_URL=https://your-project.supabase.co \
   --dart-define=SUPABASE_ANON_KEY=your-anon-key \
   --dart-define=GOOGLE_MAPS_API_KEY=your-maps-key \
-  --dart-define=APP_ENV=production
+  --dart-define=APP_ENV=development
 ```
 
 ### Environment Variables
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `SUPABASE_URL` | Release only | Dev fallback | Supabase project URL |
-| `SUPABASE_ANON_KEY` | Release only | Dev fallback | Supabase anonymous API key |
-| `GOOGLE_MAPS_API_KEY` | No | None | Google Maps SDK key for the Google renderer |
-| `APP_ENV` | No | `development` | `development`, `staging`, or `production` |
-
-> In **debug mode**, Supabase uses development fallbacks, but the Google Maps
-> client key must still come from local environment config when you want the
-> Google renderer or web Google Maps integration.
-
-For Flutter web, the repo uses a gitignored runtime file:
-
-```bash
-cp web/google_maps_config.js.example web/google_maps_config.js
-# then set window.GOOGLE_MAPS_API_KEY inside that file
-```
-
-`./scripts/run.sh chrome` generates that file automatically from `.env` for
-local development.
-
-### Key Placement
-
-Use this project’s keys in the following locations only:
-
-| Key | Safe Location | Commit to Git? | Notes |
-|-----|---------------|----------------|-------|
-| `GOOGLE_MAPS_API_KEY` | Local `.env`, CI secrets, deployment env, gitignored `web/google_maps_config.js` | No | Client-visible by design, so restrict it by Android package/SHA, iOS bundle ID, and web referrer |
-| `SUPABASE_URL` | `.env`, CI secrets, deployment env | No for project-specific values | Safe to expose to the client, but do not hardcode project-specific production values in tracked files |
-| `SUPABASE_ANON_KEY` | `.env`, CI secrets, deployment env | No for project-specific values | Public key protected by RLS; still keep production project values out of tracked config where possible |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase project secrets / Edge Function env only | Never | Full privileged server key |
-| `GOOGLE_ROUTES_API_KEY` | Supabase Edge Function secrets only | Never | Server-side Google Routes / Places billing key |
-| `ORS_API_KEY` | Supabase Edge Function secrets only | Never | Optional campus routing server key |
-| `FIREBASE_SERVICE_ACCOUNT_JSON` | Supabase Edge Function secrets only | Never | Server-only FCM credentials |
-| `CRON_SECRET` | Supabase Edge Function secrets only | Never | Protects scheduled maintenance endpoints |
-
-Tracked repo status after the current cleanup:
-- Google Maps client keys are no longer committed in tracked files.
-- Web map loading uses gitignored runtime config.
-- Server-side map keys stay in Supabase Edge Function secrets.
-- The only secret-like tracked value left is the development Supabase anon fallback in `EnvConfig`, which is a public client key rather than a server secret.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `SUPABASE_URL` | Yes | Supabase project URL |
+| `SUPABASE_ANON_KEY` | Yes | Supabase anonymous API key |
+| `GOOGLE_MAPS_API_KEY` | No | Google Maps SDK key (needed for map feature) |
+| `APP_ENV` | No | `development` (default), `staging`, or `production` |
 
 ### Mobile Platform Setup
 
@@ -147,114 +123,70 @@ Tracked repo status after the current cleanup:
 | Secret | Required For | Notes |
 |--------|--------------|-------|
 | `SUPABASE_SERVICE_ROLE_KEY` | All privileged Edge Functions | Server-only |
-| `GOOGLE_ROUTES_API_KEY` | `maps-routes` | Server-only Google Routes API key |
-| `ORS_API_KEY` | `maps-routes` campus routing | Optional; when omitted, campus mode falls back to a generated demo route |
-| `FIREBASE_SERVICE_ACCOUNT_JSON` | `notify` | FCM HTTP v1 service account JSON |
-| `CRON_SECRET` | `cleanup-cron` | Protects scheduled cron endpoints |
-| `ALLOWED_WEB_ORIGINS` | `maps-routes`, `maps-places` | Optional comma-separated browser origin allowlist for Flutter web / hosted web |
-
-> Route requests no longer use the client-side Google Directions flow.
-> Both renderers call the `maps-routes` Supabase Edge Function, which keeps
-> server-side routing keys out of the Flutter binary.
-
-> Campus mode currently supports walking routes only. For driving, cycling, or
-> transit directions, switch to the Google renderer.
-
-> `maps-places` is now rate-limited and server-cached. For browser deployments,
-> set `ALLOWED_WEB_ORIGINS` so only your own web origins can call the map Edge
-> Functions with an `Origin` header.
-
-## Development
+| `GOOGLE_ROUTES_API_KEY` | `maps-routes` | Server-side routing proxy |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | `notify` (preferred) | FCM HTTP v1 service account JSON |
+| `FCM_SERVER_KEY` | `notify` (legacy fallback) | Supported as a compatibility fallback |
+| `CRON_SECRET` | `cleanup-cron` | Protects scheduled cleanup runs |
+| `RESEND_API_KEY` | `auth-email` | Email verification delivery |
 
 ### Quality Checks
 
 ```bash
-# Full check (includes debug APK build)
+# Full check (format, analyze, test, l10n, build)
 ./scripts/check.sh
 
-# Quick check (skips build step)
+# Quick check (skip build step)
 ./scripts/check.sh --quick
 ```
 
-This executes: `pub get` -> `format check` -> `analyze` -> `test` -> `gen-l10n` -> `build`
-
-### Running Tests
-
-```bash
-# All tests
-flutter test
-
-# With coverage
-flutter test --coverage
-
-# Specific test file
-flutter test test/features/map/building_test.dart
-```
-
-Coverage spans core utilities, routing, map parsing, the bundled building registry, notification scheduling, and shared widgets.
-
-### Project Scripts
-
-| Script | Purpose |
-|--------|---------|
-| `scripts/check.sh` | Full quality gate (format, analyze, test, l10n, build) |
-| `scripts/check.sh --quick` | Quality gate without build step |
-| `tools/convert_i18n.dart` | Convert web app JSON translations to Flutter ARB format |
+All checks must pass: dependency resolution, formatting, static analysis, 83 tests, localisation generation, and APK build.
 
 ## Design System
 
-The MQ Design System maps Macquarie University's brand tokens to Flutter:
+The MQ Design System maps Macquarie University's brand identity to Flutter:
 
-| Component | Class | Description |
-|-----------|-------|-------------|
-| Colors | `MqColors` | Brand palette (MQ Red, Alabaster, Charcoal, semantic colors) |
-| Typography | `MqTypography` | Work Sans + Source Serif Pro type scale |
-| Spacing | `MqSpacing` | 4px-base spacing scale, radius tokens, 48dp tap targets |
-| Theme | `MqTheme` | Light + dark `ThemeData` builders |
-| Button | `MqButton` | Filled, outlined, and text variants with loading state |
-| Card | `MqCard` | Themed card with optional tap handler |
-| Input | `MqInput` | Text input with validation, prefix/suffix icons |
-| App Bar | `MqAppBar` | Standard app bar with MQ styling |
-| Bottom Sheet | `MqBottomSheet` | Modal sheet with drag handle |
+| Token | Class | Examples |
+|-------|-------|---------|
+| Colors | `MqColors` | MQ Red `#A6192E`, Alabaster `#EDEADE`, Charcoal shades |
+| Typography | `MqTypography` | Work Sans (UI), Source Serif Pro (headings) |
+| Spacing | `MqSpacing` | 4px base scale, 48dp minimum tap targets |
+| Theme | `MqTheme` | Complete light + dark `ThemeData` |
+
+Shared UI components: `MqButton`, `MqCard`, `MqInput`, `MqAppBar`, `MqBottomSheet`
 
 ## CI/CD
 
 GitHub Actions runs on every push and PR to `main`:
 
-1. **Analyze & Test** -- format check, static analysis, Flutter test suite with coverage, and `deno check` for `maps-routes`/`maps-places`
-2. **Build Android Smoke** -- debug APK build on pull requests
-3. **Build Android** -- release APK with secrets injection (main branch only)
-4. **Build iOS** -- release build without code signing (main branch only)
+1. **Analyze & Test** -- formatting, static analysis, 83 unit/widget tests with coverage
+2. **Build Android** -- release APK with secrets injection (main branch only)
+3. **Build iOS** -- release build without code signing (main branch only)
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Full architecture overview |
-| [env_inventory.md](env_inventory.md) | Client/server environment inventory |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community standards |
-| [SECURITY.md](SECURITY.md) | Security policy and practices |
-| [CHANGELOG.md](CHANGELOG.md) | Development history |
-| [AGENT.md](AGENT.md) | Architecture rules and coding conventions |
+| Document | Location |
+|----------|----------|
+| Architecture Overview | [`mq_navigation/docs/ARCHITECTURE.md`](mq_navigation/docs/ARCHITECTURE.md) |
+| Contributing Guidelines | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+| Code of Conduct | [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) |
+| Security Policy | [`SECURITY.md`](SECURITY.md) |
+| Changelog | [`mq_navigation/CHANGELOG.md`](mq_navigation/CHANGELOG.md) |
+| Agent Rules | [`mq_navigation/AGENT.md`](mq_navigation/AGENT.md) |
 
-### Inventory Documents
+## Roadmap
 
-| Document | Content |
-|----------|---------|
-| `entity_inventory.md` | Supabase tables and RPC functions (shared backend schema) |
-| `endpoint_inventory.md` | API routes mapped to SDK/Edge Functions |
-| `env_inventory.md` | Client/server environment variables |
-| `notification_matrix.md` | Push/local notification flows |
-| `route_matrix.md` | Flutter route map |
-| `map_inventory.md` | Map APIs, building registry schema |
-| `key_inventory.md` | 35-locale translation key inventory |
-
+- [x] **Phase 0** -- Foundation: project scaffold, inventories, CI/CD
+- [x] **Phase 1** -- App Shell: theme, routing, design system, i18n, core services
+- [x] **Phase 2** -- Settings: theme preferences, notification controls, locale selection
+- [x] **Phase 3** -- Home: campus dashboard with category grid, popular destinations, campus stats
+- [x] **Phase 4** -- Notifications: Supabase inbox, FCM push, local study-prompt reminders
+- [x] **Phase 5** -- Map: Google Maps integration, 153-building search, server-proxied routing
+- [ ] **Phase 6** -- Polish: performance, accessibility audit, store release
 
 ## Authors
 
-- **Raouf Abedini** (47990805) — COMP3130, Macquarie University
-- **Pouya Alavi** (48160202) — COMP3130, Macquarie University
+- **Raouf Abedini** (47990805) -- COMP3130, Macquarie University
+- **Pouya Alavi** (48160202) -- COMP3130, Macquarie University
 
 ## License
 

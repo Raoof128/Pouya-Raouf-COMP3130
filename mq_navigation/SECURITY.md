@@ -22,11 +22,9 @@ We will acknowledge receipt within 48 hours and provide a detailed response with
 
 ## Security Practices
 
-This project follows these security principles:
-
 ### Client-Side Security
 - **No server secrets**: API keys and server credentials are never stored in the client binary. Sensitive operations are handled by Supabase Edge Functions.
-- **Encrypted storage**: All sensitive data (tokens, user preferences) is stored using `flutter_secure_storage`, which uses iOS Keychain and Android Keystore.
+- **Encrypted storage**: All sensitive data (tokens, user preferences) is stored using `flutter_secure_storage`, backed by iOS Keychain and Android Keystore.
 - **Certificate pinning**: Planned for production releases.
 
 ### Backend Security
@@ -35,9 +33,13 @@ This project follows these security principles:
 - **Rate limiting**: Server-side rate limits protect Edge Functions from abuse.
 
 ### Build & Deployment
-- **Environment isolation**: `--dart-define` injects environment-specific configuration at build time. Secrets are passed via CI/CD secrets, never committed.
+- **Environment isolation**: `--dart-define` injects environment-specific configuration at build time. Secrets are passed via CI/CD secrets, never committed to the repository.
 - **Dependency pinning**: All dependencies use caret version constraints for reproducible builds.
-- **Static analysis**: `flutter analyze` runs on every PR to catch potential issues.
+- **Static analysis**: `flutter analyze` with hardened lint rules runs on every PR.
+
+### Error Handling
+- **Three-layer error catching**: `FlutterError.onError` (widget errors), `PlatformDispatcher.instance.onError` (platform errors), and `runZonedGuarded` (zone-level fallback) -- following Flutter's official error handling documentation.
+- **No sensitive data in logs**: Error messages are sanitised before logging.
 
 ### Data Handling
 - **Minimal data collection**: The app only collects data necessary for its core functionality.

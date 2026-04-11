@@ -1,13 +1,20 @@
-# Contributing to MQ Navigation Flutter
+# Contributing to MQ Navigation
 
-Thank you for your interest in contributing to this project. This document outlines the workflow and standards expected for all contributions.
+Thank you for your interest in contributing. This document outlines the workflow and standards expected for all contributions.
 
 ## Getting Started
 
 1. **Fork & clone** the repository.
 2. Install [Flutter](https://docs.flutter.dev/get-started/install) (stable channel, SDK ^3.11.0).
-3. Run `flutter pub get` to install dependencies.
-4. Copy the environment template and fill in your keys:
+3. Navigate to the Flutter project:
+
+```bash
+cd mq_navigation
+flutter pub get
+flutter gen-l10n
+```
+
+4. Run with environment variables:
 
 ```bash
 flutter run \
@@ -18,7 +25,7 @@ flutter run \
 
 ## Development Workflow
 
-### Branch naming
+### Branch Naming
 
 | Type | Pattern | Example |
 |------|---------|---------|
@@ -26,9 +33,9 @@ flutter run \
 | Bug fix | `fix/<short-description>` | `fix/map-permission-handling` |
 | Chore | `chore/<short-description>` | `chore/update-deps` |
 
-### Before submitting a PR
+### Before Submitting a PR
 
-Run the full check suite:
+Run the full check suite from `mq_navigation/`:
 
 ```bash
 ./scripts/check.sh --quick
@@ -43,14 +50,14 @@ This executes:
 
 All checks must pass before a PR will be reviewed.
 
-### Commit messages
+### Commit Messages
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 feat: add building category filter to home page
 fix: resolve map permission handling on Android 13+
-chore: pin intl dependency to ^0.19.0
+chore: pin intl dependency to ^0.20.2
 test: add widget tests for MqInput validation
 ```
 
@@ -62,6 +69,7 @@ test: add widget tests for MqInput validation
 - **Design tokens**: use `MqColors`, `MqTypography`, `MqSpacing` -- no magic numbers or hardcoded colors.
 - **Accessibility**: all interactive elements must have semantic labels and meet the 48dp minimum tap target.
 - **RTL support**: use `EdgeInsetsDirectional` and `TextDirection`-aware layouts.
+- **No server secrets**: API keys and server credentials never go in the client binary.
 
 ## Code Style
 
