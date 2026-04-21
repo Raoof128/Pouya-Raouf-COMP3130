@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
+import 'web_maps_key_stub.dart'
+    if (dart.library.js_interop) 'web_maps_key.dart';
 import 'package:mq_navigation/core/config/env_config.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/features/map/domain/services/geo_utils.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/google/desktop_map_fallback_view.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/map_view_helpers.dart';
-import 'package:mq_navigation/shared/widgets/mq_card.dart';
 
 /// The native `google_maps_flutter` renderer.
 ///
@@ -109,8 +109,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     // google_maps_flutter only supports Android, iOS, and Web.
     // On desktop platforms (macOS, Linux, Windows) show a fallback.
     final isGoogleMapsSupported =
@@ -132,21 +130,20 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       );
     }
 
-    // On web the Google Maps JS SDK receives its key via google_maps_config.js
-    // (HTML-side), so the Dart-side EnvConfig check does not apply.
-    if (!kIsWeb && !EnvConfig.hasGoogleMapsApiKey) {
-      return MqCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.googleMapUnavailable,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(widget.selectedBuilding?.name ?? l10n.mapLoadErrorDescription),
-          ],
-        ),
+    // On web, the Maps JS API key comes from google_maps_config.js (HTML-side).
+    // On native, it comes from --dart-define via EnvConfig.
+    // In both cases, fall back to the OSM renderer instead of crashing.
+    final hasKey =
+        kIsWeb ? hasWebGoogleMapsApiKey() : EnvConfig.hasGoogleMapsApiKey;
+    if (!hasKey) {
+      return DesktopMapFallbackView(
+        searchResults: widget.searchResults,
+        searchQuery: widget.searchQuery,
+        selectedBuilding: widget.selectedBuilding,
+        route: widget.route,
+        currentLocation: widget.currentLocation,
+        isNavigating: widget.isNavigating,
+        onSelectBuilding: widget.onSelectBuilding,
       );
     }
 

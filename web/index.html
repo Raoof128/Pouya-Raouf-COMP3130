@@ -33,33 +33,56 @@
   <link rel="manifest" href="manifest.json">
 
   <!--
-    `google_maps_config.js` is generated locally / in CI and is intentionally
-    gitignored. It can set `window.GOOGLE_MAPS_API_KEY` for web builds without
+    google_maps_config.js is generated locally / in CI and is intentionally
+    gitignored. It sets window.GOOGLE_MAPS_API_KEY for web builds without
     committing the key into source control.
 
-    Loaded via synchronous XHR so the value is available before
-    flutter_bootstrap.js runs, and a missing file (404) is handled silently
-    without Chrome MIME-type errors.
+    The script below:
+    1. Reads the key safely by extracting only the key value via a regex match
+       (no arbitrary code evaluation).
+    2. If a key is available, injects the Google Maps JavaScript API script tag
+       so google_maps_flutter_web can access window.google.maps at widget build
+       time. Without this tag the SDK is never loaded, causing:
+           TypeError: Cannot read properties of undefined (reading 'maps')
+    3. Without a key, the Dart app falls back to the OpenStreetMap renderer.
   -->
   <script>
-    window.GOOGLE_MAPS_API_KEY = window.GOOGLE_MAPS_API_KEY || "";
-    try {
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", "google_maps_config.js", false);
-      xhr.send();
-      if (xhr.status === 200) { new Function(xhr.responseText)(); }
-    } catch (_) { /* file not present or blocked – continue without */ }
+    (function () {
+      window.GOOGLE_MAPS_API_KEY = window.GOOGLE_MAPS_API_KEY || "";
+
+      // Read the key from the config file via synchronous XHR.
+      // Only the key string is extracted — no dynamic code evaluation.
+      try {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "google_maps_config.js", false);
+        xhr.send();
+        if (xhr.status === 200) {
+          // Use String.prototype.match (no eval / no Function constructor).
+          var parts = xhr.responseText.match(
+            /window\.GOOGLE_MAPS_API_KEY\s*=\s*["']([^"']*)["']/
+          );
+          if (parts && parts[1]) {
+            window.GOOGLE_MAPS_API_KEY = parts[1];
+          }
+        }
+      } catch (_) {
+        /* File absent or request blocked — continue with empty key. */
+      }
+
+      // Inject the Maps JS API only when a key is present.
+      if (window.GOOGLE_MAPS_API_KEY) {
+        var s = document.createElement("script");
+        s.src =
+          "https://maps.googleapis.com/maps/api/js" +
+          "?key=" + encodeURIComponent(window.GOOGLE_MAPS_API_KEY) +
+          "&libraries=geometry,places&language=en";
+        s.defer = false;
+        document.head.appendChild(s);
+      }
+    })();
   </script>
 </head>
 <body>
-  <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
-
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
-  -->
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
