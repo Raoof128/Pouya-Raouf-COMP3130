@@ -125,13 +125,17 @@ class SettingsPage extends ConsumerWidget {
                     const SizedBox(height: MqSpacing.space6),
 
                     // ── Map Preferences section ───────────────────
-                    _SectionHeader(title: l10n.settings_experience), // Using experience for map prefs
+                    _SectionHeader(
+                      title: l10n.settings_experience,
+                    ), // Using experience for map prefs
                     _SettingsCard(
                       children: [
                         _TapRow(
                           icon: Icons.map_outlined,
                           label: l10n.defaultRenderer,
-                          value: preferences.defaultRenderer == MapRendererType.campus
+                          value:
+                              preferences.defaultRenderer ==
+                                  MapRendererType.campus
                               ? l10n.campusRenderer
                               : l10n.googleRenderer,
                           semanticLabel: l10n.defaultRenderer,
@@ -655,7 +659,9 @@ class _TapRow extends StatelessWidget {
                 Icon(
                   icon,
                   size: 22,
-                  color: iconColor ?? (dark ? MqColors.slate500 : MqColors.charcoal600),
+                  color:
+                      iconColor ??
+                      (dark ? MqColors.slate500 : MqColors.charcoal600),
                 ),
                 const SizedBox(width: MqSpacing.space4),
                 Expanded(
@@ -663,9 +669,11 @@ class _TapRow extends StatelessWidget {
                     label,
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: labelColor ?? (dark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary),
+                      color:
+                          labelColor ??
+                          (dark
+                              ? MqColors.contentPrimaryDark
+                              : MqColors.contentPrimary),
                     ),
                   ),
                 ),

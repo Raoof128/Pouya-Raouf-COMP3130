@@ -1811,3 +1811,20 @@ Synchronized all 34 supported language files (`app_*.arb`) with the latest keys 
 - `lib/app/l10n/app_*.arb` (34 files)
 **Verification:**
 - Ran `flutter gen-l10n` → Confirmed zero untranslated messages across all supported languages.
+
+### Raouf: 2026-04-22 (AEST) — Final repository cleanup
+**Scope:** Maintenance.
+**Summary:**
+Cleaned up the repository before final push:
+1. **Gitignore**: Added `build/` to the root `.gitignore` to prevent local build artifacts from being tracked.
+2. **Formatting**: Applied `dart format .` across the entire project to ensure consistent style.
+3. **Build Files**: Updated `generated_plugins.cmake` for Linux and Windows platforms.
+4. **Cleanup**: Removed the temporary `tools/sync_l10n.dart` utility script.
+**Files Changed:**
+- `.gitignore`
+- `linux/flutter/generated_plugins.cmake`
+- `windows/flutter/generated_plugins.cmake`
+- Numerous Dart files (formatting only)
+**Verification:**
+- Verified `.gitignore` correctly ignores the `build/` folder.
+- `git status` confirms no more untracked or incorrectly modified files.

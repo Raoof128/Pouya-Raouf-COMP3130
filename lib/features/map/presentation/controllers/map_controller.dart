@@ -164,10 +164,10 @@ class MapController extends AsyncNotifier<MapState> {
   Future<MapState> build() async {
     ref.onDispose(() => _locationSubscription?.cancel());
     final buildings = await ref.read(mapRepositoryProvider).getBuildings();
-    
+
     // Load defaults from user preferences
     final prefs = await ref.watch(settingsControllerProvider.future);
-    
+
     return MapState(
       renderer: prefs.defaultRenderer,
       buildings: buildings,

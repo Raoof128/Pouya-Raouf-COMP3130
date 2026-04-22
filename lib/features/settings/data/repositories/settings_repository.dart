@@ -41,9 +41,13 @@ class LocalSettingsRepository implements SettingsRepository {
     try {
       final themeModeString = await _storage.read(_themeModeKey);
       final localeCode = await _storage.read(_localeCodeKey);
-      final notificationsEnabled = await _storage.read(_notificationsEnabledKey);
+      final notificationsEnabled = await _storage.read(
+        _notificationsEnabledKey,
+      );
       final defaultRendererString = await _storage.read(_defaultRendererKey);
-      final defaultTravelModeString = await _storage.read(_defaultTravelModeKey);
+      final defaultTravelModeString = await _storage.read(
+        _defaultTravelModeKey,
+      );
       final lowDataMode = await _storage.read(_lowDataModeKey);
       final reducedMotion = await _storage.read(_reducedMotionKey);
 
@@ -90,10 +94,19 @@ class LocalSettingsRepository implements SettingsRepository {
         _notificationsEnabledKey,
         preferences.notificationsEnabled.toString(),
       );
-      await _storage.write(_defaultRendererKey, preferences.defaultRenderer.name);
-      await _storage.write(_defaultTravelModeKey, preferences.defaultTravelMode.name);
+      await _storage.write(
+        _defaultRendererKey,
+        preferences.defaultRenderer.name,
+      );
+      await _storage.write(
+        _defaultTravelModeKey,
+        preferences.defaultTravelMode.name,
+      );
       await _storage.write(_lowDataModeKey, preferences.lowDataMode.toString());
-      await _storage.write(_reducedMotionKey, preferences.reducedMotion.toString());
+      await _storage.write(
+        _reducedMotionKey,
+        preferences.reducedMotion.toString(),
+      );
       return preferences;
     } catch (error, stackTrace) {
       AppLogger.error('Failed to save user preferences', error, stackTrace);

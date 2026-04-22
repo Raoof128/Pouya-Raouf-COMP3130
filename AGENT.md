@@ -92,6 +92,12 @@ See `CHANGELOG.md` for full development history.
 
 The project was built through phases 0–5, originally including auth, calendar, event feed, profile management, and gamification features. These were subsequently removed to focus the Flutter app on campus navigation: 3-tab nav (Home/Map/Settings), local-only settings, FCM push + study prompt notifications, and dual-renderer campus map with building search and routing via Edge Function proxy.
 
+### Raouf: 2026-04-22 (AEST) — Final repository cleanup
+**Scope:** Maintenance.
+**Summary:** Performed final cleanup: added `build/` to `.gitignore`, applied project-wide formatting via `dart format .`, and synchronized generated CMake files for Linux and Windows after dependency updates. Deleted temporary synchronization scripts.
+**Files Changed:** `.gitignore`, `lib/**`, `linux/flutter/generated_plugins.cmake`, `windows/flutter/generated_plugins.cmake`
+**Verification:** `git status` shows a clean working tree (excluding gitignored files).
+
 ### Raouf: 2026-04-22 (AEST) — Localization synchronization
 **Scope:** Internationalization.
 **Summary:** Synchronized 34 localization files (`app_*.arb`) with the master `app_en.arb`. Ensured all languages have the same set of keys, including the newly added settings and accessibility strings. Used English as the fallback value for missing translations to prevent UI breakage and "missing key" warnings during generation.
