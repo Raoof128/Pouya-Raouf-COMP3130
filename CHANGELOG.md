@@ -1840,6 +1840,7 @@ Addressed the failing iOS CI build by synchronizing deployment targets and updat
 - `ios/Runner.xcodeproj/project.pbxproj`
 - `ios/Podfile`
 - `ios/Podfile.lock`
+- `ios/Flutter/AppFrameworkInfo.plist`
 **Verification:**
 - Confirmed `pod update` completed successfully locally.
 - Deployment targets are now consistent and satisfy all plugin requirements.
