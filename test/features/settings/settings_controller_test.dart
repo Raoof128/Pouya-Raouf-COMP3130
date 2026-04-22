@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
-import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/features/settings/data/repositories/settings_repository.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:mq_navigation/shared/models/user_preferences.dart';
@@ -16,12 +14,13 @@ void main() {
   setUp(() {
     repository = MockSettingsRepository();
     // Default mock behavior
-    when(() => repository.loadPreferences()).thenAnswer(
-      (_) async => const UserPreferences(),
-    );
+    when(
+      () => repository.loadPreferences(),
+    ).thenAnswer((_) async => const UserPreferences());
     registerFallbackValue(const UserPreferences());
     when(() => repository.savePreferences(any())).thenAnswer(
-      (invocation) async => invocation.positionalArguments[0] as UserPreferences,
+      (invocation) async =>
+          invocation.positionalArguments[0] as UserPreferences,
     );
     when(() => repository.wipeAllLocalData()).thenAnswer((_) async {});
   });
@@ -43,64 +42,76 @@ void main() {
 
       final state = container.read(settingsControllerProvider).value;
       expect(state?.defaultRenderer, MapRendererType.google);
-      verify(() => repository.savePreferences(any(
-        that: isA<UserPreferences>().having(
-          (p) => p.defaultRenderer,
-          'defaultRenderer',
-          MapRendererType.google,
+      verify(
+        () => repository.savePreferences(
+          any(
+            that: isA<UserPreferences>().having(
+              (p) => p.defaultRenderer,
+              'defaultRenderer',
+              MapRendererType.google,
+            ),
+          ),
         ),
-      ))).called(1);
+      ).called(1);
     });
 
-    test('updateDefaultTravelMode updates state and repository', () async {
+    test('updateHapticsEnabled updates state and repository', () async {
       final container = createContainer();
       final controller = container.read(settingsControllerProvider.notifier);
 
-      await controller.updateDefaultTravelMode(TravelMode.drive);
+      await controller.updateHapticsEnabled(false);
 
       final state = container.read(settingsControllerProvider).value;
-      expect(state?.defaultTravelMode, TravelMode.drive);
-      verify(() => repository.savePreferences(any(
-        that: isA<UserPreferences>().having(
-          (p) => p.defaultTravelMode,
-          'defaultTravelMode',
-          TravelMode.drive,
+      expect(state?.hapticsEnabled, isFalse);
+      verify(
+        () => repository.savePreferences(
+          any(
+            that: isA<UserPreferences>().having(
+              (p) => p.hapticsEnabled,
+              'hapticsEnabled',
+              isFalse,
+            ),
+          ),
         ),
-      ))).called(1);
+      ).called(1);
     });
 
-    test('updateLowDataMode updates state and repository', () async {
+    test('updateHighContrastMap updates state and repository', () async {
       final container = createContainer();
       final controller = container.read(settingsControllerProvider.notifier);
 
-      await controller.updateLowDataMode(true);
+      await controller.updateHighContrastMap(true);
 
       final state = container.read(settingsControllerProvider).value;
-      expect(state?.lowDataMode, isTrue);
-      verify(() => repository.savePreferences(any(
-        that: isA<UserPreferences>().having(
-          (p) => p.lowDataMode,
-          'lowDataMode',
-          isTrue,
+      expect(state?.highContrastMap, isTrue);
+      verify(
+        () => repository.savePreferences(
+          any(
+            that: isA<UserPreferences>().having(
+              (p) => p.highContrastMap,
+              'highContrastMap',
+              isTrue,
+            ),
+          ),
         ),
-      ))).called(1);
+      ).called(1);
     });
 
-    test('updateReducedMotion updates state and repository', () async {
+    test('updateQuietHours settings updates state and repository', () async {
       final container = createContainer();
       final controller = container.read(settingsControllerProvider.notifier);
 
-      await controller.updateReducedMotion(true);
+      await controller.updateQuietHoursEnabled(true);
+      await controller.updateQuietHoursStart('22:00');
+      await controller.updateQuietHoursEnd('07:00');
 
       final state = container.read(settingsControllerProvider).value;
-      expect(state?.reducedMotion, isTrue);
-      verify(() => repository.savePreferences(any(
-        that: isA<UserPreferences>().having(
-          (p) => p.reducedMotion,
-          'reducedMotion',
-          isTrue,
-        ),
-      ))).called(1);
+      expect(state?.quietHoursEnabled, isTrue);
+      expect(state?.quietHoursStart, '22:00');
+      expect(state?.quietHoursEnd, '07:00');
+
+      // verify 3 separate calls for the 3 updates
+      verify(() => repository.savePreferences(any())).called(3);
     });
 
     test('wipeAllLocalData calls repository and resets state', () async {
@@ -109,12 +120,15 @@ void main() {
 
       // Change a value first
       await controller.updateLowDataMode(true);
-      expect(container.read(settingsControllerProvider).value?.lowDataMode, isTrue);
+      expect(
+        container.read(settingsControllerProvider).value?.lowDataMode,
+        isTrue,
+      );
 
       // Setup repository to return defaults on next load
-      when(() => repository.loadPreferences()).thenAnswer(
-        (_) async => const UserPreferences(),
-      );
+      when(
+        () => repository.loadPreferences(),
+      ).thenAnswer((_) async => const UserPreferences());
 
       await controller.wipeAllLocalData();
 

@@ -2061,5 +2061,14 @@
   "wipeData": "Wipe All Local Data",
   "wipeDataConfirm": "Are you sure you want to wipe all local data? This will reset your theme, language, and all saved preferences.",
   "wipeDataAction": "Wipe Data",
-  "wipeDataSuccess": "All local data has been wiped."
+  "wipeDataSuccess": "All local data has been wiped.",
+  "haptics": "Haptic Feedback",
+  "quietHours": "Quiet Hours",
+  "quietHoursStart": "Starts at",
+  "quietHoursEnd": "Ends at",
+  "highContrastMap": "High-Contrast Map",
+  "devDiagnostics": "Dev Diagnostics",
+  "buildVersion": "Build: 2026.04.22-beta",
+  "renderer": "Renderer: CrsSimple (Campus)",
+  "edgeProxy": "Edge Proxy: maps-places (Active)"
 }

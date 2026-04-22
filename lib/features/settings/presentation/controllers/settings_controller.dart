@@ -83,6 +83,31 @@ class SettingsController extends AsyncNotifier<UserPreferences> {
     return _save(currentPreferences.copyWith(reducedMotion: enabled));
   }
 
+  Future<String?> updateHapticsEnabled(bool enabled) async {
+    final currentPreferences = state.value ?? const UserPreferences();
+    return _save(currentPreferences.copyWith(hapticsEnabled: enabled));
+  }
+
+  Future<String?> updateQuietHoursEnabled(bool enabled) async {
+    final currentPreferences = state.value ?? const UserPreferences();
+    return _save(currentPreferences.copyWith(quietHoursEnabled: enabled));
+  }
+
+  Future<String?> updateQuietHoursStart(String time) async {
+    final currentPreferences = state.value ?? const UserPreferences();
+    return _save(currentPreferences.copyWith(quietHoursStart: time));
+  }
+
+  Future<String?> updateQuietHoursEnd(String time) async {
+    final currentPreferences = state.value ?? const UserPreferences();
+    return _save(currentPreferences.copyWith(quietHoursEnd: time));
+  }
+
+  Future<String?> updateHighContrastMap(bool enabled) async {
+    final currentPreferences = state.value ?? const UserPreferences();
+    return _save(currentPreferences.copyWith(highContrastMap: enabled));
+  }
+
   /// Wipes all local data and resets the controller to its initial state.
   ///
   /// This will reset theme, locale, and all other preferences to defaults.

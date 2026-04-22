@@ -2065,5 +2065,14 @@
   "accessibility": "Accessibility",
   "settings_general": "General",
   "settings_experience": "Experience",
-  "settingsError": "Failed to load settings"
+  "settingsError": "Failed to load settings",
+  "haptics": "Haptic Feedback",
+  "quietHours": "Quiet Hours",
+  "quietHoursStart": "Starts at",
+  "quietHoursEnd": "Ends at",
+  "highContrastMap": "High-Contrast Map",
+  "devDiagnostics": "Dev Diagnostics",
+  "buildVersion": "Build: 2026.04.22-beta",
+  "renderer": "Renderer: CrsSimple (Campus)",
+  "edgeProxy": "Edge Proxy: maps-places (Active)"
 }

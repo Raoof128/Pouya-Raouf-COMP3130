@@ -12,6 +12,8 @@ import 'package:mq_navigation/features/notifications/data/repositories/notificat
 import 'package:mq_navigation/features/notifications/domain/entities/app_notification.dart';
 import 'package:mq_navigation/features/notifications/domain/entities/notification_preferences.dart';
 import 'package:mq_navigation/features/notifications/domain/services/notification_scheduler.dart';
+import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
+import 'package:mq_navigation/shared/models/user_preferences.dart';
 
 @immutable
 class NotificationsState {
@@ -86,6 +88,16 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
       next,
     ) {
       if (next.value == ConnectivityStatus.online) {
+        unawaited(_syncScheduledReminders());
+      }
+    });
+
+    // Listen to settings changes to re-sync reminders if quiet hours change
+    ref.listen<AsyncValue<UserPreferences>>(settingsControllerProvider, (
+      _,
+      next,
+    ) {
+      if (next.hasValue) {
         unawaited(_syncScheduledReminders());
       }
     });
@@ -249,6 +261,7 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
     List<NotificationPreference>? preferencesOverride,
   }) async {
     try {
+      final userPrefs = ref.read(settingsControllerProvider).value;
       await ref
           .read(notificationSchedulerProvider)
           .syncReminders(
@@ -256,6 +269,7 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
                 preferencesOverride ??
                 state.value?.preferences ??
                 NotificationPreference.defaults(),
+            userPreferences: userPrefs,
           );
     } catch (error, stackTrace) {
       AppLogger.warning(

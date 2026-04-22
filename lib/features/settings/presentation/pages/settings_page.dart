@@ -3,21 +3,59 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
+import 'package:mq_navigation/core/utils/haptics.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
+import 'package:mq_navigation/shared/widgets/mq_bottom_sheet.dart';
 
 /// Main settings screen for managing app-wide preferences.
 ///
 /// Reacts to changes in [SettingsController]. Uses custom styled widgets
 /// rather than standard Material tiles to match the MQ design system,
 /// including a red radial gradient background in dark mode.
-class SettingsPage extends ConsumerWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends ConsumerState<SettingsPage> {
+  int _versionTapCount = 0;
+
+  void _handleVersionTap() {
+    _versionTapCount++;
+    if (_versionTapCount >= 7) {
+      _versionTapCount = 0;
+      MqHaptics.heavy(true); // Always vibrate for the easter egg!
+
+      final l10n = AppLocalizations.of(context)!;
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (context) => MqBottomSheet(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '🛠️ ${l10n.devDiagnostics}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: MqSpacing.space2),
+              Text(l10n.buildVersion),
+              Text(l10n.renderer),
+              Text(l10n.edgeProxy),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final settingsState = ref.watch(settingsControllerProvider);
     final dark = context.isDarkMode;
@@ -196,6 +234,24 @@ class SettingsPage extends ConsumerWidget {
                               .updateReducedMotion(v),
                         ),
                         _ToggleRow(
+                          icon: Icons.vibration_outlined,
+                          label: l10n.haptics,
+                          value: preferences.hapticsEnabled,
+                          semanticLabel: l10n.haptics,
+                          onChanged: (v) => ref
+                              .read(settingsControllerProvider.notifier)
+                              .updateHapticsEnabled(v),
+                        ),
+                        _ToggleRow(
+                          icon: Icons.contrast_outlined,
+                          label: l10n.highContrastMap,
+                          value: preferences.highContrastMap,
+                          semanticLabel: l10n.highContrastMap,
+                          onChanged: (v) => ref
+                              .read(settingsControllerProvider.notifier)
+                              .updateHighContrastMap(v),
+                        ),
+                        _ToggleRow(
                           icon: Icons.data_usage_outlined,
                           label: l10n.lowDataMode,
                           value: preferences.lowDataMode,
@@ -226,6 +282,41 @@ class SettingsPage extends ConsumerWidget {
                             }
                           },
                         ),
+                        _ToggleRow(
+                          icon: Icons.bedtime_outlined,
+                          label: l10n.quietHours,
+                          value: preferences.quietHoursEnabled,
+                          semanticLabel: l10n.quietHours,
+                          onChanged: (v) => ref
+                              .read(settingsControllerProvider.notifier)
+                              .updateQuietHoursEnabled(v),
+                        ),
+                        if (preferences.quietHoursEnabled) ...[
+                          _TapRow(
+                            icon: Icons.access_time_outlined,
+                            label: l10n.quietHoursStart,
+                            value: preferences.quietHoursStart,
+                            onTap: () => _selectTime(
+                              context,
+                              preferences.quietHoursStart,
+                              (time) => ref
+                                  .read(settingsControllerProvider.notifier)
+                                  .updateQuietHoursStart(time),
+                            ),
+                          ),
+                          _TapRow(
+                            icon: Icons.access_time_filled_outlined,
+                            label: l10n.quietHoursEnd,
+                            value: preferences.quietHoursEnd,
+                            onTap: () => _selectTime(
+                              context,
+                              preferences.quietHoursEnd,
+                              (time) => ref
+                                  .read(settingsControllerProvider.notifier)
+                                  .updateQuietHoursEnd(time),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                     const SizedBox(height: MqSpacing.space6),
@@ -251,9 +342,13 @@ class SettingsPage extends ConsumerWidget {
                     _SectionHeader(title: l10n.about),
                     _SettingsCard(
                       children: [
-                        _AboutAppRow(
-                          appName: l10n.appName,
-                          desc: l10n.aboutDesc,
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: _handleVersionTap,
+                          child: _AboutAppRow(
+                            appName: l10n.appName,
+                            desc: l10n.aboutDesc,
+                          ),
                         ),
                         _InfoRow(
                           icon: Icons.code_outlined,
@@ -305,6 +400,24 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
+  Future<void> _selectTime(
+    BuildContext context,
+    String current,
+    Function(String) onSelect,
+  ) async {
+    final parts = current.split(':');
+    final initial = TimeOfDay(
+      hour: int.parse(parts[0]),
+      minute: int.parse(parts[1]),
+    );
+    final picked = await showTimePicker(context: context, initialTime: initial);
+    if (picked != null) {
+      final hour = picked.hour.toString().padLeft(2, '0');
+      final minute = picked.minute.toString().padLeft(2, '0');
+      onSelect('$hour:$minute');
+    }
+  }
+
   Future<void> _confirmWipe(
     BuildContext context,
     WidgetRef ref,
@@ -342,8 +455,6 @@ class SettingsPage extends ConsumerWidget {
   }
 
   // ── Bottom-sheet picker ──────────────────────────────────
-  // Uses _PickerItem wrapper so null-valued items (e.g. "System" locale)
-  // are distinguishable from a dismissal which also returns null.
   Future<void> _showPicker<T>({
     required BuildContext context,
     required String title,
@@ -361,41 +472,21 @@ class SettingsPage extends ConsumerWidget {
 
     final selected = await showModalBottomSheet<_PickerItem<T>>(
       context: context,
-      backgroundColor: dark ? MqColors.charcoal850 : Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(MqSpacing.radiusXl),
-        ),
-      ),
+      backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) {
-        return DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.5,
-          maxChildSize: 0.75,
-          minChildSize: 0.3,
-          builder: (ctx, controller) {
-            return Column(
+        return MqBottomSheet(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.sizeOf(context).height * 0.6,
+            ),
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Handle bar
                 Padding(
                   padding: const EdgeInsetsDirectional.only(
-                    top: MqSpacing.space3,
+                    bottom: MqSpacing.space4,
                   ),
-                  child: Container(
-                    width: 36,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: dark
-                          ? Colors.white.withAlpha(26)
-                          : Colors.black.withAlpha(26),
-                      borderRadius: BorderRadius.circular(MqSpacing.radiusFull),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
                   child: Text(
                     title,
                     style: context.textTheme.titleMedium?.copyWith(
@@ -406,9 +497,9 @@ class SettingsPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Expanded(
+                Flexible(
                   child: ListView.builder(
-                    controller: controller,
+                    shrinkWrap: true,
                     itemCount: wrappedItems.length,
                     itemBuilder: (ctx, i) {
                       final wrapped = wrappedItems[i];
@@ -444,8 +535,8 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
               ],
-            );
-          },
+            ),
+          ),
         );
       },
     );

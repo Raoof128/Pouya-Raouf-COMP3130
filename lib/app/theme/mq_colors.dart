@@ -38,6 +38,8 @@ abstract final class MqColors {
   static const Color slate300 = Color(0xFFC6D8E4);
   static const Color slate400 = Color(0xFFB3CBDB);
   static const Color slate500 = Color(0xFF8D98A1);
+  static const Color slate600 = Color(0xFF717F87);
+  static const Color slate700 = Color(0xFF56636B);
 
   // ── Semantic ───────────────────────────────────────────
   static const Color success = Color(0xFF10B981);

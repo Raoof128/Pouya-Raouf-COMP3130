@@ -16,6 +16,11 @@ class UserPreferences {
     this.defaultTravelMode = TravelMode.walk,
     this.lowDataMode = false,
     this.reducedMotion = false,
+    this.hapticsEnabled = true,
+    this.quietHoursEnabled = false,
+    this.quietHoursStart = '23:00',
+    this.quietHoursEnd = '08:00',
+    this.highContrastMap = false,
   });
 
   final ThemeMode themeMode;
@@ -25,6 +30,11 @@ class UserPreferences {
   final TravelMode defaultTravelMode;
   final bool lowDataMode;
   final bool reducedMotion;
+  final bool hapticsEnabled;
+  final bool quietHoursEnabled;
+  final String quietHoursStart;
+  final String quietHoursEnd;
+  final bool highContrastMap;
 
   Locale? get locale => localeCode == null ? null : Locale(localeCode!);
 
@@ -37,6 +47,11 @@ class UserPreferences {
     TravelMode? defaultTravelMode,
     bool? lowDataMode,
     bool? reducedMotion,
+    bool? hapticsEnabled,
+    bool? quietHoursEnabled,
+    String? quietHoursStart,
+    String? quietHoursEnd,
+    bool? highContrastMap,
   }) {
     return UserPreferences(
       themeMode: themeMode ?? this.themeMode,
@@ -46,6 +61,11 @@ class UserPreferences {
       defaultTravelMode: defaultTravelMode ?? this.defaultTravelMode,
       lowDataMode: lowDataMode ?? this.lowDataMode,
       reducedMotion: reducedMotion ?? this.reducedMotion,
+      hapticsEnabled: hapticsEnabled ?? this.hapticsEnabled,
+      quietHoursEnabled: quietHoursEnabled ?? this.quietHoursEnabled,
+      quietHoursStart: quietHoursStart ?? this.quietHoursStart,
+      quietHoursEnd: quietHoursEnd ?? this.quietHoursEnd,
+      highContrastMap: highContrastMap ?? this.highContrastMap,
     );
   }
 
@@ -60,7 +80,12 @@ class UserPreferences {
           defaultRenderer == other.defaultRenderer &&
           defaultTravelMode == other.defaultTravelMode &&
           lowDataMode == other.lowDataMode &&
-          reducedMotion == other.reducedMotion;
+          reducedMotion == other.reducedMotion &&
+          hapticsEnabled == other.hapticsEnabled &&
+          quietHoursEnabled == other.quietHoursEnabled &&
+          quietHoursStart == other.quietHoursStart &&
+          quietHoursEnd == other.quietHoursEnd &&
+          highContrastMap == other.highContrastMap;
 
   @override
   int get hashCode => Object.hash(
@@ -71,5 +96,10 @@ class UserPreferences {
     defaultTravelMode,
     lowDataMode,
     reducedMotion,
+    hapticsEnabled,
+    quietHoursEnabled,
+    quietHoursStart,
+    quietHoursEnd,
+    highContrastMap,
   );
 }

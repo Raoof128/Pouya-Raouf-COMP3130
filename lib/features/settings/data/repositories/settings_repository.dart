@@ -13,6 +13,11 @@ const _defaultRendererKey = 'settings.default_renderer';
 const _defaultTravelModeKey = 'settings.default_travel_mode';
 const _lowDataModeKey = 'settings.low_data_mode';
 const _reducedMotionKey = 'settings.reduced_motion';
+const _hapticsEnabledKey = 'settings.haptics_enabled';
+const _quietHoursEnabledKey = 'settings.quiet_hours_enabled';
+const _quietHoursStartKey = 'settings.quiet_hours_start';
+const _quietHoursEndKey = 'settings.quiet_hours_end';
+const _highContrastMapKey = 'settings.high_contrast_map';
 
 /// Data source for persisting and retrieving user settings.
 ///
@@ -50,6 +55,11 @@ class LocalSettingsRepository implements SettingsRepository {
       );
       final lowDataMode = await _storage.read(_lowDataModeKey);
       final reducedMotion = await _storage.read(_reducedMotionKey);
+      final hapticsEnabled = await _storage.read(_hapticsEnabledKey);
+      final quietHoursEnabled = await _storage.read(_quietHoursEnabledKey);
+      final quietHoursStart = await _storage.read(_quietHoursStartKey);
+      final quietHoursEnd = await _storage.read(_quietHoursEndKey);
+      final highContrastMap = await _storage.read(_highContrastMapKey);
 
       final localThemeMode = ThemeMode.values.firstWhere(
         (mode) => mode.name == themeModeString,
@@ -74,6 +84,11 @@ class LocalSettingsRepository implements SettingsRepository {
         defaultTravelMode: defaultTravelMode,
         lowDataMode: lowDataMode == 'true',
         reducedMotion: reducedMotion == 'true',
+        hapticsEnabled: hapticsEnabled != 'false',
+        quietHoursEnabled: quietHoursEnabled == 'true',
+        quietHoursStart: quietHoursStart ?? '23:00',
+        quietHoursEnd: quietHoursEnd ?? '08:00',
+        highContrastMap: highContrastMap == 'true',
       );
     } catch (error, stackTrace) {
       AppLogger.error('Failed to load user preferences', error, stackTrace);
@@ -106,6 +121,20 @@ class LocalSettingsRepository implements SettingsRepository {
       await _storage.write(
         _reducedMotionKey,
         preferences.reducedMotion.toString(),
+      );
+      await _storage.write(
+        _hapticsEnabledKey,
+        preferences.hapticsEnabled.toString(),
+      );
+      await _storage.write(
+        _quietHoursEnabledKey,
+        preferences.quietHoursEnabled.toString(),
+      );
+      await _storage.write(_quietHoursStartKey, preferences.quietHoursStart);
+      await _storage.write(_quietHoursEndKey, preferences.quietHoursEnd);
+      await _storage.write(
+        _highContrastMapKey,
+        preferences.highContrastMap.toString(),
       );
       return preferences;
     } catch (error, stackTrace) {

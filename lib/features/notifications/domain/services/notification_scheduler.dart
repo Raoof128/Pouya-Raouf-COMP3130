@@ -4,6 +4,7 @@ import 'package:mq_navigation/features/notifications/data/datasources/local_noti
 import 'package:mq_navigation/features/notifications/domain/entities/app_notification.dart';
 import 'package:mq_navigation/features/notifications/domain/entities/notification_preferences.dart';
 import 'package:mq_navigation/features/notifications/domain/entities/reminder_request.dart';
+import 'package:mq_navigation/shared/models/user_preferences.dart';
 
 /// Handles scheduling and unscheduling of local push notifications.
 ///
@@ -17,12 +18,14 @@ class NotificationScheduler {
 
   Future<void> syncReminders({
     required List<NotificationPreference> preferences,
+    UserPreferences? userPreferences,
     String? studyPromptTitle,
     String? studyPromptBody,
     DateTime? now,
   }) async {
     final requests = buildRequests(
       preferences: preferences,
+      userPreferences: userPreferences,
       studyPromptTitle: studyPromptTitle,
       studyPromptBody: studyPromptBody,
       now: now,
@@ -37,6 +40,7 @@ class NotificationScheduler {
 
   List<ReminderRequest> buildRequests({
     required List<NotificationPreference> preferences,
+    UserPreferences? userPreferences,
     String? studyPromptTitle,
     String? studyPromptBody,
     DateTime? now,
@@ -56,9 +60,28 @@ class NotificationScheduler {
         studyPreference!.scheduledHour,
         studyPreference.scheduledMinute,
       );
+
+      // Apply Quiet Hours Check
+      if (userPreferences?.quietHoursEnabled == true) {
+        scheduledFor = _applyQuietHours(
+          scheduledFor,
+          userPreferences!.quietHoursStart,
+          userPreferences.quietHoursEnd,
+        );
+      }
+
       if (!scheduledFor.isAfter(current)) {
         scheduledFor = scheduledFor.add(const Duration(days: 1));
+        // Re-check quiet hours for the next day
+        if (userPreferences?.quietHoursEnabled == true) {
+          scheduledFor = _applyQuietHours(
+            scheduledFor,
+            userPreferences!.quietHoursStart,
+            userPreferences.quietHoursEnd,
+          );
+        }
       }
+
       requests.add(
         ReminderRequest(
           notificationId: _localNotificationsService.notificationIdForStableId(
@@ -79,6 +102,40 @@ class NotificationScheduler {
 
     AppLogger.debug('Prepared notification reminders', requests.length);
     return requests;
+  }
+
+  DateTime _applyQuietHours(DateTime time, String startStr, String endStr) {
+    try {
+      final startParts = startStr.split(':');
+      final endParts = endStr.split(':');
+      if (startParts.length != 2 || endParts.length != 2) return time;
+
+      final startH = int.parse(startParts[0]);
+      final startM = int.parse(startParts[1]);
+      final endH = int.parse(endParts[0]);
+      final endM = int.parse(endParts[1]);
+
+      final start = DateTime(time.year, time.month, time.day, startH, startM);
+      final end = DateTime(time.year, time.month, time.day, endH, endM);
+
+      // If end is before start, it means quiet hours span across midnight
+      final spansMidnight = end.isBefore(start);
+      if (spansMidnight) {
+        if (time.isAfter(start) || time.isBefore(end)) {
+          // Inside quiet hours across midnight
+          // Move to the end time on the current or next day
+          return time.isBefore(end) ? end : end.add(const Duration(days: 1));
+        }
+      } else {
+        if (time.isAfter(start) && time.isBefore(end)) {
+          // Inside quiet hours on same day
+          return end;
+        }
+      }
+    } catch (e) {
+      AppLogger.warning('Failed to parse quiet hours', e);
+    }
+    return time;
   }
 }
 
