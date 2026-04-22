@@ -33,6 +33,31 @@
   <link rel="manifest" href="manifest.json">
 
   <!--
+    Workaround for Flutter web assertion failure:
+      "!identical(kind, PointerDeviceKind.trackpad) is not true"
+
+    Chrome on macOS sometimes dispatches `pointerdown` events with an empty
+    pointerType when the user scrolls or pans with a trackpad. Flutter's web
+    engine maps an empty-string pointerType to PointerDeviceKind.trackpad, but
+    PointerDownEvent (used for click/tap) asserts that it is NEVER a trackpad
+    (trackpad pan/zoom must use PointerPanZoomStartEvent instead).
+
+    We intercept and suppress those spurious pointerdown events at the capture
+    phase — before they reach Flutter's canvas — to prevent the assertion crash
+    while preserving all normal mouse, touch, and trackpad scroll behaviour.
+  -->
+  <script>
+    (function () {
+      window.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === '' || e.pointerType === 'unknown') {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        }
+      }, { capture: true, passive: false });
+    })();
+  </script>
+
+  <!--
     google_maps_config.js is generated locally / in CI and is intentionally
     gitignored. It sets window.GOOGLE_MAPS_API_KEY for web builds without
     committing the key into source control.
