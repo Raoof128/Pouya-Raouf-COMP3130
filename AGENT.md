@@ -92,7 +92,14 @@ See `CHANGELOG.md` for full development history.
 
 The project was built through phases 0–5, originally including auth, calendar, event feed, profile management, and gamification features. These were subsequently removed to focus the Flutter app on campus navigation: 3-tab nav (Home/Map/Settings), local-only settings, FCM push + study prompt notifications, and dual-renderer campus map with building search and routing via Edge Function proxy.
 
-### Raouf: 2026-04-22 (AEST) — Final repository cleanup
+### Raouf: 2026-04-22 (AEST) — iOS deployment target synchronization & build fixes
+**Scope:** iOS build configuration.
+**Summary:** Updated IPHONEOS_DEPLOYMENT_TARGET from 13.0 to 15.0 in `ios/Runner.xcodeproj/project.pbxproj` and `ios/Podfile` to resolve version conflicts with Firebase 12.12.0+. Synchronized `ios/Podfile.lock` via `pod update`. Added warning suppressions for third-party pods to ensure clean CI logs.
+**Files Changed:** `ios/Runner.xcodeproj/project.pbxproj`, `ios/Podfile`, `ios/Podfile.lock`
+**Verification:** `pod update` successful; ready for CI retry.
+
+### Raouf: 2026-04-22 (AEST) — Zero-data features (Haptics, Quiet Hours, High-Contrast)
+
 **Scope:** Maintenance.
 **Summary:** Performed final cleanup: added `build/` to `.gitignore`, applied project-wide formatting via `dart format .`, and synchronized generated CMake files for Linux and Windows after dependency updates. Deleted temporary synchronization scripts.
 **Files Changed:** `.gitignore`, `lib/**`, `linux/flutter/generated_plugins.cmake`, `windows/flutter/generated_plugins.cmake`

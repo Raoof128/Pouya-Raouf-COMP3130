@@ -1827,4 +1827,20 @@ Cleaned up the repository before final push:
 - Numerous Dart files (formatting only)
 **Verification:**
 - Verified `.gitignore` correctly ignores the `build/` folder.
-- `git status` confirms no more untracked or incorrectly modified files.
+- git status confirms no more untracked or incorrectly modified files.
+
+### Raouf: 2026-04-22 (AEST) — iOS deployment target synchronization & build fixes
+**Scope:** iOS platform support.
+**Summary:**
+Addressed the failing iOS CI build by synchronizing deployment targets and updating dependencies.
+1. **Deployment Target**: Bumped `IPHONEOS_DEPLOYMENT_TARGET` from 13.0 to 15.0 in the Xcode project and Podfile to satisfy Firebase 12.12.0+ requirements.
+2. **Dependency Sync**: Ran `pod update` in `ios/` to align the `Podfile.lock` with the latest plugin versions.
+3. **Log Noise**: Ported warning suppressions from macOS to iOS Podfile to ensure cleaner builds.
+**Files Changed:**
+- `ios/Runner.xcodeproj/project.pbxproj`
+- `ios/Podfile`
+- `ios/Podfile.lock`
+**Verification:**
+- Confirmed `pod update` completed successfully locally.
+- Deployment targets are now consistent across all project configurations.
+
