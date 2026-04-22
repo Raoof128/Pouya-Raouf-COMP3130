@@ -18,7 +18,7 @@ if (secretsFile.exists()) {
 
 // Also load local.properties for IDE / direct flutter run fallback
 val localPropertiesFile = rootProject.file("local.properties")
-val localProps = java.util.Properties()
+val localProps = Properties()
 if (localPropertiesFile.exists()) {
     localPropertiesFile.inputStream().use { localProps.load(it) }
 }
@@ -43,10 +43,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -83,6 +79,12 @@ android {
                 signingConfigs.getByName("debug")
             }
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

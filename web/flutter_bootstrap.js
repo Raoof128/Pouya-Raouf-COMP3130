@@ -3,14 +3,11 @@
 
 (function () {
   const mapsApiKey = window.GOOGLE_MAPS_API_KEY || "";
-  const serviceWorkerVersion = {{flutter_service_worker_version}};
 
   function loadFlutterApp() {
-    _flutter.loader.load({
-      serviceWorker: {
-        serviceWorkerVersion: serviceWorkerVersion,
-      },
-    });
+    // flutter_build_config (injected above) already contains the service
+    // worker version, so no extra arguments are needed here.
+    _flutter.loader.load();
   }
 
   if (!mapsApiKey) {
@@ -21,18 +18,31 @@
     return;
   }
 
+  // Check if Maps JS API is already loading / loaded (e.g. injected by index.html).
   const existingScript = document.querySelector(
     'script[data-google-maps-sdk="true"]',
   );
   if (existingScript) {
-    loadFlutterApp();
+    // Wait for it to finish loading before starting Flutter.
+    if (window.google && window.google.maps) {
+      loadFlutterApp();
+    } else {
+      existingScript.addEventListener("load", loadFlutterApp);
+      existingScript.addEventListener("error", loadFlutterApp);
+    }
     return;
   }
 
+  // Inject Maps JS API using the classic (non-async) loader so that
+  // window.google.maps.Map / Marker / etc. are fully available synchronously
+  // by the time google_maps_flutter_web initialises.
+  // NOTE: do NOT add "loading=async" here — that switches to the new
+  // lazy-import API which is incompatible with google_maps_flutter_web.
   const script = document.createElement("script");
   script.src =
-    "https://maps.googleapis.com/maps/api/js?loading=async&key=" +
-    encodeURIComponent(mapsApiKey);
+    "https://maps.googleapis.com/maps/api/js" +
+    "?key=" + encodeURIComponent(mapsApiKey) +
+    "&libraries=geometry,places&language=en";
   script.async = true;
   script.defer = true;
   script.dataset.googleMapsSdk = "true";
@@ -43,3 +53,7 @@
   };
   document.head.appendChild(script);
 })();
+
+
+
+

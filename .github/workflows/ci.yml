@@ -124,6 +124,9 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Update CocoaPods repo
+        run: pod repo update
+
       - name: Build iOS (no code sign)
         run: |
           flutter build ios --release --no-codesign \

@@ -37,14 +37,11 @@
     gitignored. It sets window.GOOGLE_MAPS_API_KEY for web builds without
     committing the key into source control.
 
-    The script below:
-    1. Reads the key safely by extracting only the key value via a regex match
-       (no arbitrary code evaluation).
-    2. If a key is available, injects the Google Maps JavaScript API script tag
-       so google_maps_flutter_web can access window.google.maps at widget build
-       time. Without this tag the SDK is never loaded, causing:
-           TypeError: Cannot read properties of undefined (reading 'maps')
-    3. Without a key, the Dart app falls back to the OpenStreetMap renderer.
+    This script reads the key from google_maps_config.js so it is available
+    on window.GOOGLE_MAPS_API_KEY before flutter_bootstrap.js runs.
+    flutter_bootstrap.js then injects the Maps JS API script and waits for
+    it to fully load before starting Flutter, so google_maps_flutter_web
+    can access window.google.maps synchronously.
   -->
   <script>
     (function () {
@@ -69,16 +66,9 @@
         /* File absent or request blocked — continue with empty key. */
       }
 
-      // Inject the Maps JS API only when a key is present.
-      if (window.GOOGLE_MAPS_API_KEY) {
-        var s = document.createElement("script");
-        s.src =
-          "https://maps.googleapis.com/maps/api/js" +
-          "?key=" + encodeURIComponent(window.GOOGLE_MAPS_API_KEY) +
-          "&libraries=geometry,places&language=en";
-        s.defer = false;
-        document.head.appendChild(s);
-      }
+      // NOTE: Do NOT inject the Maps JS API here.
+      // flutter_bootstrap.js handles loading it and waits for it to finish
+      // before starting Flutter (so google_maps_flutter_web works correctly).
     })();
   </script>
 </head>
