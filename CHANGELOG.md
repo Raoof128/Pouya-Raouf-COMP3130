@@ -1802,3 +1802,12 @@ Performed a full project health check via `scripts/check.sh` and addressed all f
 - `test/features/map/map_controller_test.dart`
 **Verification:**
 - `./scripts/check.sh` → All 6 steps passed (Format, Analyze, Test, L10n, Build).
+
+### Raouf: 2026-04-22 (AEST) — Localization synchronization
+**Scope:** Internationalization.
+**Summary:**
+Synchronized all 34 supported language files (`app_*.arb`) with the latest keys from `app_en.arb`. This ensures that new settings options and accessibility features are correctly represented (using English fallbacks) across all locales, preventing generation errors and UI "missing key" text.
+**Files Changed:**
+- `lib/app/l10n/app_*.arb` (34 files)
+**Verification:**
+- Ran `flutter gen-l10n` → Confirmed zero untranslated messages across all supported languages.

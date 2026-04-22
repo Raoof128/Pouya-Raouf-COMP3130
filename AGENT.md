@@ -92,7 +92,11 @@ See `CHANGELOG.md` for full development history.
 
 The project was built through phases 0–5, originally including auth, calendar, event feed, profile management, and gamification features. These were subsequently removed to focus the Flutter app on campus navigation: 3-tab nav (Home/Map/Settings), local-only settings, FCM push + study prompt notifications, and dual-renderer campus map with building search and routing via Edge Function proxy.
 
-### Raouf: 2026-04-22 (AEST) — Project-wide verification & build fixes
+### Raouf: 2026-04-22 (AEST) — Localization synchronization
+**Scope:** Internationalization.
+**Summary:** Synchronized 34 localization files (`app_*.arb`) with the master `app_en.arb`. Ensured all languages have the same set of keys, including the newly added settings and accessibility strings. Used English as the fallback value for missing translations to prevent UI breakage and "missing key" warnings during generation.
+**Files Changed:** All `.arb` files in `lib/app/l10n/`.
+**Verification:** `flutter gen-l10n` reported 0 untranslated messages.
 **Scope:** Quality assurance & build stability.
 **Summary:** Executed `scripts/check.sh` and resolved all issues. Added missing localization keys to `app_en.arb`. Fixed a Kotlin compilation error in `android/app/build.gradle.kts` by adding missing imports. Updated `MapController` tests to correctly mock the new `SettingsController` dependency, eliminating binding and storage errors during testing. Verified that all checks (format, analyze, test, build) now pass cleanly.
 **Files Changed:** `lib/app/l10n/app_en.arb`, `android/app/build.gradle.kts`, `test/features/map/map_controller_test.dart`
