@@ -9,6 +9,7 @@ import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
 import 'package:mq_navigation/shared/widgets/mq_bottom_sheet.dart';
+import 'package:mq_navigation/shared/widgets/mq_tactile_button.dart';
 
 /// Main settings screen for managing app-wide preferences.
 ///
@@ -104,13 +105,26 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         start: MqSpacing.space1,
                         bottom: MqSpacing.space6,
                       ),
-                      child: Text(
-                        l10n.settings,
-                        style: context.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: dark
-                              ? MqColors.contentPrimaryDark
-                              : MqColors.contentPrimary,
+                      child: TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeOutBack,
+                        builder: (context, value, child) {
+                          return Opacity(
+                            opacity: value.clamp(0.0, 1.0),
+                            child: Transform.translate(
+                              offset: Offset(0, 15 * (1 - value)),
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: Text(
+                          l10n.settings.toUpperCase(),
+                          style: context.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1.2,
+                            color: dark ? MqColors.vividRed : MqColors.red,
+                          ),
                         ),
                       ),
                     ),
@@ -336,19 +350,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
                     // ── Danger Zone section ──────────────────────
                     _SectionHeader(title: l10n.dangerZone),
-                    _SettingsCard(
-                      children: [
-                        _TapRow(
-                          icon: Icons.delete_forever_outlined,
-                          label: l10n.wipeData,
-                          value: '',
-                          labelColor: MqColors.vividRed,
-                          iconColor: MqColors.vividRed,
-                          semanticLabel: l10n.wipeData,
-                          hapticsEnabled: preferences.hapticsEnabled,
-                          onTap: () => _confirmWipe(context, ref, l10n),
-                        ),
-                      ],
+                    _DangerZoneCard(
+                      hapticsEnabled: preferences.hapticsEnabled,
+                      onTap: () => _confirmWipe(context, ref, l10n),
+                      subtitle: l10n.wipeDataConfirm,
+                      title: l10n.wipeData,
                     ),
                     const SizedBox(height: MqSpacing.space6),
 
@@ -670,18 +676,124 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = context.isDarkMode;
     return Padding(
       padding: const EdgeInsetsDirectional.only(
         start: MqSpacing.space2,
         bottom: MqSpacing.space3,
       ),
-      child: Text(
-        title.toUpperCase(),
-        style: context.textTheme.labelMedium?.copyWith(
-          fontWeight: FontWeight.w700,
-          letterSpacing: 1.2,
-          color: dark ? MqColors.vividRed : MqColors.brightRed,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOutBack,
+        builder: (context, value, child) {
+          return Opacity(
+            opacity: value.clamp(0.0, 1.0),
+            child: Transform.translate(
+              offset: Offset(0, 15 * (1 - value)),
+              child: child,
+            ),
+          );
+        },
+        child: KineticHeader(title: title),
+      ),
+    );
+  }
+}
+
+class KineticHeader extends StatelessWidget {
+  const KineticHeader({super.key, required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = context.isDarkMode;
+    return Text(
+      title.toUpperCase(),
+      style: context.textTheme.labelMedium?.copyWith(
+        fontWeight: FontWeight.w800,
+        letterSpacing: 1.2,
+        color: dark ? MqColors.vividRed : MqColors.red,
+      ),
+    );
+  }
+}
+
+class _DangerZoneCard extends StatelessWidget {
+  const _DangerZoneCard({
+    required this.hapticsEnabled,
+    required this.onTap,
+    required this.subtitle,
+    required this.title,
+  });
+
+  final bool hapticsEnabled;
+  final VoidCallback onTap;
+  final String subtitle;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = context.isDarkMode;
+    return Semantics(
+      button: true,
+      label: title,
+      child: MqTactileButton(
+        hapticsEnabled: hapticsEnabled,
+        onTap: onTap,
+        borderRadius: MqSpacing.radiusXl,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsetsDirectional.all(MqSpacing.space6),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                MqColors.charcoal850,
+                MqColors.red.withValues(alpha: 0.2),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
+            border: Border.all(color: MqColors.red.withValues(alpha: 0.5)),
+          ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.warning_amber_rounded,
+                color: MqColors.vividRed,
+                size: MqSpacing.iconLg,
+              ),
+              const SizedBox(width: MqSpacing.space4),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        color: MqColors.vividRed,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: MqSpacing.space1),
+                    Text(
+                      subtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: dark
+                            ? Colors.white.withValues(alpha: 0.75)
+                            : MqColors.contentPrimaryDark.withValues(
+                                alpha: 0.75,
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -734,8 +846,6 @@ class _TapRow extends StatelessWidget {
     required this.value,
     required this.onTap,
     this.semanticLabel,
-    this.labelColor,
-    this.iconColor,
     this.hapticsEnabled = true,
   });
 
@@ -744,8 +854,6 @@ class _TapRow extends StatelessWidget {
   final String value;
   final VoidCallback onTap;
   final String? semanticLabel;
-  final Color? labelColor;
-  final Color? iconColor;
   final bool hapticsEnabled;
 
   @override
@@ -754,55 +862,51 @@ class _TapRow extends StatelessWidget {
     return Semantics(
       label: semanticLabel,
       button: true,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            MqHaptics.light(hapticsEnabled);
-            onTap();
-          },
-          splashColor: dark ? Colors.white.withAlpha(13) : MqColors.sand100,
-          child: Padding(
-            padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
-            child: Row(
-              children: [
-                Icon(
-                  icon,
-                  size: 22,
-                  color:
-                      iconColor ??
-                      (dark ? MqColors.slate500 : MqColors.charcoal600),
-                ),
-                const SizedBox(width: MqSpacing.space4),
-                Expanded(
-                  child: Text(
-                    label,
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color:
-                          labelColor ??
-                          (dark
-                              ? MqColors.contentPrimaryDark
-                              : MqColors.contentPrimary),
-                    ),
+      child: MqTactileButton(
+        hapticsEnabled: hapticsEnabled,
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
+            border: Border.all(
+              color: dark ? Colors.white.withAlpha(13) : MqColors.sand200,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 22,
+                color: dark ? MqColors.slate500 : MqColors.charcoal600,
+              ),
+              const SizedBox(width: MqSpacing.space4),
+              Expanded(
+                child: Text(
+                  label,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: dark
+                        ? MqColors.contentPrimaryDark
+                        : MqColors.contentPrimary,
                   ),
                 ),
-                if (value.isNotEmpty) ...[
-                  Text(
-                    value,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: dark ? MqColors.slate500 : MqColors.charcoal600,
-                    ),
-                  ),
-                  const SizedBox(width: MqSpacing.space1),
-                  Icon(
-                    Icons.arrow_drop_down_rounded,
-                    size: 20,
+              ),
+              if (value.isNotEmpty) ...[
+                Text(
+                  value,
+                  style: context.textTheme.bodyMedium?.copyWith(
                     color: dark ? MqColors.slate500 : MqColors.charcoal600,
                   ),
-                ],
+                ),
+                const SizedBox(width: MqSpacing.space1),
+                Icon(
+                  Icons.arrow_drop_down_rounded,
+                  size: 20,
+                  color: dark ? MqColors.slate500 : MqColors.charcoal600,
+                ),
               ],
-            ),
+            ],
           ),
         ),
       ),
@@ -835,54 +939,51 @@ class _ToggleRow extends StatelessWidget {
     return Semantics(
       label: semanticLabel,
       toggled: value,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            MqHaptics.light(hapticsEnabled);
-            onChanged(!value);
-          },
-          splashColor: dark ? Colors.white.withAlpha(13) : MqColors.sand100,
-          child: Padding(
-            padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
-            child: Row(
-              children: [
-                Icon(
-                  icon,
-                  size: 22,
-                  color: dark ? MqColors.slate500 : MqColors.charcoal600,
-                ),
-                const SizedBox(width: MqSpacing.space4),
-                Expanded(
-                  child: Text(
-                    label,
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: dark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: MqSpacing.minTapTarget,
-                  height: MqSpacing.space6,
-                  child: Switch.adaptive(
-                    value: value,
-                    onChanged: (v) {
-                      MqHaptics.light(hapticsEnabled);
-                      onChanged(v);
-                    },
-                    activeThumbColor: Colors.white,
-                    activeTrackColor: MqColors.vividRed,
-                    inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: dark
-                        ? Colors.white.withAlpha(26)
-                        : MqColors.sand300,
-                  ),
-                ),
-              ],
+      child: MqTactileButton(
+        hapticsEnabled: hapticsEnabled,
+        onTap: () => onChanged(!value),
+        child: Container(
+          padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
+            border: Border.all(
+              color: dark ? Colors.white.withAlpha(13) : MqColors.sand200,
             ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 22,
+                color: dark ? MqColors.slate500 : MqColors.charcoal600,
+              ),
+              const SizedBox(width: MqSpacing.space4),
+              Expanded(
+                child: Text(
+                  label,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: dark
+                        ? MqColors.contentPrimaryDark
+                        : MqColors.contentPrimary,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: MqSpacing.minTapTarget,
+                height: MqSpacing.space6,
+                child: Switch.adaptive(
+                  value: value,
+                  onChanged: onChanged,
+                  activeThumbColor: Colors.white,
+                  activeTrackColor: MqColors.vividRed,
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: dark
+                      ? Colors.white.withAlpha(26)
+                      : MqColors.sand300,
+                ),
+              ),
+            ],
           ),
         ),
       ),

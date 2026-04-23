@@ -88,6 +88,12 @@ Located in project root:
 
 See `CHANGELOG.md` for full development history.
 
+### Raouf: 2026-04-23 (AEST) — Home bento hero swap + Settings kinetic/tactile refresh
+**Scope:** Home quick-access hierarchy update and Settings interaction polish.
+**Summary:** Updated Home Bento hierarchy so the large left hero card now routes to `Student Services` (query: `services`) and moved `Food & Drink` to the secondary quick row. Refreshed Settings with kinetic section/title animation, tactile row interactions via `MqTactileButton`, and a standout Danger Zone Bento block for wipe-data action while preserving existing controller wiring and i18n keys.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `lib/features/settings/presentation/pages/settings_page.dart`.
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
 ### Raouf: 2026-04-23 (AEST) — Home background image dark-mode + clarity fix
 **Scope:** Home background image rendering and visual clarity.
 **Summary:** Fixed Home background photo visibility in dark mode by always rendering the campus background layer (instead of conditionally hiding it in dark mode). Reduced the background wash/veil opacity to avoid the “blurry/foggy” look: light overlay changed to `MqColors.alabaster` alpha `0.50` (from `0.78`) and dark overlay uses `MqColors.charcoal950` alpha `0.42` to preserve readability while keeping image detail visible.

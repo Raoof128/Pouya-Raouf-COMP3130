@@ -4,6 +4,21 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-04-23 (AEST) — Home bento hero swap + Settings kinetic/tactile refresh
+
+**Scope:** Home quick-access hierarchy update and Settings interaction polish.
+
+**Summary:**
+Updated Home Bento hierarchy so the large left hero card now routes to **Student Services** (query: `services`) and moved **Food & Drink** into secondary quick-access chips. Refreshed Settings with kinetic title/section motion (slide + fade), tactile row interactions using `MqTactileButton`, and a distinct Danger Zone Bento block for wipe-data to improve visual priority and affordance without changing underlying settings persistence logic.
+
+**Files Changed:**
+- `lib/features/home/presentation/pages/home_page.dart`
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `AGENT.md`, `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze clean, 144 tests passed, gen-l10n clean).
+
 ### Raouf: 2026-04-23 (AEST) — Home background image dark-mode + clarity fix
 
 **Scope:** Home background image rendering and visual clarity.

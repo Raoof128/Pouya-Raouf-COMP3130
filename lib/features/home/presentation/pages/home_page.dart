@@ -304,10 +304,10 @@ class _QuickAccessSection extends StatelessWidget {
               Expanded(
                 child: _BentoHeroCard(
                   hapticsEnabled: hapticsEnabled,
-                  icon: Icons.restaurant,
+                  icon: Icons.support_agent,
                   isDark: dark,
-                  label: l10n.home_foodDrink,
-                  onTap: () => onTapCategory('food'),
+                  label: l10n.home_studentServices,
+                  onTap: () => onTapCategory('services'),
                 ),
               ),
               const SizedBox(width: MqSpacing.space4),
@@ -359,9 +359,9 @@ class _QuickAccessSection extends StatelessWidget {
               searchQuery: 'bus',
             ),
             _QuickAccessItem(
-              icon: Icons.support_agent,
-              label: l10n.home_studentServices,
-              searchQuery: 'services',
+              icon: Icons.restaurant,
+              label: l10n.home_foodDrink,
+              searchQuery: 'food',
             ),
           ],
           onTapCategory: onTapCategory,
