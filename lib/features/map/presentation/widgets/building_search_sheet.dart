@@ -6,6 +6,7 @@ import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
 import 'package:mq_navigation/app/theme/mq_animations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
+import 'package:mq_navigation/core/utils/haptics.dart';
 import 'package:mq_navigation/features/map/data/datasources/places_search_source.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
@@ -129,6 +130,9 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
   }
 
   void _onPlaceTapped(PlaceSuggestion suggestion) {
+    final haptics =
+        ref.read(settingsControllerProvider).value?.hapticsEnabled ?? true;
+    MqHaptics.selection(haptics);
     _searchFocusNode.unfocus();
     final controller = ref.read(mapControllerProvider.notifier);
     controller.setRenderer(MapRendererType.google);
@@ -191,6 +195,13 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
                   title: Text(building.name),
                   subtitle: Text(building.code),
                   onTap: () {
+                    final haptics =
+                        ref
+                            .read(settingsControllerProvider)
+                            .value
+                            ?.hapticsEnabled ??
+                        true;
+                    MqHaptics.selection(haptics);
                     _searchFocusNode.unfocus();
                     ref
                         .read(mapControllerProvider.notifier)

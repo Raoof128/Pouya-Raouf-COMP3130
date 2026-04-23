@@ -4,6 +4,49 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-04-23 (AEST) — Settings Audit & Functional Wiring
+
+**Scope:** Verify all 12 settings are fully functional, persisted, and accurately consumed app-wide.
+
+**Summary:**
+Conducted a comprehensive audit of `SettingsRepository`, `SettingsController`, and all app-wide consumers. Verified that `themeMode`, `localeCode`, `notificationsEnabled`, `lowDataMode`, `reducedMotion`, `quietHoursEnabled`, `quietHoursStart`, `quietHoursEnd`, and `highContrastMap` were perfectly wired. Addressed two functional bugs:
+
+1. **Map State Reset on Unrelated Setting Changes:** `MapController` was using `ref.watch(settingsControllerProvider.future)` in its `build()` method. This caused the entire map state (selected building, route, search query, location) to reset whenever *any* unrelated setting (like theme or haptics) was toggled. Swapped to `ref.read` for the initial load and `ref.listen` to selectively update `renderer` and `travelMode` dynamically without destroying the map state.
+2. **Cosmetic Haptics:** `hapticsEnabled` was cosmetic (only used in the dev Easter egg). Wired it up to `MqHaptics.light` on all `SettingsPage` toggles/pickers and `MqHaptics.selection` in `BuildingSearchSheet` when selecting a campus building or a Google Place suggestion.
+
+**Files Changed:**
+- `lib/features/map/presentation/controllers/map_controller.dart`
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/features/map/presentation/widgets/building_search_sheet.dart`
+- `AGENT.md`, `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze clean, 144 tests passed, gen-l10n clean).
+
+### Raouf: 2026-04-23 (AEST) — Home/Settings 100% Theme & Colour Parity
+
+**Scope:** Lock `HomePage` visual language to `SettingsPage` — identical colour tokens, card treatment, section-header style and dark-mode red glow.
+
+**Summary:**
+The home tab was previously light-mode only, used off-token colours (`MqColors.red` vs Settings' `vividRed`/`brightRed`), hardcoded an `0xFFFDECEE` icon-circle tint, hardcoded English strings, and rendered a solid black 20pt "Quick Access" heading instead of Settings' uppercase letter-spaced red header. The page now:
+
+- Branches every surface, border, text and accent through `context.isDarkMode`, so dark mode swaps to `charcoal850` cards with `Colors.white.withAlpha(13)` borders and `vividRed` accents — a byte-for-byte match of `_SettingsCard`.
+- Layers the same top-origin red radial gradient (`vividRed.withAlpha(38) → transparent`) that sits on `SettingsPage` in dark mode; light mode keeps the branded campus photograph under its ivory veil.
+- Replaces the section heading with the Settings `_SectionHeader` treatment (uppercase, `labelMedium`, `FontWeight.w700`, `letterSpacing: 1.2`, `vividRed` dark / `brightRed` light).
+- Swaps the magic `0xFFFDECEE` icon tint for a token-derived `red.withAlpha(20)` (light) / `vividRed.withAlpha(38)` (dark).
+- Replaces every hardcoded string with new `home_*` ARB keys and adds them to all 34 non-English locales with English fallback (matching the prior localisation sync convention).
+- Uses `EdgeInsetsDirectional` throughout so the page mirrors correctly in RTL locales (ar/fa/he/ur).
+
+**Files Changed:**
+- `lib/features/home/presentation/pages/home_page.dart` (rewritten)
+- `lib/app/l10n/app_en.arb` (+11 keys)
+- `lib/app/l10n/app_ar.arb`, `app_bn.arb`, `app_cs.arb`, `app_da.arb`, `app_de.arb`, `app_el.arb`, `app_es.arb`, `app_fa.arb`, `app_fi.arb`, `app_fr.arb`, `app_he.arb`, `app_hi.arb`, `app_hu.arb`, `app_id.arb`, `app_it.arb`, `app_ja.arb`, `app_ko.arb`, `app_ms.arb`, `app_ne.arb`, `app_nl.arb`, `app_no.arb`, `app_pl.arb`, `app_pt.arb`, `app_ro.arb`, `app_ru.arb`, `app_si.arb`, `app_sv.arb`, `app_ta.arb`, `app_th.arb`, `app_tr.arb`, `app_uk.arb`, `app_ur.arb`, `app_vi.arb`, `app_zh.arb` (+11 keys each, English fallback)
+- `lib/app/l10n/generated/app_localizations*.dart` (regenerated via `flutter gen-l10n`)
+- `AGENT.md`, `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze clean, 144 tests passed, gen-l10n clean).
+
 ### Raouf: 2026-03-21 (AEDT) — Campus Map Zoom Fix & Technical Audit
 
 **Scope:** Fix critical map zoom usability issues and perform a deep technical audit of map feature code.

@@ -165,8 +165,51 @@ class MapController extends AsyncNotifier<MapState> {
     ref.onDispose(() => _locationSubscription?.cancel());
     final buildings = await ref.read(mapRepositoryProvider).getBuildings();
 
-    // Load defaults from user preferences
-    final prefs = await ref.watch(settingsControllerProvider.future);
+    // Load defaults from user preferences (read once so we don't rebuild on unrelated setting changes)
+    final prefs = await ref.read(settingsControllerProvider.future);
+
+    // Listen to settings changes to update map renderer/travel mode dynamically
+    // without destroying the entire map state (selected building, route, etc).
+    ref.listen(settingsControllerProvider, (previous, next) {
+      final nextPrefs = next.value;
+      final currentMapState = state.value;
+      if (nextPrefs == null || currentMapState == null) return;
+
+      var updatedState = currentMapState;
+      var changed = false;
+
+      if (currentMapState.renderer != nextPrefs.defaultRenderer) {
+        _invalidateRouteRequest();
+        updatedState = updatedState.copyWith(
+          renderer: nextPrefs.defaultRenderer,
+          clearRoute: true,
+          isLoadingRoute: false,
+          isNavigating: false,
+          hasArrived: false,
+          clearError: true,
+        );
+        changed = true;
+      }
+
+      if (currentMapState.travelMode != nextPrefs.defaultTravelMode) {
+        _invalidateRouteRequest();
+        updatedState = updatedState.copyWith(
+          travelMode: nextPrefs.defaultTravelMode,
+          isLoadingRoute: false,
+          isNavigating: false,
+          hasArrived: false,
+        );
+        changed = true;
+      }
+
+      if (changed) {
+        state = AsyncData(updatedState);
+        if (updatedState.selectedBuilding != null &&
+            currentMapState.route != null) {
+          unawaited(loadRoute());
+        }
+      }
+    });
 
     return MapState(
       renderer: prefs.defaultRenderer,

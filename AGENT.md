@@ -88,6 +88,20 @@ Located in project root:
 
 See `CHANGELOG.md` for full development history.
 
+### Raouf: 2026-04-23 (AEST) — Settings Audit & Functional Wiring
+**Scope:** Verify all 12 settings are fully functional, persisted, and accurately consumed app-wide.
+**Summary:** Conducted a comprehensive audit of `SettingsRepository`, `SettingsController`, and all app-wide consumers. Verified that `themeMode`, `localeCode`, `notificationsEnabled`, `lowDataMode`, `reducedMotion`, `quietHoursEnabled`, `quietHoursStart`, `quietHoursEnd`, and `highContrastMap` were perfectly wired. Fixed two functional bugs: 
+1) `MapController` was using `ref.watch(settingsControllerProvider.future)` in its `build()` method, causing the entire map state (selected building, route, search query) to reset whenever *any* unrelated setting (e.g., theme or haptics) was toggled. Swapped to `ref.read` for initial load and `ref.listen` to selectively update `renderer` and `travelMode` dynamically.
+2) `hapticsEnabled` was cosmetic (only used in the dev Easter egg). Wired it up to `MqHaptics.light` on all `SettingsPage` toggles/pickers and `MqHaptics.selection` in `BuildingSearchSheet`.
+**Files Changed:** `lib/features/map/presentation/controllers/map_controller.dart`, `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/map/presentation/widgets/building_search_sheet.dart`.
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
+### Raouf: 2026-04-23 (AEST) — Home/Settings 100% theme & colour parity
+**Scope:** UI polish — locking `HomePage` to the same design language as `SettingsPage`.
+**Summary:** Rewrote `lib/features/home/presentation/pages/home_page.dart` so every surface, border, text and accent colour mirrors `SettingsPage`: dual-theme branching via `context.isDarkMode`, charcoal850/white cards with `sand200` / `white-13%` borders, `vividRed` (dark) / `red` (light) accents, the Settings-style uppercase letter-spaced red section header, and the Settings red radial glow layered on dark-mode Home. Removed all hardcoded strings (i18n rule) by adding 11 `home_*` ARB keys to `app_en.arb` and propagating them with English fallback to all 34 non-English locales. Swapped `EdgeInsets` for `EdgeInsetsDirectional` for RTL safety.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/app_*.arb` (34 locales), `lib/app/l10n/generated/*` (regenerated).
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
 ### Summary
 
 The project was built through phases 0–5, originally including auth, calendar, event feed, profile management, and gamification features. These were subsequently removed to focus the Flutter app on campus navigation: 3-tab nav (Home/Map/Settings), local-only settings, FCM push + study prompt notifications, and dual-renderer campus map with building search and routing via Edge Function proxy.

@@ -127,6 +127,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             ThemeMode.dark => l10n.dark,
                           },
                           semanticLabel: l10n.appearance,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onTap: () => _showPicker<ThemeMode>(
                             context: context,
                             title: l10n.appearance,
@@ -147,6 +148,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           label: l10n.language,
                           value: _languageLabel(preferences.localeCode, l10n),
                           semanticLabel: l10n.language,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onTap: () => _showPicker<String?>(
                             context: context,
                             title: l10n.language,
@@ -177,6 +179,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               ? l10n.campusRenderer
                               : l10n.googleRenderer,
                           semanticLabel: l10n.defaultRenderer,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onTap: () => _showPicker<MapRendererType>(
                             context: context,
                             title: l10n.defaultRenderer,
@@ -200,6 +203,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             TravelMode.transit => l10n.transit,
                           },
                           semanticLabel: l10n.defaultTravelMode,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onTap: () => _showPicker<TravelMode>(
                             context: context,
                             title: l10n.defaultTravelMode,
@@ -229,6 +233,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           label: l10n.reducedMotion,
                           value: preferences.reducedMotion,
                           semanticLabel: l10n.reducedMotion,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onChanged: (v) => ref
                               .read(settingsControllerProvider.notifier)
                               .updateReducedMotion(v),
@@ -238,6 +243,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           label: l10n.haptics,
                           value: preferences.hapticsEnabled,
                           semanticLabel: l10n.haptics,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onChanged: (v) => ref
                               .read(settingsControllerProvider.notifier)
                               .updateHapticsEnabled(v),
@@ -247,6 +253,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           label: l10n.highContrastMap,
                           value: preferences.highContrastMap,
                           semanticLabel: l10n.highContrastMap,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onChanged: (v) => ref
                               .read(settingsControllerProvider.notifier)
                               .updateHighContrastMap(v),
@@ -256,6 +263,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           label: l10n.lowDataMode,
                           value: preferences.lowDataMode,
                           semanticLabel: l10n.lowDataMode,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onChanged: (v) => ref
                               .read(settingsControllerProvider.notifier)
                               .updateLowDataMode(v),
@@ -273,6 +281,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           label: l10n.notifications,
                           value: preferences.notificationsEnabled,
                           semanticLabel: l10n.notifications,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onChanged: (v) async {
                             final msg = await ref
                                 .read(settingsControllerProvider.notifier)
@@ -287,6 +296,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           label: l10n.quietHours,
                           value: preferences.quietHoursEnabled,
                           semanticLabel: l10n.quietHours,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onChanged: (v) => ref
                               .read(settingsControllerProvider.notifier)
                               .updateQuietHoursEnabled(v),
@@ -296,6 +306,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             icon: Icons.access_time_outlined,
                             label: l10n.quietHoursStart,
                             value: preferences.quietHoursStart,
+                            hapticsEnabled: preferences.hapticsEnabled,
                             onTap: () => _selectTime(
                               context,
                               preferences.quietHoursStart,
@@ -308,6 +319,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             icon: Icons.access_time_filled_outlined,
                             label: l10n.quietHoursEnd,
                             value: preferences.quietHoursEnd,
+                            hapticsEnabled: preferences.hapticsEnabled,
                             onTap: () => _selectTime(
                               context,
                               preferences.quietHoursEnd,
@@ -332,6 +344,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           labelColor: MqColors.vividRed,
                           iconColor: MqColors.vividRed,
                           semanticLabel: l10n.wipeData,
+                          hapticsEnabled: preferences.hapticsEnabled,
                           onTap: () => _confirmWipe(context, ref, l10n),
                         ),
                       ],
@@ -722,6 +735,7 @@ class _TapRow extends StatelessWidget {
     this.semanticLabel,
     this.labelColor,
     this.iconColor,
+    this.hapticsEnabled = true,
   });
 
   final IconData icon;
@@ -731,6 +745,7 @@ class _TapRow extends StatelessWidget {
   final String? semanticLabel;
   final Color? labelColor;
   final Color? iconColor;
+  final bool hapticsEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -741,7 +756,10 @@ class _TapRow extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onTap,
+          onTap: () {
+            MqHaptics.light(hapticsEnabled);
+            onTap();
+          },
           splashColor: dark ? Colors.white.withAlpha(13) : MqColors.sand100,
           child: Padding(
             padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
@@ -800,6 +818,7 @@ class _ToggleRow extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.semanticLabel,
+    this.hapticsEnabled = true,
   });
 
   final IconData icon;
@@ -807,6 +826,7 @@ class _ToggleRow extends StatelessWidget {
   final bool value;
   final void Function(bool) onChanged;
   final String? semanticLabel;
+  final bool hapticsEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -817,7 +837,10 @@ class _ToggleRow extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => onChanged(!value),
+          onTap: () {
+            MqHaptics.light(hapticsEnabled);
+            onChanged(!value);
+          },
           splashColor: dark ? Colors.white.withAlpha(13) : MqColors.sand100,
           child: Padding(
             padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
@@ -845,7 +868,10 @@ class _ToggleRow extends StatelessWidget {
                   height: MqSpacing.space6,
                   child: Switch.adaptive(
                     value: value,
-                    onChanged: onChanged,
+                    onChanged: (v) {
+                      MqHaptics.light(hapticsEnabled);
+                      onChanged(v);
+                    },
                     activeThumbColor: Colors.white,
                     activeTrackColor: MqColors.vividRed,
                     inactiveThumbColor: Colors.white,

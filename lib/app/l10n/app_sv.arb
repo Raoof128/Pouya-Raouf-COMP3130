@@ -2070,5 +2070,16 @@
   "devDiagnostics": "Dev Diagnostics",
   "buildVersion": "Build: 2026.04.22-beta",
   "renderer": "Renderer: CrsSimple (Campus)",
-  "edgeProxy": "Edge Proxy: maps-places (Active)"
+  "edgeProxy": "Edge Proxy: maps-places (Active)",
+  "home_brandTitle": "MQ NAVIGATION",
+  "home_welcomeTitle": "Welcome to MQ Navigation",
+  "home_welcomeSubtitle": "Find your way around campus quickly and easily.",
+  "home_startExploring": "Start Exploring",
+  "home_quickAccess": "Quick Access",
+  "home_foodDrink": "Food & Drink",
+  "home_parking": "Parking",
+  "home_faculty": "Faculty",
+  "home_campusHub": "Campus Hub",
+  "home_transport": "Transport",
+  "home_studentServices": "Student Services"
 }
