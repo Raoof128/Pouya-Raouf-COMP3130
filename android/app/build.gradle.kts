@@ -88,6 +88,11 @@ kotlin {
     }
 }
 
+// Suppress obsolete Java source/target warnings emitted by the Flutter engine JAR (Java 8 bytecode)
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.addAll(listOf("-Xlint:-options"))
+}
+
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
