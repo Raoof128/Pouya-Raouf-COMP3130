@@ -115,6 +115,13 @@ See `CHANGELOG.md` for full development history.
 **Verification:** `./scripts/sync_supabase_secrets.sh`; direct `curl` POST to `${SUPABASE_URL}/functions/v1/maps-routes` with `renderer=google` + `travelMode=WALK` returned route payload (`HTTP 200`).
 **Follow-ups:** Add `TFNSW_API_KEY` to `.env` if transit APIs should be fully enabled.
 
+### Raouf: 2026-04-23 (AEST) — TfNSW key provisioning + anon access alignment
+**Scope:** TfNSW secret setup and edge-function runtime access mode.
+**Summary:** Added `TFNSW_API_KEY` to local `.env`, synced secrets to Supabase, and redeployed `tfnsw-proxy` + `maps-routes`. Updated `tfnsw-proxy` deployment to `--no-verify-jwt` so it matches the app’s no-auth architecture and can be called with anon key only.
+**Files Changed:** `.env` (local-only, gitignored).
+**Verification:** `./scripts/sync_supabase_secrets.sh`; `supabase functions deploy tfnsw-proxy`; `supabase functions deploy maps-routes`; `supabase functions deploy tfnsw-proxy --no-verify-jwt`; direct `curl` GET to `${SUPABASE_URL}/functions/v1/tfnsw-proxy` with anon key returned `HTTP 200`.
+**Follow-ups:** If departures remain empty (`[]`) at some times, validate `TFNSW_STOP_ID` against the desired station/platform and peak timetable windows.
+
 ### Raouf: 2026-04-23 (AEST) — Localization parity fix for newly added Home/Settings keys
 **Scope:** Internationalization consistency across all locale ARB files.
 **Summary:** Added the 11 newly introduced `app_en.arb` keys to all 34 non-English locale ARB files using English fallback values to restore key parity and eliminate `flutter gen-l10n` untranslated warnings during app launch/run.

@@ -1,3 +1,19 @@
+### Raouf: 2026-04-23 (AEST) — TfNSW key provisioning + anon access alignment
+**Scope:** TfNSW secret setup and edge-function runtime access mode.
+**Summary:** Added the provided `TFNSW_API_KEY` to local `.env`, synced edge secrets, redeployed `tfnsw-proxy` and `maps-routes`, and redeployed `tfnsw-proxy` with `--no-verify-jwt` to align with the app’s no-auth architecture. This removed anonymous 401 failures for the TfNSW proxy endpoint.
+**Files Changed:**
+- `.env` (local-only, gitignored)
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `./scripts/sync_supabase_secrets.sh` → `TFNSW_API_KEY` set
+- `supabase functions deploy tfnsw-proxy`
+- `supabase functions deploy maps-routes`
+- `supabase functions deploy tfnsw-proxy --no-verify-jwt`
+- Direct `curl` GET to `${SUPABASE_URL}/functions/v1/tfnsw-proxy` with anon key → `HTTP 200`
+**Follow-ups:**
+- If response is empty (`[]`), tune `TFNSW_STOP_ID` for the desired stop/platform and recheck during active service windows.
+
 ### Raouf: 2026-04-23 (AEST) — Supabase secret sync fallback for Google routes key
 **Scope:** Edge-function secret sync robustness for Google routing.
 **Summary:** Updated `scripts/sync_supabase_secrets.sh` so `GOOGLE_ROUTES_API_KEY` is populated from `GOOGLE_MAPS_API_KEY` when a dedicated routes key is not present in `.env`. Re-synced secrets and verified the `maps-routes` function now returns successful Google route responses.
