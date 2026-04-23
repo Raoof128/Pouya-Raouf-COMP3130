@@ -2079,8 +2079,26 @@
   "offlineCampusMapsReady": "Offline campus maps are ready",
   "homeNextClassLabel": "Next Class",
   "homeNextClassEmpty": "No classes remaining today",
+  "homeCommuteCountdownLabel": "{mode} Countdown",
+  "@homeCommuteCountdownLabel": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
   "homeNextMetroLabel": "Next Metro",
   "homeNextMetroEmpty": "No upcoming metro departures",
+  "commutePreferences": "Commute Preferences",
+  "mainTransport": "Main Transport",
+  "commuteModeNotSet": "Not Set",
+  "commuteModeMetro": "Metro",
+  "commuteModeBus": "Bus",
+  "commuteModeTrain": "Train",
+  "favoriteRouteLine": "Favorite Route / Line",
+  "setRoutePrompt": "Set route...",
+  "favoriteRouteTitle": "Favorite Route",
+  "favoriteRouteHint": "e.g., 525, Chatswood",
   "minutesShort": "{minutes} min",
   "@minutesShort": {
     "placeholders": {

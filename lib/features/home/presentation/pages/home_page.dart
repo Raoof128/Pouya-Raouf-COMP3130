@@ -13,6 +13,7 @@ import 'package:mq_navigation/features/timetable/presentation/providers/timetabl
 import 'package:mq_navigation/features/transit/domain/entities/metro_departure.dart';
 import 'package:mq_navigation/features/transit/presentation/providers/tfnsw_provider.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
+import 'package:mq_navigation/shared/models/user_preferences.dart';
 import 'package:mq_navigation/shared/widgets/mq_tactile_button.dart';
 
 /// Home screen for the MQ Navigation app.
@@ -39,6 +40,8 @@ class HomePage extends ConsumerWidget {
     final dark = context.isDarkMode;
     final hapticsEnabled =
         ref.watch(settingsControllerProvider).value?.hapticsEnabled ?? true;
+    final preferences =
+        ref.watch(settingsControllerProvider).value ?? const UserPreferences();
     final nextClass = ref.watch(nextTimetableClassProvider);
     final metroDepartures = ref.watch(tfnswMetroProvider);
     return Scaffold(
@@ -86,6 +89,8 @@ class HomePage extends ConsumerWidget {
                         const _HeroSection(),
                         const SizedBox(height: MqSpacing.space8),
                         _LiveCardsSection(
+                          commuteMode: preferences.commuteMode,
+                          favoriteRoute: preferences.favoriteRoute,
                           hapticsEnabled: hapticsEnabled,
                           metroDepartures: metroDepartures,
                           nextClass: nextClass,
@@ -124,12 +129,16 @@ class HomePage extends ConsumerWidget {
 
 class _LiveCardsSection extends StatelessWidget {
   const _LiveCardsSection({
+    required this.commuteMode,
+    required this.favoriteRoute,
     required this.hapticsEnabled,
     required this.metroDepartures,
     required this.nextClass,
     required this.onTapClass,
   });
 
+  final String commuteMode;
+  final String favoriteRoute;
   final bool hapticsEnabled;
   final AsyncValue<List<MetroDeparture>> metroDepartures;
   final AsyncValue<TimetableClass?> nextClass;
@@ -145,9 +154,19 @@ class _LiveCardsSection extends StatelessWidget {
         ? null
         : DateFormat.Hm().format(upcomingClass.startTime);
 
-    final metroSubtitle = (metro == null || metro.isEmpty)
+    final departures = metro ?? const <MetroDeparture>[];
+    final metroSubtitle = departures.isEmpty
         ? l10n.homeNextMetroEmpty
-        : '${metro.first.destination} • ${l10n.minutesShort(metro.first.minutesUntilDeparture)}';
+        : '${departures.first.destination} • ${l10n.minutesShort(departures.first.minutesUntilDeparture)}';
+
+    final metroTitle = commuteMode == 'none'
+        ? l10n.homeNextMetroLabel
+        : l10n.homeCommuteCountdownLabel(switch (commuteMode) {
+            'metro' => l10n.commuteModeMetro,
+            'bus' => l10n.commuteModeBus,
+            'train' => l10n.commuteModeTrain,
+            _ => l10n.commuteModeNotSet,
+          });
 
     final classSubtitle = upcomingClass == null
         ? l10n.homeNextClassEmpty
@@ -160,7 +179,7 @@ class _LiveCardsSection extends StatelessWidget {
           icon: Icons.directions_transit,
           isDark: dark,
           subtitle: metroSubtitle,
-          title: l10n.homeNextMetroLabel,
+          title: metroTitle,
         ),
         const SizedBox(height: MqSpacing.space3),
         _LiveInfoCard(
@@ -197,58 +216,64 @@ class _LiveInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MqTactileButton(
-      hapticsEnabled: hapticsEnabled,
-      onTap: onTap ?? () {},
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: isDark
-              ? MqColors.charcoal850
-              : Colors.white.withValues(alpha: 0.88),
-          borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-          border: Border.all(
-            color: isDark ? Colors.white.withAlpha(13) : MqColors.sand200,
-          ),
-        ),
-        padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
-        child: Row(
-          children: [
-            Icon(icon, color: isDark ? MqColors.vividRed : MqColors.red),
-            const SizedBox(width: MqSpacing.space3),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: context.textTheme.titleSmall?.copyWith(
-                      color: isDark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: MqSpacing.space1),
-                  Text(
-                    subtitle,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: isDark
-                          ? MqColors.contentSecondaryDark
-                          : MqColors.contentSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (onTap != null)
-              Icon(
-                Icons.chevron_right,
-                color: isDark ? Colors.white70 : MqColors.contentTertiary,
-              ),
-          ],
+    final card = Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: isDark
+            ? MqColors.charcoal850
+            : Colors.white.withValues(alpha: 0.88),
+        borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
+        border: Border.all(
+          color: isDark ? Colors.white.withAlpha(13) : MqColors.sand200,
         ),
       ),
+      padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
+      child: Row(
+        children: [
+          Icon(icon, color: isDark ? MqColors.vividRed : MqColors.red),
+          const SizedBox(width: MqSpacing.space3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    color: isDark
+                        ? MqColors.contentPrimaryDark
+                        : MqColors.contentPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: MqSpacing.space1),
+                Text(
+                  subtitle,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: isDark
+                        ? MqColors.contentSecondaryDark
+                        : MqColors.contentSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (onTap != null)
+            Icon(
+              Icons.chevron_right,
+              color: isDark ? Colors.white70 : MqColors.contentTertiary,
+            ),
+        ],
+      ),
+    );
+
+    if (onTap == null) {
+      return card;
+    }
+
+    return MqTactileButton(
+      hapticsEnabled: hapticsEnabled,
+      onTap: onTap!,
+      child: card,
     );
   }
 }

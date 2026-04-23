@@ -2099,5 +2099,23 @@
         "type": "int"
       }
     }
-  }
+  },
+  "homeCommuteCountdownLabel": "{mode} Countdown",
+  "@homeCommuteCountdownLabel": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "commutePreferences": "Commute Preferences",
+  "mainTransport": "Main Transport",
+  "commuteModeNotSet": "Not Set",
+  "commuteModeMetro": "Metro",
+  "commuteModeBus": "Bus",
+  "commuteModeTrain": "Train",
+  "favoriteRouteLine": "Favorite Route / Line",
+  "setRoutePrompt": "Set route...",
+  "favoriteRouteTitle": "Favorite Route",
+  "favoriteRouteHint": "e.g., 525, Chatswood"
 }

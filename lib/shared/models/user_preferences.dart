@@ -9,6 +9,8 @@ import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 @immutable
 class UserPreferences {
   const UserPreferences({
+    this.commuteMode = 'none',
+    this.favoriteRoute = '',
     this.themeMode = ThemeMode.system,
     this.localeCode,
     this.notificationsEnabled = true,
@@ -25,6 +27,8 @@ class UserPreferences {
   });
 
   final ThemeMode themeMode;
+  final String commuteMode;
+  final String favoriteRoute;
   final String? localeCode;
   final bool notificationsEnabled;
   final MapRendererType defaultRenderer;
@@ -42,6 +46,8 @@ class UserPreferences {
 
   UserPreferences copyWith({
     ThemeMode? themeMode,
+    String? commuteMode,
+    String? favoriteRoute,
     String? localeCode,
     bool clearLocale = false,
     bool? notificationsEnabled,
@@ -58,6 +64,8 @@ class UserPreferences {
   }) {
     return UserPreferences(
       themeMode: themeMode ?? this.themeMode,
+      commuteMode: commuteMode ?? this.commuteMode,
+      favoriteRoute: favoriteRoute ?? this.favoriteRoute,
       localeCode: clearLocale ? null : localeCode ?? this.localeCode,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       defaultRenderer: defaultRenderer ?? this.defaultRenderer,
@@ -80,6 +88,8 @@ class UserPreferences {
       other is UserPreferences &&
           runtimeType == other.runtimeType &&
           themeMode == other.themeMode &&
+          commuteMode == other.commuteMode &&
+          favoriteRoute == other.favoriteRoute &&
           localeCode == other.localeCode &&
           notificationsEnabled == other.notificationsEnabled &&
           defaultRenderer == other.defaultRenderer &&
@@ -96,6 +106,8 @@ class UserPreferences {
   @override
   int get hashCode => Object.hash(
     themeMode,
+    commuteMode,
+    favoriteRoute,
     localeCode,
     notificationsEnabled,
     defaultRenderer,

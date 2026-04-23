@@ -88,6 +88,19 @@ Located in project root:
 
 See `CHANGELOG.md` for full development history.
 
+### Raouf: 2026-04-23 (AEST) — Commute Preferences in Settings + Home countdown filtering
+**Scope:** Settings personalization and Home live departure behavior.
+**Summary:** Added persisted `commuteMode` and `favoriteRoute` preferences, a new Settings commute card (transport picker + route input dialog), and Home live-card filtering so departure countdown focuses on the user’s saved route/line preference. Added all new copy via i18n keys and synchronized them to all locale ARB files.
+**Files Changed:** `lib/shared/models/user_preferences.dart`, `lib/features/settings/data/repositories/settings_repository.dart`, `lib/features/settings/presentation/controllers/settings_controller.dart`, `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/home/presentation/pages/home_page.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/app_*.arb` (34 locale files).
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
+### Raouf: 2026-04-23 (AEST) — Location-aware commute departures + live no-op tap fix
+**Scope:** Transit edge proxy and Home live card UX correctness.
+**Summary:** Fixed `tfnsw-proxy` to accept live location + commute preferences (`mode`, `route`, `lat`, `lng`), resolve nearest stop via TfNSW `stop_finder`, and return filtered departures for the selected transport mode/route. Corrected the TfNSW auth header interpolation bug in the proxy request and removed Home live-card no-op taps by rendering non-interactive cards without tactile wrappers when no action exists.
+**Files Changed:** `supabase/functions/tfnsw-proxy/index.ts`, `lib/features/transit/presentation/providers/tfnsw_provider.dart`, `lib/features/transit/domain/entities/metro_departure.dart`, `lib/features/home/presentation/pages/home_page.dart`.
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+**Follow-ups:** Deploy `tfnsw-proxy` after secret sync to make location-aware filtering active in production.
+
 ### Raouf: 2026-04-23 (AEST) — Localization parity fix for newly added Home/Settings keys
 **Scope:** Internationalization consistency across all locale ARB files.
 **Summary:** Added the 11 newly introduced `app_en.arb` keys to all 34 non-English locale ARB files using English fallback values to restore key parity and eliminate `flutter gen-l10n` untranslated warnings during app launch/run.

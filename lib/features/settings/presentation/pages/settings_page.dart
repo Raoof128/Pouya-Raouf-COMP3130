@@ -12,6 +12,7 @@ import 'package:mq_navigation/features/timetable/data/services/timetable_import_
 import 'package:mq_navigation/features/timetable/presentation/providers/timetable_provider.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
 import 'package:mq_navigation/shared/widgets/mq_bottom_sheet.dart';
+import 'package:mq_navigation/shared/widgets/mq_input.dart';
 import 'package:mq_navigation/shared/widgets/mq_tactile_button.dart';
 
 /// Main settings screen for managing app-wide preferences.
@@ -407,6 +408,56 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     ),
                     const SizedBox(height: MqSpacing.space6),
 
+                    // ── Commute Preferences section ───────────────
+                    _SectionHeader(title: l10n.commutePreferences),
+                    _SettingsCard(
+                      children: [
+                        _TapRow(
+                          icon: Icons.commute_outlined,
+                          label: l10n.mainTransport,
+                          value: switch (preferences.commuteMode) {
+                            'metro' => l10n.commuteModeMetro,
+                            'bus' => l10n.commuteModeBus,
+                            'train' => l10n.commuteModeTrain,
+                            _ => l10n.commuteModeNotSet,
+                          },
+                          semanticLabel: l10n.mainTransport,
+                          hapticsEnabled: preferences.hapticsEnabled,
+                          onTap: () => _showPicker<String>(
+                            context: context,
+                            title: l10n.mainTransport,
+                            current: preferences.commuteMode,
+                            items: const ['none', 'metro', 'bus', 'train'],
+                            labelOf: (v) => switch (v) {
+                              'metro' => l10n.commuteModeMetro,
+                              'bus' => l10n.commuteModeBus,
+                              'train' => l10n.commuteModeTrain,
+                              _ => l10n.commuteModeNotSet,
+                            },
+                            onSelect: (v) => ref
+                                .read(settingsControllerProvider.notifier)
+                                .updateCommutePreferences(commuteMode: v),
+                          ),
+                        ),
+                        if (preferences.commuteMode != 'none')
+                          _TapRow(
+                            icon: Icons.route_outlined,
+                            label: l10n.favoriteRouteLine,
+                            value: preferences.favoriteRoute.trim().isEmpty
+                                ? l10n.setRoutePrompt
+                                : preferences.favoriteRoute,
+                            semanticLabel: l10n.favoriteRouteLine,
+                            hapticsEnabled: preferences.hapticsEnabled,
+                            onTap: () => _showRouteInputDialog(
+                              context: context,
+                              currentRoute: preferences.favoriteRoute,
+                              ref: ref,
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: MqSpacing.space6),
+
                     // ── Danger Zone section ──────────────────────
                     _SectionHeader(title: l10n.dangerZone),
                     _DangerZoneCard(
@@ -530,6 +581,52 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       } else if (context.mounted) {
         context.showSnackBar(l10n.wipeDataSuccess);
       }
+    }
+  }
+
+  Future<void> _showRouteInputDialog({
+    required BuildContext context,
+    required String currentRoute,
+    required WidgetRef ref,
+  }) async {
+    final l10n = AppLocalizations.of(context)!;
+    final controller = TextEditingController(text: currentRoute);
+    final saved = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: MqColors.charcoal850,
+        title: Text(
+          l10n.favoriteRouteTitle,
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: MqInput(
+          controller: controller,
+          hint: l10n.favoriteRouteHint,
+          label: l10n.favoriteRouteLine,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              l10n.cancel,
+              style: const TextStyle(color: Colors.white70),
+            ),
+          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(dialogContext, controller.text.trim()),
+            child: Text(
+              l10n.save,
+              style: const TextStyle(color: MqColors.vividRed),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (saved != null) {
+      await ref
+          .read(settingsControllerProvider.notifier)
+          .updateCommutePreferences(favoriteRoute: saved);
     }
   }
 

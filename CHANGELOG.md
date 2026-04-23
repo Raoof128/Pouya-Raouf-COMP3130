@@ -1,8 +1,43 @@
+### Raouf: 2026-04-23 (AEST) — Location-aware commute departures + live no-op tap fix
+**Scope:** Transit edge proxy and Home live card UX correctness.
+**Summary:** Fixed `tfnsw-proxy` to accept live location + commute preferences (`mode`, `route`, `lat`, `lng`), resolve nearest stop via TfNSW `stop_finder`, and return filtered departures for the selected transport mode/route. Corrected the TfNSW auth header interpolation bug in the proxy request and removed Home live-card no-op taps by rendering non-interactive cards without tactile wrappers when no action exists.
+**Files Changed:**
+- `supabase/functions/tfnsw-proxy/index.ts`
+- `lib/features/transit/presentation/providers/tfnsw_provider.dart`
+- `lib/features/transit/domain/entities/metro_departure.dart`
+- `lib/features/home/presentation/pages/home_page.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `./scripts/check.sh --quick` → pass (format, analyze, flutter test 144, gen-l10n).
+**Follow-ups:**
+- Deploy `tfnsw-proxy` and confirm device-level behavior at runtime with GPS enabled.
+
 # Changelog
 
 All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
+
+### Raouf: 2026-04-23 (AEST) — Commute Preferences in Settings + Home countdown filtering
+
+**Scope:** Settings personalization and Home live departure behavior.
+
+**Summary:**
+Added a new Commute Preferences feature with persisted `commuteMode` and `favoriteRoute` values in local settings. Implemented a dedicated Settings card (mode picker + route input dialog) and wired Home’s live departure card to respect these preferences by filtering departures using the saved route/line text. All new user-visible labels and prompts were added through localization keys and propagated across all locale ARB files.
+
+**Files Changed:**
+- `lib/shared/models/user_preferences.dart`
+- `lib/features/settings/data/repositories/settings_repository.dart`
+- `lib/features/settings/presentation/controllers/settings_controller.dart`
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/features/home/presentation/pages/home_page.dart`
+- `lib/app/l10n/app_en.arb`
+- `lib/app/l10n/app_ar.arb`, `app_bn.arb`, `app_cs.arb`, `app_da.arb`, `app_de.arb`, `app_el.arb`, `app_es.arb`, `app_fa.arb`, `app_fi.arb`, `app_fr.arb`, `app_he.arb`, `app_hi.arb`, `app_hu.arb`, `app_id.arb`, `app_it.arb`, `app_ja.arb`, `app_ko.arb`, `app_ms.arb`, `app_ne.arb`, `app_nl.arb`, `app_no.arb`, `app_pl.arb`, `app_pt.arb`, `app_ro.arb`, `app_ru.arb`, `app_si.arb`, `app_sv.arb`, `app_ta.arb`, `app_th.arb`, `app_tr.arb`, `app_uk.arb`, `app_ur.arb`, `app_vi.arb`, `app_zh.arb`
+- `AGENT.md`, `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 144 tests, gen-l10n).
 
 ### Raouf: 2026-04-23 (AEST) — Localization parity fix for newly added Home/Settings keys
 
