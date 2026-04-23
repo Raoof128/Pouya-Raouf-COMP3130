@@ -4,6 +4,20 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-04-23 (AEST) — Dark/Light parity audit pass (Home + Settings)
+
+**Scope:** Visual parity verification for dark mode and light mode branches.
+
+**Summary:**
+Completed a full parity audit for `HomePage` and `SettingsPage` backgrounds, surfaces, accents, and section-header treatment across both theme modes. Verified shared scaffold colors (`alabaster` / `charcoal850`), dark radial glow behavior, and card token consistency. Resolved one remaining mismatch by changing Home section-header light accent from `brightRed` to `red` to match Settings headers exactly. Updated stale Home comment to reflect current behavior (background photo now renders in both themes).
+
+**Files Changed:**
+- `lib/features/home/presentation/pages/home_page.dart`
+- `AGENT.md`, `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze clean, 144 tests passed, gen-l10n clean).
+
 ### Raouf: 2026-04-23 (AEST) — Home bento hero swap + Settings kinetic/tactile refresh
 
 **Scope:** Home quick-access hierarchy update and Settings interaction polish.

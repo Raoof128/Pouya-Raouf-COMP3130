@@ -88,6 +88,12 @@ Located in project root:
 
 See `CHANGELOG.md` for full development history.
 
+### Raouf: 2026-04-23 (AEST) — Dark/Light parity audit pass (Home + Settings)
+**Scope:** Visual parity verification for dark mode and light mode branches.
+**Summary:** Performed a full parity audit across `HomePage` and `SettingsPage` surface/background/accent usage. Confirmed shared scaffold backgrounds (`alabaster` light / `charcoal850` dark), matching dark-mode radial glow treatment, and consistent card token usage (`sand200`/`white-13%` borders, `charcoal850` dark surfaces). Fixed one remaining mismatch by aligning Home section-header light accent from `brightRed` to `red` so it matches Settings headers exactly. Also corrected stale Home documentation comment to reflect that the background photo now renders in both theme modes.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`.
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
 ### Raouf: 2026-04-23 (AEST) — Home bento hero swap + Settings kinetic/tactile refresh
 **Scope:** Home quick-access hierarchy update and Settings interaction polish.
 **Summary:** Updated Home Bento hierarchy so the large left hero card now routes to `Student Services` (query: `services`) and moved `Food & Drink` to the secondary quick row. Refreshed Settings with kinetic section/title animation, tactile row interactions via `MqTactileButton`, and a standout Danger Zone Bento block for wipe-data action while preserving existing controller wiring and i18n keys.

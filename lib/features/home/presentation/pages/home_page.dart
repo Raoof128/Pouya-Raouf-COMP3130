@@ -22,9 +22,8 @@ import 'package:mq_navigation/shared/widgets/mq_tactile_button.dart';
 /// * Cards share the same `charcoal850 / white`, `sand200 / white-13%`
 ///   border, `radiusXl` rounding as Settings cards.
 ///
-/// The light branch keeps the branded campus photograph plus an ivory
-/// veil; the dark branch drops the photo for a charcoal wash so the red
-/// glow reads cleanly.
+/// Both theme branches keep the branded campus photograph with an adaptive
+/// overlay so contrast stays readable in light and dark mode.
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
@@ -402,7 +401,7 @@ class _SectionHeader extends StatelessWidget {
         style: context.textTheme.labelMedium?.copyWith(
           fontWeight: FontWeight.w700,
           letterSpacing: 1.2,
-          color: dark ? MqColors.vividRed : MqColors.brightRed,
+          color: dark ? MqColors.vividRed : MqColors.red,
         ),
       ),
     );
