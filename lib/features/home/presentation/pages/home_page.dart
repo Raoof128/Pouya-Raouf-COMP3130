@@ -6,7 +6,9 @@ import 'package:mq_navigation/app/router/route_names.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/map/presentation/controllers/map_controller.dart';
+import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
+import 'package:mq_navigation/shared/widgets/mq_tactile_button.dart';
 
 /// Home screen for the MQ Navigation app.
 ///
@@ -31,6 +33,8 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dark = context.isDarkMode;
+    final hapticsEnabled =
+        ref.watch(settingsControllerProvider).value?.hapticsEnabled ?? true;
     return Scaffold(
       backgroundColor: dark ? MqColors.charcoal850 : MqColors.alabaster,
       body: Stack(
@@ -76,6 +80,7 @@ class HomePage extends ConsumerWidget {
                         const _HeroSection(),
                         const SizedBox(height: MqSpacing.space8),
                         _QuickAccessSection(
+                          hapticsEnabled: hapticsEnabled,
                           onTapCategory: (query) {
                             // Riverpod state is global; AppShell preserves
                             // MapPage so we must update the controller
@@ -193,57 +198,71 @@ class _HeroSection extends StatelessWidget {
     final subtitleColor = dark ? MqColors.slate500 : MqColors.charcoal700;
     final ctaColor = dark ? MqColors.vividRed : MqColors.red;
 
-    return Column(
-      children: [
-        Text(
-          l10n.home_welcomeTitle,
-          textAlign: TextAlign.center,
-          style: context.textTheme.headlineLarge?.copyWith(
-            fontSize: 32,
-            fontWeight: FontWeight.w700,
-            height: 1.2,
-            letterSpacing: -0.5,
-            color: titleColor,
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - value)),
+            child: child,
           ),
-        ),
-        const SizedBox(height: MqSpacing.space3),
-        Text(
-          l10n.home_welcomeSubtitle,
-          textAlign: TextAlign.center,
-          style: context.textTheme.bodyLarge?.copyWith(
-            color: subtitleColor,
-            fontSize: 16,
-            height: 1.4,
-          ),
-        ),
-        const SizedBox(height: MqSpacing.space5),
-        SizedBox(
-          height: 52,
-          child: FilledButton.icon(
-            onPressed: () => context.goNamed(RouteNames.map),
-            style: FilledButton.styleFrom(
-              backgroundColor: ctaColor,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsetsDirectional.symmetric(
-                horizontal: MqSpacing.space6,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-              ),
-              elevation: 2,
-            ),
-            icon: const Icon(Icons.near_me, size: MqSpacing.iconMd),
-            label: Text(
-              l10n.home_startExploring,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.2,
-              ),
+        );
+      },
+      child: Column(
+        children: [
+          Text(
+            l10n.home_welcomeTitle,
+            textAlign: TextAlign.center,
+            style: context.textTheme.headlineLarge?.copyWith(
+              fontSize: 32,
+              fontWeight: FontWeight.w800,
+              height: 1.2,
+              letterSpacing: -0.5,
+              color: titleColor,
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: MqSpacing.space2),
+          Text(
+            l10n.home_welcomeSubtitle,
+            textAlign: TextAlign.center,
+            style: context.textTheme.bodyLarge?.copyWith(
+              color: subtitleColor,
+              fontSize: 16,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: MqSpacing.space5),
+          SizedBox(
+            height: 52,
+            child: FilledButton.icon(
+              onPressed: () => context.goNamed(RouteNames.map),
+              style: FilledButton.styleFrom(
+                backgroundColor: ctaColor,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsetsDirectional.symmetric(
+                  horizontal: MqSpacing.space6,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
+                ),
+                elevation: 2,
+              ),
+              icon: const Icon(Icons.near_me, size: MqSpacing.iconMd),
+              label: Text(
+                l10n.home_startExploring,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -253,69 +272,93 @@ class _HeroSection extends StatelessWidget {
 // -------------------------------------------------------------------------- //
 
 class _QuickAccessSection extends StatelessWidget {
-  const _QuickAccessSection({required this.onTapCategory});
+  const _QuickAccessSection({
+    required this.hapticsEnabled,
+    required this.onTapCategory,
+  });
 
+  final bool hapticsEnabled;
   final void Function(String searchQuery) onTapCategory;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    final items = <_QuickAccessItem>[
-      _QuickAccessItem(
-        icon: Icons.restaurant,
-        label: l10n.home_foodDrink,
-        searchQuery: 'food',
-      ),
-      _QuickAccessItem(
-        icon: Icons.local_parking,
-        label: l10n.home_parking,
-        searchQuery: 'parking',
-      ),
-      _QuickAccessItem(
-        icon: Icons.school,
-        label: l10n.home_faculty,
-        searchQuery: 'faculty',
-      ),
-      _QuickAccessItem(
-        icon: Icons.account_balance,
-        label: l10n.home_campusHub,
-        searchQuery: 'campus hub',
-      ),
-      _QuickAccessItem(
-        icon: Icons.directions_bus,
-        label: l10n.home_transport,
-        searchQuery: 'bus',
-      ),
-      _QuickAccessItem(
-        icon: Icons.support_agent,
-        label: l10n.home_studentServices,
-        searchQuery: 'services',
-      ),
-    ];
+    final dark = context.isDarkMode;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(title: l10n.home_quickAccess),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: MqSpacing.space4,
-            crossAxisSpacing: MqSpacing.space4,
-            childAspectRatio: 1.05,
+        SizedBox(
+          height: 280,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _BentoHeroCard(
+                  hapticsEnabled: hapticsEnabled,
+                  icon: Icons.restaurant,
+                  isDark: dark,
+                  label: l10n.home_foodDrink,
+                  onTap: () => onTapCategory('food'),
+                ),
+              ),
+              const SizedBox(width: MqSpacing.space4),
+              Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: _BentoCompactCard(
+                        hapticsEnabled: hapticsEnabled,
+                        icon: Icons.local_parking,
+                        isDark: dark,
+                        label: l10n.home_parking,
+                        onTap: () => onTapCategory('parking'),
+                      ),
+                    ),
+                    const SizedBox(height: MqSpacing.space4),
+                    Expanded(
+                      child: _BentoCompactCard(
+                        hapticsEnabled: hapticsEnabled,
+                        icon: Icons.event,
+                        isDark: dark,
+                        label: l10n.events,
+                        onTap: () => onTapCategory('events'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          itemCount: items.length,
-          itemBuilder: (context, i) {
-            final item = items[i];
-            return _QuickAccessCard(
-              icon: item.icon,
-              label: item.label,
-              onTap: () => onTapCategory(item.searchQuery),
-            );
-          },
+        ),
+        const SizedBox(height: MqSpacing.space4),
+        _SecondaryQuickRow(
+          hapticsEnabled: hapticsEnabled,
+          items: [
+            _QuickAccessItem(
+              icon: Icons.school,
+              label: l10n.home_faculty,
+              searchQuery: 'faculty',
+            ),
+            _QuickAccessItem(
+              icon: Icons.account_balance,
+              label: l10n.home_campusHub,
+              searchQuery: 'campus hub',
+            ),
+            _QuickAccessItem(
+              icon: Icons.directions_bus,
+              label: l10n.home_transport,
+              searchQuery: 'bus',
+            ),
+            _QuickAccessItem(
+              icon: Icons.support_agent,
+              label: l10n.home_studentServices,
+              searchQuery: 'services',
+            ),
+          ],
+          onTapCategory: onTapCategory,
         ),
       ],
     );
@@ -360,88 +403,211 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-class _QuickAccessCard extends StatelessWidget {
-  const _QuickAccessCard({
+class _BentoCompactCard extends StatelessWidget {
+  const _BentoCompactCard({
+    required this.hapticsEnabled,
     required this.icon,
+    required this.isDark,
     required this.label,
     required this.onTap,
   });
 
+  final bool hapticsEnabled;
   final IconData icon;
+  final bool isDark;
   final String label;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final dark = context.isDarkMode;
+    return Semantics(
+      button: true,
+      label: label,
+      child: MqTactileButton(
+        hapticsEnabled: hapticsEnabled,
+        onTap: onTap,
+        borderRadius: MqSpacing.radiusXl,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: isDark
+                ? MqColors.charcoal850
+                : Colors.white.withValues(alpha: 0.88),
+            borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
+            border: Border.all(
+              color: isDark ? Colors.white.withAlpha(13) : MqColors.sand200,
+            ),
+          ),
+          padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: isDark ? MqColors.vividRed : MqColors.red,
+                size: MqSpacing.iconLg,
+              ),
+              const SizedBox(height: MqSpacing.space2),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: isDark
+                      ? MqColors.contentPrimaryDark
+                      : MqColors.contentPrimary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-    // Colour tokens must mirror `_SettingsCard` exactly.
-    final cardColor = dark
-        ? MqColors.charcoal850
-        : Colors.white.withValues(alpha: 0.85);
-    final borderColor = dark
-        ? Colors.white.withAlpha(13)
-        : MqColors.sand200.withValues(alpha: 0.8);
-    final accent = dark ? MqColors.vividRed : MqColors.red;
-    final iconBg = dark
-        ? MqColors.vividRed.withAlpha(38)
-        : MqColors.red.withAlpha(20);
-    final labelColor = dark
-        ? MqColors.contentPrimaryDark
-        : MqColors.contentPrimary;
+class _BentoHeroCard extends StatelessWidget {
+  const _BentoHeroCard({
+    required this.hapticsEnabled,
+    required this.icon,
+    required this.isDark,
+    required this.label,
+    required this.onTap,
+  });
+
+  final bool hapticsEnabled;
+  final IconData icon;
+  final bool isDark;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final labelParts = label.split(' & ');
+    final heroLabel = labelParts.length > 1
+        ? '${labelParts[0]} &\n${labelParts[1]}'
+        : label;
 
     return Semantics(
       button: true,
       label: label,
-      child: Material(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-          splashColor: dark ? Colors.white.withAlpha(13) : MqColors.sand100,
-          child: Ink(
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-              border: Border.all(color: borderColor),
-              boxShadow: [
-                BoxShadow(
-                  color: accent.withValues(alpha: dark ? 0.08 : 0.04),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+      child: MqTactileButton(
+        hapticsEnabled: hapticsEnabled,
+        onTap: onTap,
+        borderRadius: MqSpacing.radiusXl,
+        child: Container(
+          decoration: BoxDecoration(
+            color: isDark
+                ? MqColors.charcoal850
+                : Colors.white.withValues(alpha: 0.88),
+            borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
+            border: Border.all(
+              color: isDark ? Colors.white.withAlpha(13) : MqColors.sand200,
             ),
-            padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: MqSpacing.minTapTarget,
-                  height: MqSpacing.minTapTarget,
-                  decoration: BoxDecoration(
-                    color: iconBg,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(icon, color: accent, size: MqSpacing.iconDefault),
+          ),
+          padding: const EdgeInsetsDirectional.all(MqSpacing.space6),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsetsDirectional.all(MqSpacing.space3),
+                decoration: BoxDecoration(
+                  color: isDark ? MqColors.vividRed : MqColors.red,
+                  shape: BoxShape.circle,
                 ),
-                const SizedBox(height: MqSpacing.space3),
-                Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: labelColor,
-                    letterSpacing: 0.2,
-                  ),
+                child: Icon(icon, color: Colors.white),
+              ),
+              const SizedBox(height: MqSpacing.space4),
+              Text(
+                heroLabel,
+                style: context.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  height: 1.1,
+                  color: isDark
+                      ? MqColors.contentPrimaryDark
+                      : MqColors.contentPrimary,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _SecondaryQuickRow extends StatelessWidget {
+  const _SecondaryQuickRow({
+    required this.hapticsEnabled,
+    required this.items,
+    required this.onTapCategory,
+  });
+
+  final bool hapticsEnabled;
+  final List<_QuickAccessItem> items;
+  final void Function(String searchQuery) onTapCategory;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.isDarkMode;
+    return Wrap(
+      spacing: MqSpacing.space3,
+      runSpacing: MqSpacing.space3,
+      children: [
+        for (final item in items)
+          SizedBox(
+            width:
+                (context.screenWidth -
+                    (MqSpacing.space5 * 2) -
+                    MqSpacing.space3) /
+                2,
+            child: MqTactileButton(
+              hapticsEnabled: hapticsEnabled,
+              onTap: () => onTapCategory(item.searchQuery),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? MqColors.charcoal850
+                      : Colors.white.withValues(alpha: 0.88),
+                  borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.white.withAlpha(13)
+                        : MqColors.sand200,
+                  ),
+                ),
+                padding: const EdgeInsetsDirectional.symmetric(
+                  horizontal: MqSpacing.space3,
+                  vertical: MqSpacing.space3,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      item.icon,
+                      size: MqSpacing.iconMd,
+                      color: isDark ? MqColors.vividRed : MqColors.red,
+                    ),
+                    const SizedBox(width: MqSpacing.space2),
+                    Expanded(
+                      child: Text(
+                        item.label,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? MqColors.contentPrimaryDark
+                              : MqColors.contentPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

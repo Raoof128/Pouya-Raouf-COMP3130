@@ -61,6 +61,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final dark = context.isDarkMode;
 
     return Scaffold(
+      backgroundColor: dark ? MqColors.charcoal850 : MqColors.alabaster,
       body: settingsState.when(
         data: (preferences) {
           return Stack(

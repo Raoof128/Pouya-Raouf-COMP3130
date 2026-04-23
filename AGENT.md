@@ -88,6 +88,18 @@ Located in project root:
 
 See `CHANGELOG.md` for full development history.
 
+### Raouf: 2026-04-23 (AEST) — Home tactical UI refresh (tactile + kinetic + bento)
+**Scope:** Home UX enhancement with tactile interactions and asymmetric quick access layout.
+**Summary:** Added reusable `MqTactileButton` (`lib/shared/widgets/mq_tactile_button.dart`) with press-scale animation, drop-shadow depth, and configurable haptic feedback. Upgraded home hero text to a kinetic intro using `TweenAnimationBuilder` (fade + slide-up). Replaced the old symmetric quick-access grid with an asymmetrical Bento layout (hero card + stacked compact cards), while preserving tokenized styling and localized labels. Wired haptic preference from `SettingsController` into all home tactile cards.
+**Files Changed:** `lib/shared/widgets/mq_tactile_button.dart`, `lib/features/home/presentation/pages/home_page.dart`.
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
+### Raouf: 2026-04-23 (AEST) — Settings/Home background parity
+**Scope:** Visual consistency in Settings scaffold background.
+**Summary:** Updated `SettingsPage` scaffold background to exactly match `HomePage` base colors in both theme modes (`MqColors.alabaster` in light mode and `MqColors.charcoal850` in dark mode), so both tabs now share identical page-level background surfaces.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`.
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
 ### Raouf: 2026-04-23 (AEST) — Settings Audit & Functional Wiring
 **Scope:** Verify all 12 settings are fully functional, persisted, and accurately consumed app-wide.
 **Summary:** Conducted a comprehensive audit of `SettingsRepository`, `SettingsController`, and all app-wide consumers. Verified that `themeMode`, `localeCode`, `notificationsEnabled`, `lowDataMode`, `reducedMotion`, `quietHoursEnabled`, `quietHoursStart`, `quietHoursEnd`, and `highContrastMap` were perfectly wired. Fixed two functional bugs: 

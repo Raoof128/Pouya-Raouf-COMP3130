@@ -4,6 +4,35 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-04-23 (AEST) — Home tactical UI refresh (tactile + kinetic + bento)
+
+**Scope:** Home UX enhancement with tactile interactions and asymmetric quick access layout.
+
+**Summary:**
+Introduced a reusable tactile interaction primitive and applied it to Home quick actions. Added `MqTactileButton` with squishy press feedback (`AnimatedScale`), subtle depth shadow, and optional haptics. Upgraded the hero copy block to animate in on first build (fade + upward slide) via `TweenAnimationBuilder`. Replaced the previous symmetric 2-column grid with an asymmetrical Bento layout composed of a large hero card and stacked compact cards, plus secondary quick actions beneath. All labels remain localized and all surfaces remain token-based.
+
+**Files Changed:**
+- `lib/shared/widgets/mq_tactile_button.dart` (new)
+- `lib/features/home/presentation/pages/home_page.dart`
+- `AGENT.md`, `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze clean, 144 tests passed, gen-l10n clean).
+
+### Raouf: 2026-04-23 (AEST) — Settings/Home background parity
+
+**Scope:** Visual consistency in Settings scaffold background.
+
+**Summary:**
+Updated `SettingsPage` scaffold background to exactly match `HomePage` base colors in both theme modes (`MqColors.alabaster` in light mode and `MqColors.charcoal850` in dark mode), ensuring the two tabs share the same page-level background surface.
+
+**Files Changed:**
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `AGENT.md`, `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze clean, 144 tests passed, gen-l10n clean).
+
 ### Raouf: 2026-04-23 (AEST) — Settings Audit & Functional Wiring
 
 **Scope:** Verify all 12 settings are fully functional, persisted, and accurately consumed app-wide.
