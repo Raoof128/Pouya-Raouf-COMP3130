@@ -121,6 +121,7 @@ Deno.serve(async (req) => {
     const url = new URL(req.url);
     const commuteMode = normalizeMode(url.searchParams.get("mode"));
     const favoriteRoute = (url.searchParams.get("route") ?? "").trim().toLowerCase();
+    const preferredStopId = (url.searchParams.get("stopId") ?? "").trim();
     const latitude = Number(url.searchParams.get("lat"));
     const longitude = Number(url.searchParams.get("lng"));
 
@@ -128,7 +129,9 @@ Deno.serve(async (req) => {
       Number.isFinite(latitude) && Number.isFinite(longitude)
         ? await resolveNearestStopId({ apiKey, latitude, longitude })
         : null;
-    const stopId = stopIdFromLocation ?? Deno.env.get("TFNSW_STOP_ID") ?? "10101403";
+    const stopId = preferredStopId.length > 0
+      ? preferredStopId
+      : stopIdFromLocation ?? Deno.env.get("TFNSW_STOP_ID") ?? "10101403";
     const params = new URLSearchParams({
       outputFormat: "rapidJSON",
       type_dm: "stop",

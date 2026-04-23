@@ -21,6 +21,7 @@ const _highContrastMapKey = 'settings.high_contrast_map';
 const _offlineCampusMapsEnabledKey = 'settings.offline_campus_maps_enabled';
 const _commuteModeKey = 'settings.commute_mode';
 const _favoriteRouteKey = 'settings.favorite_route';
+const _favoriteStopIdKey = 'settings.favorite_stop_id';
 
 /// Data source for persisting and retrieving user settings.
 ///
@@ -68,6 +69,7 @@ class LocalSettingsRepository implements SettingsRepository {
       );
       final commuteMode = await _storage.read(_commuteModeKey);
       final favoriteRoute = await _storage.read(_favoriteRouteKey);
+      final favoriteStopId = await _storage.read(_favoriteStopIdKey);
 
       final localThemeMode = ThemeMode.values.firstWhere(
         (mode) => mode.name == themeModeString,
@@ -100,6 +102,7 @@ class LocalSettingsRepository implements SettingsRepository {
         offlineCampusMapsEnabled: offlineCampusMapsEnabled == 'true',
         commuteMode: commuteMode ?? 'none',
         favoriteRoute: favoriteRoute ?? '',
+        favoriteStopId: favoriteStopId ?? '',
       );
     } catch (error, stackTrace) {
       AppLogger.error('Failed to load user preferences', error, stackTrace);
@@ -153,6 +156,7 @@ class LocalSettingsRepository implements SettingsRepository {
       );
       await _storage.write(_commuteModeKey, preferences.commuteMode);
       await _storage.write(_favoriteRouteKey, preferences.favoriteRoute);
+      await _storage.write(_favoriteStopIdKey, preferences.favoriteStopId);
       return preferences;
     } catch (error, stackTrace) {
       AppLogger.error('Failed to save user preferences', error, stackTrace);

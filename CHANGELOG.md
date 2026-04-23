@@ -1,3 +1,23 @@
+### Raouf: 2026-04-23 (AEST) — User-configurable TfNSW stop ID wired to commute settings
+**Scope:** Settings personalization and live departure source selection.
+**Summary:** Added a new persisted commute preference for `favoriteStopId` and surfaced it in Settings with a "Preferred Stop ID" input under Commute Preferences. The TfNSW provider now sends this value to `tfnsw-proxy`, and the edge function prioritizes the user-selected stop ID over location-derived/default stop IDs while still applying mode and route filters.
+**Files Changed:**
+- `lib/shared/models/user_preferences.dart`
+- `lib/features/settings/data/repositories/settings_repository.dart`
+- `lib/features/settings/presentation/controllers/settings_controller.dart`
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/features/transit/presentation/providers/tfnsw_provider.dart`
+- `supabase/functions/tfnsw-proxy/index.ts`
+- `lib/app/l10n/app_en.arb`
+- `lib/app/l10n/app_*.arb` (34 locale files)
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `./scripts/check.sh --quick` → pass (format, analyze, flutter test 144, gen-l10n)
+- `supabase functions deploy tfnsw-proxy --no-verify-jwt` → success
+**Follow-ups:**
+- Add stop search/autocomplete using TfNSW `stop_finder` to reduce manual stop ID entry errors.
+
 ### Raouf: 2026-04-23 (AEST) — TfNSW key provisioning + anon access alignment
 **Scope:** TfNSW secret setup and edge-function runtime access mode.
 **Summary:** Added the provided `TFNSW_API_KEY` to local `.env`, synced edge secrets, redeployed `tfnsw-proxy` and `maps-routes`, and redeployed `tfnsw-proxy` with `--no-verify-jwt` to align with the app’s no-auth architecture. This removed anonymous 401 failures for the TfNSW proxy endpoint.

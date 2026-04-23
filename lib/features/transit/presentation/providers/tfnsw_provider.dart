@@ -20,6 +20,7 @@ final tfnswMetroProvider = StreamProvider.autoDispose<List<MetroDeparture>>((
         .getCurrentLocation();
     yield await _fetchDepartures(
       favoriteRoute: preferences.favoriteRoute,
+      favoriteStopId: preferences.favoriteStopId,
       mode: preferences.commuteMode,
       latitude: location?.latitude,
       longitude: location?.longitude,
@@ -30,6 +31,7 @@ final tfnswMetroProvider = StreamProvider.autoDispose<List<MetroDeparture>>((
 
 Future<List<MetroDeparture>> _fetchDepartures({
   required String favoriteRoute,
+  required String favoriteStopId,
   required String mode,
   required double? latitude,
   required double? longitude,
@@ -39,6 +41,7 @@ Future<List<MetroDeparture>> _fetchDepartures({
     final query = <String, String>{
       'mode': mode,
       if (favoriteRoute.trim().isNotEmpty) 'route': favoriteRoute.trim(),
+      if (favoriteStopId.trim().isNotEmpty) 'stopId': favoriteStopId.trim(),
       if (latitude != null) 'lat': latitude.toString(),
       if (longitude != null) 'lng': longitude.toString(),
     };

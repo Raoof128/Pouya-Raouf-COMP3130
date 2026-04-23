@@ -11,6 +11,7 @@ class UserPreferences {
   const UserPreferences({
     this.commuteMode = 'none',
     this.favoriteRoute = '',
+    this.favoriteStopId = '',
     this.themeMode = ThemeMode.system,
     this.localeCode,
     this.notificationsEnabled = true,
@@ -29,6 +30,7 @@ class UserPreferences {
   final ThemeMode themeMode;
   final String commuteMode;
   final String favoriteRoute;
+  final String favoriteStopId;
   final String? localeCode;
   final bool notificationsEnabled;
   final MapRendererType defaultRenderer;
@@ -48,6 +50,7 @@ class UserPreferences {
     ThemeMode? themeMode,
     String? commuteMode,
     String? favoriteRoute,
+    String? favoriteStopId,
     String? localeCode,
     bool clearLocale = false,
     bool? notificationsEnabled,
@@ -66,6 +69,7 @@ class UserPreferences {
       themeMode: themeMode ?? this.themeMode,
       commuteMode: commuteMode ?? this.commuteMode,
       favoriteRoute: favoriteRoute ?? this.favoriteRoute,
+      favoriteStopId: favoriteStopId ?? this.favoriteStopId,
       localeCode: clearLocale ? null : localeCode ?? this.localeCode,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       defaultRenderer: defaultRenderer ?? this.defaultRenderer,
@@ -90,6 +94,7 @@ class UserPreferences {
           themeMode == other.themeMode &&
           commuteMode == other.commuteMode &&
           favoriteRoute == other.favoriteRoute &&
+          favoriteStopId == other.favoriteStopId &&
           localeCode == other.localeCode &&
           notificationsEnabled == other.notificationsEnabled &&
           defaultRenderer == other.defaultRenderer &&
@@ -108,6 +113,7 @@ class UserPreferences {
     themeMode,
     commuteMode,
     favoriteRoute,
+    favoriteStopId,
     localeCode,
     notificationsEnabled,
     defaultRenderer,

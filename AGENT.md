@@ -122,6 +122,13 @@ See `CHANGELOG.md` for full development history.
 **Verification:** `./scripts/sync_supabase_secrets.sh`; `supabase functions deploy tfnsw-proxy`; `supabase functions deploy maps-routes`; `supabase functions deploy tfnsw-proxy --no-verify-jwt`; direct `curl` GET to `${SUPABASE_URL}/functions/v1/tfnsw-proxy` with anon key returned `HTTP 200`.
 **Follow-ups:** If departures remain empty (`[]`) at some times, validate `TFNSW_STOP_ID` against the desired station/platform and peak timetable windows.
 
+### Raouf: 2026-04-23 (AEST) — User-configurable TfNSW stop ID wired to commute settings
+**Scope:** Settings personalization and live departure source selection.
+**Summary:** Added a persisted `favoriteStopId` preference and exposed it in Settings as a new "Preferred Stop ID" input under Commute Preferences. Wired this value into the TfNSW provider query and edge proxy so user-selected stop ID takes precedence over location-derived/default stops while still honoring selected mode (bus/train/metro) and favorite route filters.
+**Files Changed:** `lib/shared/models/user_preferences.dart`, `lib/features/settings/data/repositories/settings_repository.dart`, `lib/features/settings/presentation/controllers/settings_controller.dart`, `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/transit/presentation/providers/tfnsw_provider.dart`, `supabase/functions/tfnsw-proxy/index.ts`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/app_*.arb` (34 locale files).
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed; `supabase functions deploy tfnsw-proxy --no-verify-jwt` succeeded.
+**Follow-ups:** Optionally add stop search/autocomplete (via TfNSW `stop_finder`) to avoid manual stop ID entry mistakes.
+
 ### Raouf: 2026-04-23 (AEST) — Localization parity fix for newly added Home/Settings keys
 **Scope:** Internationalization consistency across all locale ARB files.
 **Summary:** Added the 11 newly introduced `app_en.arb` keys to all 34 non-English locale ARB files using English fallback values to restore key parity and eliminate `flutter gen-l10n` untranslated warnings during app launch/run.

@@ -454,6 +454,21 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               ref: ref,
                             ),
                           ),
+                        if (preferences.commuteMode != 'none')
+                          _TapRow(
+                            icon: Icons.pin_drop_outlined,
+                            label: l10n.favoriteStopIdLabel,
+                            value: preferences.favoriteStopId.trim().isEmpty
+                                ? l10n.setStopIdPrompt
+                                : preferences.favoriteStopId,
+                            semanticLabel: l10n.favoriteStopIdLabel,
+                            hapticsEnabled: preferences.hapticsEnabled,
+                            onTap: () => _showStopIdInputDialog(
+                              context: context,
+                              currentStopId: preferences.favoriteStopId,
+                              ref: ref,
+                            ),
+                          ),
                       ],
                     ),
                     const SizedBox(height: MqSpacing.space6),
@@ -627,6 +642,52 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       await ref
           .read(settingsControllerProvider.notifier)
           .updateCommutePreferences(favoriteRoute: saved);
+    }
+  }
+
+  Future<void> _showStopIdInputDialog({
+    required BuildContext context,
+    required String currentStopId,
+    required WidgetRef ref,
+  }) async {
+    final l10n = AppLocalizations.of(context)!;
+    final controller = TextEditingController(text: currentStopId);
+    final saved = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: MqColors.charcoal850,
+        title: Text(
+          l10n.favoriteStopIdTitle,
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: MqInput(
+          controller: controller,
+          hint: l10n.favoriteStopIdHint,
+          label: l10n.favoriteStopIdLabel,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              l10n.cancel,
+              style: const TextStyle(color: Colors.white70),
+            ),
+          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(dialogContext, controller.text.trim()),
+            child: Text(
+              l10n.save,
+              style: const TextStyle(color: MqColors.vividRed),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (saved != null) {
+      await ref
+          .read(settingsControllerProvider.notifier)
+          .updateCommutePreferences(favoriteStopId: saved);
     }
   }
 

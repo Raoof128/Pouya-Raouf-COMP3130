@@ -118,12 +118,14 @@ class SettingsController extends AsyncNotifier<UserPreferences> {
   Future<String?> updateCommutePreferences({
     String? commuteMode,
     String? favoriteRoute,
+    String? favoriteStopId,
   }) async {
     final currentPreferences = state.value ?? const UserPreferences();
     return _save(
       currentPreferences.copyWith(
         commuteMode: commuteMode,
         favoriteRoute: favoriteRoute,
+        favoriteStopId: favoriteStopId,
       ),
     );
   }

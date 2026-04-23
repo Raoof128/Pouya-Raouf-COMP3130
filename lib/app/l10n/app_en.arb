@@ -2099,6 +2099,10 @@
   "setRoutePrompt": "Set route...",
   "favoriteRouteTitle": "Favorite Route",
   "favoriteRouteHint": "e.g., 525, Chatswood",
+  "favoriteStopIdLabel": "Preferred Stop ID",
+  "setStopIdPrompt": "Set stop ID...",
+  "favoriteStopIdTitle": "Preferred Stop ID",
+  "favoriteStopIdHint": "e.g., 10101403",
   "minutesShort": "{minutes} min",
   "@minutesShort": {
     "placeholders": {
