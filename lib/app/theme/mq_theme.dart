@@ -31,16 +31,32 @@ abstract final class MqTheme {
         scrolledUnderElevation: 1,
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: MqColors.alabasterLight,
-        indicatorColor: MqColors.red.withAlpha(30),
-        elevation: 3,
-        labelTextStyle: const WidgetStatePropertyAll(
-          TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: MqColors.charcoal600,
-          ),
+        backgroundColor: Colors.white,
+        indicatorColor: MqColors.red,
+        indicatorShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
         ),
+        elevation: 3,
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: Colors.white, size: 22);
+          }
+          return const IconThemeData(color: MqColors.charcoal600, size: 22);
+        }),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: MqColors.red,
+            );
+          }
+          return const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: MqColors.charcoal600,
+          );
+        }),
       ),
       cardTheme: CardThemeData(
         color: Colors.white,
