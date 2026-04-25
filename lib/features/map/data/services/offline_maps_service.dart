@@ -18,9 +18,7 @@ class OfflineMapsService {
   }
 
   TileProvider tileProvider() {
-    return FMTCTileProvider(
-      stores: const {campusOfflineStoreName: null},
-    );
+    return FMTCTileProvider(stores: const {campusOfflineStoreName: null});
   }
 
   Future<void> downloadCampusTiles() async {

@@ -54,10 +54,7 @@ class HomePage extends ConsumerWidget {
                     gradient: RadialGradient(
                       center: const Alignment(0, -1.2),
                       radius: 1.1,
-                      colors: [
-                        MqColors.vividRed.withAlpha(38),
-                        Colors.transparent,
-                      ],
+                      colors: [MqColors.red.withAlpha(38), Colors.transparent],
                     ),
                   ),
                   child: const SizedBox.expand(),
@@ -147,7 +144,7 @@ class _MetroCountdownCard extends StatelessWidget {
         ? MqColors.charcoal850
         : Colors.white.withValues(alpha: 0.88);
     final border = dark ? Colors.white.withAlpha(13) : MqColors.sand200;
-    final accent = dark ? MqColors.vividRed : MqColors.red;
+    const accent = MqColors.red;
     final titleColor = dark
         ? MqColors.contentPrimaryDark
         : MqColors.contentPrimary;
@@ -277,7 +274,10 @@ class _LoadingBody extends StatelessWidget {
         SizedBox(
           width: 14,
           height: 14,
-          child: CircularProgressIndicator(strokeWidth: 2, color: subtitleColor),
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: subtitleColor,
+          ),
         ),
         const SizedBox(width: MqSpacing.space2),
         Text(
@@ -327,9 +327,7 @@ class _DepartureBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final next = departures.isEmpty ? null : departures.first;
-    final routeSuffix = favoriteRoute.trim().isEmpty
-        ? ''
-        : ' • $favoriteRoute';
+    final routeSuffix = favoriteRoute.trim().isEmpty ? '' : ' • $favoriteRoute';
 
     final title = next == null
         ? l10n.homeNextMetroLabel
@@ -435,7 +433,7 @@ class _HomeHeader extends StatelessWidget {
     final surfaceColor = dark
         ? MqColors.charcoal850.withValues(alpha: 0.92)
         : MqColors.alabasterLight.withValues(alpha: 0.92);
-    final accent = dark ? MqColors.vividRed : MqColors.red;
+    const accent = MqColors.red;
 
     return Container(
       padding: const EdgeInsetsDirectional.symmetric(
@@ -483,7 +481,7 @@ class _HeroSection extends StatelessWidget {
     final subtitleColor = dark
         ? MqColors.contentPrimaryDark.withValues(alpha: 0.92)
         : MqColors.contentPrimary.withValues(alpha: 0.92);
-    final ctaColor = dark ? MqColors.vividRed : MqColors.red;
+    const ctaColor = MqColors.red;
     final heroTextShadow = [
       Shadow(
         blurRadius: 16,
@@ -678,7 +676,6 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = context.isDarkMode;
     return Padding(
       padding: const EdgeInsetsDirectional.only(
         start: MqSpacing.space2,
@@ -689,7 +686,7 @@ class _SectionHeader extends StatelessWidget {
         style: context.textTheme.labelMedium?.copyWith(
           fontWeight: FontWeight.w700,
           letterSpacing: 1.2,
-          color: dark ? MqColors.vividRed : MqColors.red,
+          color: MqColors.red,
         ),
       ),
     );
@@ -735,11 +732,7 @@ class _BentoCompactCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                color: isDark ? MqColors.vividRed : MqColors.red,
-                size: MqSpacing.iconLg,
-              ),
+              Icon(icon, color: MqColors.red, size: MqSpacing.iconLg),
               const SizedBox(height: MqSpacing.space2),
               Text(
                 label,
@@ -805,8 +798,8 @@ class _BentoHeroCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsetsDirectional.all(MqSpacing.space3),
-                decoration: BoxDecoration(
-                  color: isDark ? MqColors.vividRed : MqColors.red,
+                decoration: const BoxDecoration(
+                  color: MqColors.red,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: Colors.white),
@@ -848,58 +841,58 @@ class _TertiaryQuickRow extends StatelessWidget {
     final isDark = context.isDarkMode;
     return IntrinsicHeight(
       child: Row(
-      children: [
-        for (var i = 0; i < items.length; i++) ...[
-          if (i != 0) const SizedBox(width: MqSpacing.space3),
-          Expanded(
-            child: MqTactileButton(
-              hapticsEnabled: hapticsEnabled,
-              onTap: () => onTapCategory(items[i].searchQuery),
-              borderRadius: MqSpacing.radiusLg,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? MqColors.charcoal850
-                      : Colors.white.withValues(alpha: 0.88),
-                  borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
-                  border: Border.all(
+        children: [
+          for (var i = 0; i < items.length; i++) ...[
+            if (i != 0) const SizedBox(width: MqSpacing.space3),
+            Expanded(
+              child: MqTactileButton(
+                hapticsEnabled: hapticsEnabled,
+                onTap: () => onTapCategory(items[i].searchQuery),
+                borderRadius: MqSpacing.radiusLg,
+                child: Container(
+                  decoration: BoxDecoration(
                     color: isDark
-                        ? Colors.white.withAlpha(13)
-                        : MqColors.sand200,
+                        ? MqColors.charcoal850
+                        : Colors.white.withValues(alpha: 0.88),
+                    borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.white.withAlpha(13)
+                          : MqColors.sand200,
+                    ),
                   ),
-                ),
-                padding: const EdgeInsetsDirectional.symmetric(
-                  horizontal: MqSpacing.space3,
-                  vertical: MqSpacing.space4,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      items[i].icon,
-                      size: MqSpacing.iconMd,
-                      color: isDark ? MqColors.vividRed : MqColors.red,
-                    ),
-                    const SizedBox(height: MqSpacing.space2),
-                    Text(
-                      items[i].label,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? MqColors.contentPrimaryDark
-                            : MqColors.contentPrimary,
+                  padding: const EdgeInsetsDirectional.symmetric(
+                    horizontal: MqSpacing.space3,
+                    vertical: MqSpacing.space4,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        items[i].icon,
+                        size: MqSpacing.iconMd,
+                        color: MqColors.red,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: MqSpacing.space2),
+                      Text(
+                        items[i].label,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? MqColors.contentPrimaryDark
+                              : MqColors.contentPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
         ],
-      ],
       ),
     );
   }

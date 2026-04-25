@@ -83,7 +83,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           center: const Alignment(0, -1.2),
                           radius: 1.1,
                           colors: [
-                            MqColors.vividRed.withAlpha(38),
+                            MqColors.red.withAlpha(38),
                             Colors.transparent,
                           ],
                         ),
@@ -125,7 +125,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           style: context.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.w800,
                             letterSpacing: 1.2,
-                            color: dark ? MqColors.vividRed : MqColors.red,
+                            color: MqColors.red,
                           ),
                         ),
                       ),
@@ -527,11 +527,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ),
           ),
         ),
-        loading: () => Center(
-          child: CircularProgressIndicator(
-            color: context.isDarkMode ? MqColors.vividRed : MqColors.red,
-          ),
-        ),
+        loading: () =>
+            const Center(child: CircularProgressIndicator(color: MqColors.red)),
       ),
     );
   }
@@ -570,7 +567,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             child: Text(l10n.cancel),
           ),
           TextButton(
-            style: TextButton.styleFrom(foregroundColor: MqColors.vividRed),
+            style: TextButton.styleFrom(foregroundColor: MqColors.red),
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(l10n.wipeDataAction),
           ),
@@ -600,10 +597,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final saved = await showDialog<String>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: MqColors.charcoal850,
+        backgroundColor: Colors.white,
         title: Text(
           l10n.favoriteRouteTitle,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: MqColors.contentPrimary),
         ),
         content: MqInput(
           controller: controller,
@@ -615,16 +612,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               l10n.cancel,
-              style: const TextStyle(color: Colors.white70),
+              style: const TextStyle(color: MqColors.contentSecondary),
             ),
           ),
           TextButton(
             onPressed: () =>
                 Navigator.pop(dialogContext, controller.text.trim()),
-            child: Text(
-              l10n.save,
-              style: const TextStyle(color: MqColors.vividRed),
-            ),
+            child: Text(l10n.save, style: const TextStyle(color: MqColors.red)),
           ),
         ],
       ),
@@ -646,10 +640,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final saved = await showDialog<String>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: MqColors.charcoal850,
+        backgroundColor: Colors.white,
         title: Text(
           l10n.favoriteStopIdTitle,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: MqColors.contentPrimary),
         ),
         content: MqInput(
           controller: controller,
@@ -661,16 +655,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               l10n.cancel,
-              style: const TextStyle(color: Colors.white70),
+              style: const TextStyle(color: MqColors.contentSecondary),
             ),
           ),
           TextButton(
             onPressed: () =>
                 Navigator.pop(dialogContext, controller.text.trim()),
-            child: Text(
-              l10n.save,
-              style: const TextStyle(color: MqColors.vividRed),
-            ),
+            child: Text(l10n.save, style: const TextStyle(color: MqColors.red)),
           ),
         ],
       ),
@@ -743,7 +734,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   ? FontWeight.w600
                                   : FontWeight.w400,
                               color: isSelected
-                                  ? MqColors.vividRed
+                                  ? MqColors.red
                                   : dark
                                   ? MqColors.contentPrimaryDark
                                   : MqColors.contentPrimary,
@@ -752,7 +743,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           trailing: isSelected
                               ? const Icon(
                                   Icons.check_rounded,
-                                  color: MqColors.vividRed,
+                                  color: MqColors.red,
                                   size: 20,
                                 )
                               : null,
@@ -915,13 +906,12 @@ class KineticHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = context.isDarkMode;
     return Text(
       title.toUpperCase(),
       style: context.textTheme.labelMedium?.copyWith(
         fontWeight: FontWeight.w800,
         letterSpacing: 1.2,
-        color: dark ? MqColors.vividRed : MqColors.red,
+        color: MqColors.red,
       ),
     );
   }
@@ -969,7 +959,7 @@ class _DangerZoneCard extends StatelessWidget {
             children: [
               const Icon(
                 Icons.warning_amber_rounded,
-                color: MqColors.vividRed,
+                color: MqColors.red,
                 size: MqSpacing.iconLg,
               ),
               const SizedBox(width: MqSpacing.space4),
@@ -980,7 +970,7 @@ class _DangerZoneCard extends StatelessWidget {
                     Text(
                       title,
                       style: context.textTheme.titleSmall?.copyWith(
-                        color: MqColors.vividRed,
+                        color: MqColors.red,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -1081,7 +1071,7 @@ class _TapRow extends StatelessWidget {
               Icon(
                 icon,
                 size: 22,
-                color: dark ? MqColors.slate500 : MqColors.charcoal600,
+                color: dark ? MqColors.slate500 : MqColors.red,
               ),
               const SizedBox(width: MqSpacing.space4),
               Expanded(
@@ -1103,7 +1093,7 @@ class _TapRow extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyMedium?.copyWith(
-                      color: dark ? MqColors.slate500 : MqColors.charcoal600,
+                      color: dark ? MqColors.slate500 : MqColors.contentPrimary,
                     ),
                   ),
                 ),
@@ -1112,7 +1102,7 @@ class _TapRow extends StatelessWidget {
               Icon(
                 Icons.chevron_right_rounded,
                 size: 20,
-                color: dark ? MqColors.slate500 : MqColors.charcoal600,
+                color: dark ? MqColors.slate500 : MqColors.red,
               ),
             ],
           ),
@@ -1160,7 +1150,7 @@ class _ToggleRow extends StatelessWidget {
               Icon(
                 icon,
                 size: 22,
-                color: dark ? MqColors.slate500 : MqColors.charcoal600,
+                color: dark ? MqColors.slate500 : MqColors.red,
               ),
               const SizedBox(width: MqSpacing.space4),
               Expanded(
@@ -1181,11 +1171,11 @@ class _ToggleRow extends StatelessWidget {
                   value: value,
                   onChanged: onChanged,
                   activeThumbColor: Colors.white,
-                  activeTrackColor: MqColors.vividRed,
+                  activeTrackColor: MqColors.red,
                   inactiveThumbColor: Colors.white,
                   inactiveTrackColor: dark
                       ? Colors.white.withAlpha(26)
-                      : MqColors.sand300,
+                      : MqColors.red.withAlpha(48),
                 ),
               ),
             ],
@@ -1221,7 +1211,7 @@ class _InfoRow extends StatelessWidget {
             Icon(
               icon,
               size: 22,
-              color: dark ? MqColors.slate500 : MqColors.charcoal600,
+              color: dark ? MqColors.slate500 : MqColors.red,
             ),
             const SizedBox(width: MqSpacing.space4),
             Expanded(
@@ -1241,7 +1231,7 @@ class _InfoRow extends StatelessWidget {
                   Text(
                     subtitle,
                     style: context.textTheme.bodySmall?.copyWith(
-                      color: dark ? MqColors.slate500 : MqColors.charcoal600,
+                      color: dark ? MqColors.slate500 : MqColors.contentPrimary,
                     ),
                   ),
                 ],
@@ -1301,14 +1291,10 @@ class _CommutePreviewTile extends StatelessWidget {
       margin: const EdgeInsetsDirectional.only(bottom: MqSpacing.space3),
       padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
       decoration: BoxDecoration(
-        color: dark
-            ? MqColors.vividRed.withAlpha(20)
-            : MqColors.red.withAlpha(14),
+        color: dark ? MqColors.red.withAlpha(20) : MqColors.red.withAlpha(14),
         borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
         border: Border.all(
-          color: dark
-              ? MqColors.vividRed.withAlpha(70)
-              : MqColors.red.withAlpha(40),
+          color: dark ? MqColors.red.withAlpha(70) : MqColors.red.withAlpha(40),
         ),
       ),
       child: Row(
@@ -1318,12 +1304,11 @@ class _CommutePreviewTile extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: dark ? MqColors.vividRed : MqColors.red,
+              color: MqColors.red,
               borderRadius: BorderRadius.circular(22),
               boxShadow: [
                 BoxShadow(
-                  color: (dark ? MqColors.vividRed : MqColors.red)
-                      .withAlpha(60),
+                  color: MqColors.red.withAlpha(60),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -1360,16 +1345,15 @@ class _CommutePreviewTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: MqSpacing.space2),
-                // TODO(l10n): promote to ARB once commute feature stabilizes.
                 Text(
-                  'DRIVES YOUR HOME SCREEN METRO COUNTDOWN',
+                  l10n.commutePreviewDrivesHomeCountdown,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: context.textTheme.labelSmall?.copyWith(
                     letterSpacing: 0.8,
                     fontWeight: FontWeight.w700,
                     fontSize: 10,
-                    color: dark ? MqColors.vividRed : MqColors.red,
+                    color: MqColors.red,
                   ),
                 ),
               ],
@@ -1401,11 +1385,11 @@ class _AboutAppRow extends StatelessWidget {
               width: MqSpacing.space10,
               height: MqSpacing.space10,
               decoration: BoxDecoration(
-                color: MqColors.vividRed,
+                color: MqColors.red,
                 borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
                 boxShadow: [
                   BoxShadow(
-                    color: MqColors.vividRed.withAlpha(51),
+                    color: MqColors.red.withAlpha(51),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),

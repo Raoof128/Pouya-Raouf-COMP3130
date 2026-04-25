@@ -1,3 +1,42 @@
+### Raouf: 2026-04-25 (AEST) — Settings strict de-grey pass (light mode)
+**Scope:** Remove remaining grey tones from Settings rows/cards in light mode.
+**Summary:** Applied a strict white/red cleanup to Settings after visual QA screenshot feedback. Set light-mode settings cards to pure white, switched light-mode row icons/chevrons to red accents, promoted light-mode value/subtitle text from grey to primary content color, and replaced the light-mode inactive switch track grey with a subtle red tint for full white/red consistency.
+**Files Changed:**
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 144 tests, gen-l10n).
+**Follow-ups:**
+- If requested, mirror the same strict no-grey treatment in other tabs/components that still use neutral greys in light mode.
+
+### Raouf: 2026-04-25 (AEST) — Settings light-card surface parity with Home
+**Scope:** Visual consistency fix for Settings light-mode card surfaces.
+**Summary:** Fixed the remaining light-mode mismatch where Settings cards looked grey compared to Home. Updated `_SettingsCard` light surface color to use the same translucent white treatment used across Home cards (`Colors.white` with alpha `0.88`) so both tabs now render with matching white/red aesthetics.
+**Files Changed:**
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 144 tests, gen-l10n).
+**Follow-ups:**
+- If any residual grey still appears on specific devices, next step is reducing `MqTactileButton` resting shadow opacity for Settings rows.
+
+### Raouf: 2026-04-25 (AEST) — Home/Settings white-red aesthetic audit + token alignment
+**Scope:** Visual consistency audit and UI token alignment for `Home` + `Settings`.
+**Summary:** Performed a full audit focused on keeping Home and Settings in the same white/red aesthetic. Standardized red accent usage by removing mixed `vividRed` usage from both screens, aligned settings dialogs to white surfaces with red action accents, and removed one remaining hardcoded user-visible string in Settings by promoting it to i18n (`commutePreviewDrivesHomeCountdown`) and synchronizing that key across all locale ARB files.
+**Files Changed:**
+- `lib/features/home/presentation/pages/home_page.dart`
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/app/l10n/app_en.arb`
+- `lib/app/l10n/app_*.arb` (34 locale files)
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 144 tests, gen-l10n).
+**Follow-ups:**
+- If strict white/red should also override dark-mode charcoal surfaces globally, apply the same token pass to shared widgets/theme tokens next.
+
 ### Raouf: 2026-04-23 (AEST) — User-configurable TfNSW stop ID wired to commute settings
 **Scope:** Settings personalization and live departure source selection.
 **Summary:** Added a new persisted commute preference for `favoriteStopId` and surfaced it in Settings with a "Preferred Stop ID" input under Commute Preferences. The TfNSW provider now sends this value to `tfnsw-proxy`, and the edge function prioritizes the user-selected stop ID over location-derived/default stop IDs while still applying mode and route filters.

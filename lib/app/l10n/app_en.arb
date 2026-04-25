@@ -2103,6 +2103,7 @@
   "setStopIdPrompt": "Set stop ID...",
   "favoriteStopIdTitle": "Preferred Stop ID",
   "favoriteStopIdHint": "e.g., 10101403",
+  "commutePreviewDrivesHomeCountdown": "DRIVES YOUR HOME SCREEN METRO COUNTDOWN",
   "minutesShort": "{minutes} min",
   "@minutesShort": {
     "placeholders": {

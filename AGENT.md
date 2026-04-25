@@ -94,6 +94,24 @@ See `CHANGELOG.md` for full development history.
 **Files Changed:** `lib/shared/models/user_preferences.dart`, `lib/features/settings/data/repositories/settings_repository.dart`, `lib/features/settings/presentation/controllers/settings_controller.dart`, `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/home/presentation/pages/home_page.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/app_*.arb` (34 locale files).
 **Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
 
+### Raouf: 2026-04-25 (AEST) — Settings strict de-grey pass (light mode)
+**Scope:** Final white/red visual cleanup for `SettingsPage` light mode.
+**Summary:** Removed residual grey appearance from Settings cards/rows based on screenshot feedback by setting light-mode cards to pure white, changing row icon/chevron accents to red, using primary content color for light-mode value/subtitle text, and tinting inactive switch tracks red instead of neutral grey.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
+### Raouf: 2026-04-25 (AEST) — Settings light-card surface parity with Home
+**Scope:** Home/Settings light-mode visual consistency.
+**Summary:** Addressed residual grey appearance in `SettingsPage` cards by aligning `_SettingsCard` light-mode surface to Home’s card token treatment (`Colors.white` with alpha `0.88`). This removes the perceived mismatch and keeps Settings aligned with the requested white/red aesthetic.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
+### Raouf: 2026-04-25 (AEST) — Home/Settings white-red aesthetic audit + i18n hardening
+**Scope:** Visual parity and localization compliance for `HomePage` and `SettingsPage`.
+**Summary:** Audited both tabs for white/red consistency and removed mixed accent usage by standardizing screen-level red accents away from `vividRed`. Updated Settings input dialogs to white surfaces with red action accents to match the requested aesthetic. Replaced one remaining hardcoded Settings helper sentence with a new localization key and propagated it across all locale ARB files for i18n parity.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `lib/features/settings/presentation/pages/settings_page.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/app_*.arb` (34 locale files), `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
+
 ### Raouf: 2026-04-23 (AEST) — Location-aware commute departures + live no-op tap fix
 **Scope:** Transit edge proxy and Home live card UX correctness.
 **Summary:** Fixed `tfnsw-proxy` to accept live location + commute preferences (`mode`, `route`, `lat`, `lng`), resolve nearest stop via TfNSW `stop_finder`, and return filtered departures for the selected transport mode/route. Corrected the TfNSW auth header interpolation bug in the proxy request and removed Home live-card no-op taps by rendering non-interactive cards without tactile wrappers when no action exists.
