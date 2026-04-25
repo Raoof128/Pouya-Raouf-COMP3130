@@ -103,6 +103,7 @@ void main() {
 
       await controller.updateCommutePreferences(
         commuteMode: 'metro',
+        favoriteDirection: 'Tallawong',
         favoriteRoute: 'M1',
         favoriteStopId: '10101403',
         favoriteStopName: 'Macquarie University Station',
@@ -110,6 +111,7 @@ void main() {
 
       final state = container.read(settingsControllerProvider).value;
       expect(state?.commuteMode, 'metro');
+      expect(state?.favoriteDirection, 'Tallawong');
       expect(state?.favoriteRoute, 'M1');
       expect(state?.favoriteStopId, '10101403');
       expect(state?.favoriteStopName, 'Macquarie University Station');
@@ -118,6 +120,11 @@ void main() {
           any(
             that: isA<UserPreferences>()
                 .having((p) => p.commuteMode, 'commuteMode', 'metro')
+                .having(
+                  (p) => p.favoriteDirection,
+                  'favoriteDirection',
+                  'Tallawong',
+                )
                 .having((p) => p.favoriteRoute, 'favoriteRoute', 'M1')
                 .having((p) => p.favoriteStopId, 'favoriteStopId', '10101403')
                 .having(

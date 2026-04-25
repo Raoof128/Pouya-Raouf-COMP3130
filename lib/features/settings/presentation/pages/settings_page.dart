@@ -29,6 +29,13 @@ class SettingsPage extends ConsumerStatefulWidget {
 }
 
 class _SettingsPageState extends ConsumerState<SettingsPage> {
+  static const _metroDirectionSydenham = 'Sydenham';
+  static const _metroDirectionTallawong = 'Tallawong';
+  static const _metroDirectionValues = [
+    '',
+    _metroDirectionTallawong,
+    _metroDirectionSydenham,
+  ];
   static const _metroLineM1 = 'M1';
   static const _metroLineValues = ['', _metroLineM1];
 
@@ -254,6 +261,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     // user sees on the Home screen (Metro Countdown).
                     _SectionHeader(title: l10n.commutePreferences),
                     _CommutePreviewTile(
+                      direction: preferences.favoriteDirection,
                       mode: preferences.commuteMode,
                       route: preferences.favoriteRoute,
                       stopId: preferences.favoriteStopId,
@@ -324,6 +332,31 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                               context: context,
                               currentRoute: preferences.favoriteRoute,
                               ref: ref,
+                            ),
+                          ),
+                        if (preferences.commuteMode == 'metro')
+                          _TapRow(
+                            icon: Icons.alt_route_rounded,
+                            label: l10n.favoriteDirectionLabel,
+                            value: _metroDirectionLabel(
+                              preferences.favoriteDirection,
+                              l10n,
+                            ),
+                            semanticLabel: l10n.favoriteDirectionLabel,
+                            hapticsEnabled: preferences.hapticsEnabled,
+                            onTap: () => _showPicker<String>(
+                              context: context,
+                              title: l10n.favoriteDirectionTitle,
+                              current: _normalizedMetroDirectionValue(
+                                preferences.favoriteDirection,
+                              ),
+                              items: _metroDirectionValues,
+                              labelOf: (v) => _metroDirectionLabel(v, l10n),
+                              onSelect: (v) => ref
+                                  .read(settingsControllerProvider.notifier)
+                                  .updateCommutePreferences(
+                                    favoriteDirection: v,
+                                  ),
                             ),
                           ),
                         if (preferences.commuteMode != 'none')
@@ -677,6 +710,22 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   static String _normalizedMetroLineValue(String value) {
     return switch (value.trim().toUpperCase()) {
       _metroLineM1 => _metroLineM1,
+      _ => '',
+    };
+  }
+
+  static String _metroDirectionLabel(String value, AppLocalizations l10n) {
+    return switch (_normalizedMetroDirectionValue(value)) {
+      _metroDirectionSydenham => l10n.metroDirectionSydenham,
+      _metroDirectionTallawong => l10n.metroDirectionTallawong,
+      _ => l10n.favoriteDirectionAny,
+    };
+  }
+
+  static String _normalizedMetroDirectionValue(String value) {
+    return switch (value.trim().toLowerCase()) {
+      'sydenham' => _metroDirectionSydenham,
+      'tallawong' => _metroDirectionTallawong,
       _ => '',
     };
   }
@@ -1494,12 +1543,14 @@ class _InfoRow extends StatelessWidget {
 /// on the Home screen.
 class _CommutePreviewTile extends StatelessWidget {
   const _CommutePreviewTile({
+    required this.direction,
     required this.mode,
     required this.route,
     required this.stopId,
     required this.l10n,
   });
 
+  final String direction;
   final String mode;
   final String route;
   final String stopId;
@@ -1526,8 +1577,12 @@ class _CommutePreviewTile extends StatelessWidget {
     final routeLabel = mode == 'metro'
         ? _SettingsPageState._metroLineLabel(route, l10n)
         : route.trim();
+    final directionLabel = mode == 'metro'
+        ? _SettingsPageState._metroDirectionLabel(direction, l10n)
+        : '';
     final detailParts = <String>[
       if (configured && routeLabel.trim().isNotEmpty) routeLabel.trim(),
+      if (configured && directionLabel.trim().isNotEmpty) directionLabel.trim(),
       if (stopId.trim().isNotEmpty) '#${stopId.trim()}',
     ];
     final detail = detailParts.isEmpty

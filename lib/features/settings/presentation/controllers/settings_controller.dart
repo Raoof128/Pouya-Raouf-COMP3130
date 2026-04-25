@@ -117,6 +117,7 @@ class SettingsController extends AsyncNotifier<UserPreferences> {
 
   Future<String?> updateCommutePreferences({
     String? commuteMode,
+    String? favoriteDirection,
     String? favoriteRoute,
     String? favoriteStopId,
     String? favoriteStopName,
@@ -127,6 +128,7 @@ class SettingsController extends AsyncNotifier<UserPreferences> {
         commuteMode: commuteMode == null
             ? null
             : _normalizeCommuteMode(commuteMode),
+        favoriteDirection: favoriteDirection,
         favoriteRoute: favoriteRoute,
         favoriteStopId: favoriteStopId,
         favoriteStopName: favoriteStopName,

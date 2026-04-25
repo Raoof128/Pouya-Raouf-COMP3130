@@ -10,6 +10,7 @@ import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 class UserPreferences {
   const UserPreferences({
     this.commuteMode = 'none',
+    this.favoriteDirection = '',
     this.favoriteRoute = '',
     this.favoriteStopId = '',
     this.favoriteStopName = '',
@@ -30,6 +31,7 @@ class UserPreferences {
 
   final ThemeMode themeMode;
   final String commuteMode;
+  final String favoriteDirection;
   final String favoriteRoute;
   final String favoriteStopId;
   final String favoriteStopName;
@@ -51,6 +53,7 @@ class UserPreferences {
   UserPreferences copyWith({
     ThemeMode? themeMode,
     String? commuteMode,
+    String? favoriteDirection,
     String? favoriteRoute,
     String? favoriteStopId,
     String? favoriteStopName,
@@ -71,6 +74,7 @@ class UserPreferences {
     return UserPreferences(
       themeMode: themeMode ?? this.themeMode,
       commuteMode: commuteMode ?? this.commuteMode,
+      favoriteDirection: favoriteDirection ?? this.favoriteDirection,
       favoriteRoute: favoriteRoute ?? this.favoriteRoute,
       favoriteStopId: favoriteStopId ?? this.favoriteStopId,
       favoriteStopName: favoriteStopName ?? this.favoriteStopName,
@@ -97,6 +101,7 @@ class UserPreferences {
           runtimeType == other.runtimeType &&
           themeMode == other.themeMode &&
           commuteMode == other.commuteMode &&
+          favoriteDirection == other.favoriteDirection &&
           favoriteRoute == other.favoriteRoute &&
           favoriteStopId == other.favoriteStopId &&
           favoriteStopName == other.favoriteStopName &&
@@ -117,6 +122,7 @@ class UserPreferences {
   int get hashCode => Object.hash(
     themeMode,
     commuteMode,
+    favoriteDirection,
     favoriteRoute,
     favoriteStopId,
     favoriteStopName,

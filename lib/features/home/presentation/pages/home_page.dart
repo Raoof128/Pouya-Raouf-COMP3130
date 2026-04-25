@@ -80,10 +80,11 @@ class HomePage extends ConsumerWidget {
                         _MetroCountdownCard(
                           commuteMode: preferences.commuteMode,
                           favoriteRoute: preferences.favoriteRoute,
-                          hapticsEnabled: hapticsEnabled,
                           metroDepartures: metroDepartures,
                           onConfigureTap: () =>
                               context.goNamed(RouteNames.settings),
+                          onRefreshTap: () =>
+                              ref.invalidate(tfnswMetroProvider),
                         ),
                         const SizedBox(height: MqSpacing.space8),
                         _QuickAccessSection(
@@ -122,16 +123,16 @@ class _MetroCountdownCard extends StatelessWidget {
   const _MetroCountdownCard({
     required this.commuteMode,
     required this.favoriteRoute,
-    required this.hapticsEnabled,
     required this.metroDepartures,
     required this.onConfigureTap,
+    required this.onRefreshTap,
   });
 
   final String commuteMode;
   final String favoriteRoute;
-  final bool hapticsEnabled;
   final AsyncValue<List<MetroDeparture>> metroDepartures;
   final VoidCallback onConfigureTap;
+  final VoidCallback onRefreshTap;
 
   bool get _isConfigured => commuteMode != 'none';
 
@@ -188,40 +189,64 @@ class _MetroCountdownCard extends StatelessWidget {
       );
     }
 
-    return MqTactileButton(
-      hapticsEnabled: hapticsEnabled,
-      onTap: onConfigureTap,
-      borderRadius: MqSpacing.radiusXl,
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: surface,
-          borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-          border: Border.all(color: border),
-        ),
-        padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: accent.withValues(alpha: dark ? 0.22 : 0.12),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(modeIcon, color: accent, size: 22),
-            ),
-            const SizedBox(width: MqSpacing.space3),
-            Expanded(child: content),
-            Icon(
-              Icons.tune_rounded,
-              size: 20,
-              color: dark ? Colors.white54 : MqColors.contentTertiary,
-            ),
-          ],
-        ),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
+        border: Border.all(color: border),
       ),
+      padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: dark ? 0.22 : 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(modeIcon, color: accent, size: 22),
+          ),
+          const SizedBox(width: MqSpacing.space3),
+          Expanded(child: content),
+          _MetroCardIconButton(
+            icon: Icons.refresh_rounded,
+            semanticLabel: l10n.refreshDepartures,
+            onTap: onRefreshTap,
+          ),
+          _MetroCardIconButton(
+            icon: Icons.tune_rounded,
+            semanticLabel: l10n.configureCommute,
+            onTap: onConfigureTap,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetroCardIconButton extends StatelessWidget {
+  const _MetroCardIconButton({
+    required this.icon,
+    required this.onTap,
+    required this.semanticLabel,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+  final String semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = context.isDarkMode;
+    return IconButton(
+      icon: Icon(icon),
+      color: dark ? Colors.white54 : MqColors.contentTertiary,
+      iconSize: 20,
+      onPressed: onTap,
+      tooltip: semanticLabel,
     );
   }
 }

@@ -20,6 +20,7 @@ const _quietHoursEndKey = 'settings.quiet_hours_end';
 const _highContrastMapKey = 'settings.high_contrast_map';
 const _offlineCampusMapsEnabledKey = 'settings.offline_campus_maps_enabled';
 const _commuteModeKey = 'settings.commute_mode';
+const _favoriteDirectionKey = 'settings.favorite_direction';
 const _favoriteRouteKey = 'settings.favorite_route';
 const _favoriteStopIdKey = 'settings.favorite_stop_id';
 const _favoriteStopNameKey = 'settings.favorite_stop_name';
@@ -69,6 +70,7 @@ class LocalSettingsRepository implements SettingsRepository {
         _offlineCampusMapsEnabledKey,
       );
       final commuteMode = await _storage.read(_commuteModeKey);
+      final favoriteDirection = await _storage.read(_favoriteDirectionKey);
       final favoriteRoute = await _storage.read(_favoriteRouteKey);
       final favoriteStopId = await _storage.read(_favoriteStopIdKey);
       final favoriteStopName = await _storage.read(_favoriteStopNameKey);
@@ -103,6 +105,7 @@ class LocalSettingsRepository implements SettingsRepository {
         highContrastMap: highContrastMap == 'true',
         offlineCampusMapsEnabled: offlineCampusMapsEnabled == 'true',
         commuteMode: _normalizeCommuteMode(commuteMode),
+        favoriteDirection: favoriteDirection ?? '',
         favoriteRoute: favoriteRoute ?? '',
         favoriteStopId: favoriteStopId ?? '',
         favoriteStopName: favoriteStopName ?? '',
@@ -158,6 +161,10 @@ class LocalSettingsRepository implements SettingsRepository {
         preferences.offlineCampusMapsEnabled.toString(),
       );
       await _storage.write(_commuteModeKey, preferences.commuteMode);
+      await _storage.write(
+        _favoriteDirectionKey,
+        preferences.favoriteDirection,
+      );
       await _storage.write(_favoriteRouteKey, preferences.favoriteRoute);
       await _storage.write(_favoriteStopIdKey, preferences.favoriteStopId);
       await _storage.write(_favoriteStopNameKey, preferences.favoriteStopName);

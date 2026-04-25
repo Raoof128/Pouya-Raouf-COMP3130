@@ -31,6 +31,7 @@ final tfnswMetroProvider = StreamProvider.autoDispose<List<MetroDeparture>>((
     }
 
     final departures = await _fetchDepartures(
+      favoriteDirection: preferences.favoriteDirection,
       favoriteRoute: preferences.favoriteRoute,
       favoriteStopId: preferences.favoriteStopId,
       mode: preferences.commuteMode,
@@ -42,7 +43,7 @@ final tfnswMetroProvider = StreamProvider.autoDispose<List<MetroDeparture>>((
     }
 
     yield departures;
-    await Future<void>.delayed(const Duration(seconds: 60));
+    await Future<void>.delayed(const Duration(seconds: 20));
     if (!ref.mounted) {
       return;
     }
@@ -57,6 +58,7 @@ final tfnswStopSearchProvider = FutureProvider.autoDispose
     });
 
 Future<List<MetroDeparture>> _fetchDepartures({
+  required String favoriteDirection,
   required String favoriteRoute,
   required String favoriteStopId,
   required String mode,
@@ -67,6 +69,8 @@ Future<List<MetroDeparture>> _fetchDepartures({
     final token = Supabase.instance.client.auth.currentSession?.accessToken;
     final query = <String, String>{
       'mode': mode,
+      if (favoriteDirection.trim().isNotEmpty)
+        'direction': favoriteDirection.trim(),
       if (favoriteRoute.trim().isNotEmpty) 'route': favoriteRoute.trim(),
       if (favoriteStopId.trim().isNotEmpty) 'stopId': favoriteStopId.trim(),
       if (latitude != null) 'lat': latitude.toString(),

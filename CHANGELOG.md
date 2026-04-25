@@ -1,3 +1,32 @@
+### Raouf: 2026-04-25 (AEST) — Faster live commute refresh + direction targeting
+**Scope:** Home commute card freshness, Settings commute targeting, persisted preferences, and TfNSW proxy filtering.
+**Summary:** Made commute tracking faster and more precise by reducing the active Home transit polling interval from 60 seconds to 20 seconds, adding a manual refresh button on the Home commute card, and introducing persisted Metro direction targeting for `Any direction`, `Tallawong`, and `Sydenham`. The direction value now flows from Settings through `UserPreferences`, `SettingsRepository`, `SettingsController`, `tfnswMetroProvider`, and `tfnsw-proxy`, where departures are filtered by destination direction with a safe fallback to avoid false empty states. Added localized labels for direction and refresh controls across all ARB locale files, and added tests covering favorite direction persistence and controller wiring.
+**Files Changed:**
+- `lib/shared/models/user_preferences.dart`
+- `lib/features/settings/data/repositories/settings_repository.dart`
+- `lib/features/settings/presentation/controllers/settings_controller.dart`
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/features/home/presentation/pages/home_page.dart`
+- `lib/features/transit/presentation/providers/tfnsw_provider.dart`
+- `lib/app/l10n/app_en.arb`
+- `lib/app/l10n/app_*.arb` (34 locale files)
+- `supabase/functions/tfnsw-proxy/index.ts`
+- `test/features/settings/settings_controller_test.dart`
+- `test/features/settings/settings_repository_test.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- TDD red run: focused settings tests failed because `favoriteDirection` did not exist yet.
+- Focused settings tests after implementation → **10/10 passed**.
+- `deno check supabase/functions/tfnsw-proxy/index.ts` → pass.
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 151 tests, gen-l10n).
+- `supabase functions deploy tfnsw-proxy --no-verify-jwt` → success.
+- Deployed endpoint: `mode=metro&stopId=211310&route=M1&direction=Tallawong` → 3 Tallawong departures.
+- Deployed endpoint: `mode=metro&stopId=211310&route=M1&direction=Sydenham` → 3 Sydenham departures.
+- `ReadLints` on edited Dart files → no linter errors.
+**Follow-ups:**
+- Rebuild or hot restart the emulator app so the new Home refresh action and Metro direction picker are loaded locally.
+
 ### Raouf: 2026-04-25 (AEST) — Metro favourite line picker
 **Scope:** Settings commute preferences, localization, and emulator runtime validation.
 **Summary:** Tested the running Android emulator app from device logs and confirmed Supabase initializes successfully with no Android internet-permission failure; the current installed build still logged a small keyboard `RenderFlex` overflow because the new Dart changes were not hot-reloaded into that process. Replaced the Metro favorite route free-text row with a localized bottom-sheet selector offering `Any metro line` and `M1 Metro North West & Bankstown Line`, while preserving the existing free-text route entry for Bus and Train. Tightened the Preferred Stop sheet height calculation to reserve room for the bottom sheet handle and padding above the keyboard.

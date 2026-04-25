@@ -21,6 +21,7 @@ void main() {
     test('saves favorite stop id and name', () async {
       const preferences = UserPreferences(
         commuteMode: 'metro',
+        favoriteDirection: 'Tallawong',
         favoriteRoute: 'M1',
         favoriteStopId: '10101403',
         favoriteStopName: 'Macquarie University Station',
@@ -29,6 +30,9 @@ void main() {
       final saved = await repository.savePreferences(preferences);
 
       expect(saved, preferences);
+      verify(
+        () => storage.write('settings.favorite_direction', 'Tallawong'),
+      ).called(1);
       verify(
         () => storage.write('settings.favorite_stop_id', '10101403'),
       ).called(1);
@@ -44,6 +48,7 @@ void main() {
       when((() => storage.read(any()))).thenAnswer((invocation) async {
         return switch (invocation.positionalArguments.first as String) {
           'settings.commute_mode' => 'bus',
+          'settings.favorite_direction' => 'Tallawong',
           'settings.favorite_route' => '525',
           'settings.favorite_stop_id' => '10101403',
           'settings.favorite_stop_name' => 'Macquarie University Station',
@@ -54,6 +59,7 @@ void main() {
       final preferences = await repository.loadPreferences();
 
       expect(preferences.commuteMode, 'bus');
+      expect(preferences.favoriteDirection, 'Tallawong');
       expect(preferences.favoriteRoute, '525');
       expect(preferences.favoriteStopId, '10101403');
       expect(preferences.favoriteStopName, 'Macquarie University Station');

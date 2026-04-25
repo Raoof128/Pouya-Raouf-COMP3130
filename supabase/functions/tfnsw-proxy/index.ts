@@ -246,6 +246,8 @@ Deno.serve(async (req) => {
     }
 
     const commuteMode = normalizeMode(url.searchParams.get("mode"));
+    const favoriteDirection = (url.searchParams.get("direction") ?? "").trim()
+      .toLowerCase();
     const favoriteRoute = (url.searchParams.get("route") ?? "").trim()
       .toLowerCase();
     const preferredStopId = (url.searchParams.get("stopId") ?? "").trim();
@@ -386,10 +388,18 @@ Deno.serve(async (req) => {
         item.destination.toLowerCase().includes(favoriteRoute) ||
         item.line.toLowerCase().includes(favoriteRoute)
       );
+    const routeFilteredDepartures = departuresMatchingRoute.length > 0
+      ? departuresMatchingRoute
+      : departuresForMode;
+    const departuresMatchingDirection = favoriteDirection.length === 0
+      ? routeFilteredDepartures
+      : routeFilteredDepartures.filter((item) =>
+        item.destination.toLowerCase().includes(favoriteDirection)
+      );
     const departures = (
-      departuresMatchingRoute.length > 0
-        ? departuresMatchingRoute
-        : departuresForMode
+      departuresMatchingDirection.length > 0
+        ? departuresMatchingDirection
+        : routeFilteredDepartures
     ).slice(0, 3);
 
     return new Response(JSON.stringify(departures), {
