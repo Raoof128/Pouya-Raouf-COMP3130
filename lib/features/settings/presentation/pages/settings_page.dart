@@ -29,6 +29,9 @@ class SettingsPage extends ConsumerStatefulWidget {
 }
 
 class _SettingsPageState extends ConsumerState<SettingsPage> {
+  static const _metroLineM1 = 'M1';
+  static const _metroLineValues = ['', _metroLineM1];
+
   int _versionTapCount = 0;
 
   void _handleVersionTap() {
@@ -285,7 +288,30 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 .updateCommutePreferences(commuteMode: v),
                           ),
                         ),
-                        if (preferences.commuteMode != 'none')
+                        if (preferences.commuteMode == 'metro')
+                          _TapRow(
+                            icon: Icons.route_outlined,
+                            label: l10n.favoriteMetroLineLabel,
+                            value: _metroLineLabel(
+                              preferences.favoriteRoute,
+                              l10n,
+                            ),
+                            semanticLabel: l10n.favoriteMetroLineLabel,
+                            hapticsEnabled: preferences.hapticsEnabled,
+                            onTap: () => _showPicker<String>(
+                              context: context,
+                              title: l10n.favoriteMetroLineTitle,
+                              current: _normalizedMetroLineValue(
+                                preferences.favoriteRoute,
+                              ),
+                              items: _metroLineValues,
+                              labelOf: (v) => _metroLineLabel(v, l10n),
+                              onSelect: (v) => ref
+                                  .read(settingsControllerProvider.notifier)
+                                  .updateCommutePreferences(favoriteRoute: v),
+                            ),
+                          )
+                        else if (preferences.commuteMode != 'none')
                           _TapRow(
                             icon: Icons.route_outlined,
                             label: l10n.favoriteRouteLine,
@@ -641,6 +667,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     }
   }
 
+  static String _metroLineLabel(String value, AppLocalizations l10n) {
+    return switch (_normalizedMetroLineValue(value)) {
+      _metroLineM1 => l10n.metroLineM1,
+      _ => l10n.favoriteMetroLineAny,
+    };
+  }
+
+  static String _normalizedMetroLineValue(String value) {
+    return switch (value.trim().toUpperCase()) {
+      _metroLineM1 => _metroLineM1,
+      _ => '',
+    };
+  }
+
   Future<void> _showStopSearchDialog({
     required BuildContext context,
     required String mode,
@@ -911,7 +951,8 @@ class _StopSearchSheetState extends ConsumerState<_StopSearchSheet> {
                 mediaQuery.viewInsets.bottom -
                 mediaQuery.padding.top -
                 mediaQuery.padding.bottom -
-                MqSpacing.space16)
+                MqSpacing.space16 -
+                MqSpacing.space12)
             .clamp(220.0, mediaQuery.size.height * 0.72)
             .toDouble();
 
@@ -1482,8 +1523,11 @@ class _CommutePreviewTile extends StatelessWidget {
       _ => l10n.commuteModeNotSet,
     };
 
+    final routeLabel = mode == 'metro'
+        ? _SettingsPageState._metroLineLabel(route, l10n)
+        : route.trim();
     final detailParts = <String>[
-      if (route.trim().isNotEmpty) route.trim(),
+      if (configured && routeLabel.trim().isNotEmpty) routeLabel.trim(),
       if (stopId.trim().isNotEmpty) '#${stopId.trim()}',
     ];
     final detail = detailParts.isEmpty

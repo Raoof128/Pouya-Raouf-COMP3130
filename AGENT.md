@@ -88,6 +88,13 @@ Located in project root:
 
 See `CHANGELOG.md` for full development history.
 
+### Raouf: 2026-04-25 (AEST) — Metro favourite line picker
+**Scope:** Settings commute preferences and emulator runtime validation.
+**Summary:** Tested the currently running Android emulator app logs: Supabase initialised successfully and no TfNSW network permission failure appeared, while the old installed build still logged a small keyboard `RenderFlex` overflow. Replaced the Metro favorite route free-text row with a localized bottom-sheet selector for `Any metro line` and `M1 Metro North West & Bankstown Line`, while keeping Bus/Train on the existing route text input. Tightened Preferred Stop sheet sizing further to account for the bottom sheet chrome above the keyboard.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/app_*.arb` (34 locale files), `AGENT.md`, `CHANGELOG.md`.
+**Verification:** Emulator log inspection → app running, Supabase initialised, exact-alarm warnings only, old build still had a 9.4px keyboard overflow; deployed TfNSW endpoint with `mode=metro&stopId=211310&route=M1` → 3 live M1 departures; `flutter analyze` → no issues; `./scripts/check.sh --quick` → 5/5 passed with 151 tests; `ReadLints` on Settings page → no linter errors. Attempted `flutter attach -d emulator-5554 --debug-port 33525` for hot reload, but the VM service returned HTTP 403 and the attach process was stopped.
+**Follow-ups:** Rebuild/reinstall or hot restart the app from the active Flutter run session so the new Metro line picker and tighter sheet sizing are loaded on the emulator.
+
 ### Raouf: 2026-04-25 (AEST) — Emulator diagnosis + route fallback hardening
 **Scope:** Android runtime networking, Settings stop picker overflow, and TfNSW route filtering.
 **Summary:** Verified the emulator can reach Supabase and the installed app has `INTERNET` granted, so the live metro issue was not an emulator network block. Hardened the TfNSW proxy so an unmatched saved route such as a stop name falls back to live departures for the selected mode instead of returning an empty list. Resized the Preferred Stop sheet against the remaining keyboard-safe height and added `INTERNET` to the main Android manifest so release installs cannot lose network access.

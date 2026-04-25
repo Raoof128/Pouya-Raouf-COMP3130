@@ -1,3 +1,24 @@
+### Raouf: 2026-04-25 (AEST) — Metro favourite line picker
+**Scope:** Settings commute preferences, localization, and emulator runtime validation.
+**Summary:** Tested the running Android emulator app from device logs and confirmed Supabase initializes successfully with no Android internet-permission failure; the current installed build still logged a small keyboard `RenderFlex` overflow because the new Dart changes were not hot-reloaded into that process. Replaced the Metro favorite route free-text row with a localized bottom-sheet selector offering `Any metro line` and `M1 Metro North West & Bankstown Line`, while preserving the existing free-text route entry for Bus and Train. Tightened the Preferred Stop sheet height calculation to reserve room for the bottom sheet handle and padding above the keyboard.
+**Files Changed:**
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/app/l10n/app_en.arb`
+- `lib/app/l10n/app_*.arb` (34 locale files)
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- Running emulator log inspection → app process active, Supabase initialized, exact-alarm warnings present, no TfNSW network-permission failure found.
+- Running emulator log inspection → current installed build still logged `A RenderFlex overflowed by 9.4 pixels on the bottom`.
+- Deployed endpoint: `mode=metro&stopId=211310&route=M1` → 3 live M1 metro departures.
+- Deployed endpoint: `mode=metro&stopId=211310` → 3 live M1 metro departures.
+- `flutter analyze` → no issues.
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 151 tests, gen-l10n).
+- `ReadLints` on `lib/features/settings/presentation/pages/settings_page.dart` → no linter errors.
+- Attempted `flutter attach -d emulator-5554 --debug-port 33525` to hot reload the running app, but VM service attachment returned HTTP 403; the attach process was stopped.
+**Follow-ups:**
+- Rebuild/reinstall or hot restart from the active Flutter run session so the new Metro line picker and tighter bottom-sheet sizing are loaded on the emulator.
+
 ### Raouf: 2026-04-25 (AEST) — Emulator diagnosis + route fallback hardening
 **Scope:** Android emulator runtime, Settings Preferred Stop layout, and Home live commute filtering.
 **Summary:** Confirmed the emulator itself can reach Supabase and the installed debug app already has Android internet permission, so the "no coming metro" symptom was not caused by emulator networking. The deployed proxy returned live M1 departures for empty/M1/metro route filters but returned none when the saved route was a stop name such as `Macquarie University`; the proxy now falls back to unfiltered live departures for the selected mode when route filtering has no matches. The Preferred Stop sheet now sizes to the keyboard-safe remaining height, and `INTERNET` is declared in the main Android manifest so release builds keep network access too.
