@@ -901,24 +901,28 @@ class _StopSearchSheetState extends ConsumerState<_StopSearchSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final dark = context.isDarkMode;
+    final mediaQuery = MediaQuery.of(context);
     final trimmedQuery = _query.trim();
     final searchResults = ref.watch(
       tfnswStopSearchProvider((mode: widget.mode, query: trimmedQuery)),
     );
+    final sheetHeight =
+        (mediaQuery.size.height -
+                mediaQuery.viewInsets.bottom -
+                mediaQuery.padding.top -
+                mediaQuery.padding.bottom -
+                MqSpacing.space16)
+            .clamp(220.0, mediaQuery.size.height * 0.72)
+            .toDouble();
 
     return AnimatedPadding(
       duration: const Duration(milliseconds: 180),
       curve: Curves.easeOutCubic,
-      padding: EdgeInsetsDirectional.only(
-        bottom: MediaQuery.viewInsetsOf(context).bottom,
-      ),
+      padding: EdgeInsetsDirectional.only(bottom: mediaQuery.viewInsets.bottom),
       child: MqBottomSheet(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.sizeOf(context).height * 0.72,
-          ),
+        child: SizedBox(
+          height: sheetHeight,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 l10n.favoriteStopIdTitle,
@@ -938,7 +942,7 @@ class _StopSearchSheetState extends ConsumerState<_StopSearchSheet> {
                 onChanged: (value) => setState(() => _query = value),
               ),
               const SizedBox(height: MqSpacing.space4),
-              Flexible(
+              Expanded(
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 160),
                   child: trimmedQuery.length < 2

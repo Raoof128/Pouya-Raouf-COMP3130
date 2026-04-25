@@ -1,3 +1,25 @@
+### Raouf: 2026-04-25 (AEST) — Emulator diagnosis + route fallback hardening
+**Scope:** Android emulator runtime, Settings Preferred Stop layout, and Home live commute filtering.
+**Summary:** Confirmed the emulator itself can reach Supabase and the installed debug app already has Android internet permission, so the "no coming metro" symptom was not caused by emulator networking. The deployed proxy returned live M1 departures for empty/M1/metro route filters but returned none when the saved route was a stop name such as `Macquarie University`; the proxy now falls back to unfiltered live departures for the selected mode when route filtering has no matches. The Preferred Stop sheet now sizes to the keyboard-safe remaining height, and `INTERNET` is declared in the main Android manifest so release builds keep network access too.
+**Files Changed:**
+- `android/app/src/main/AndroidManifest.xml`
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `supabase/functions/tfnsw-proxy/index.ts`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- Emulator shell ping to `cxsqlgvbwtevkkljzolg.supabase.co` → success.
+- Installed app permissions showed `android.permission.INTERNET: granted=true`.
+- Deployed endpoint: `mode=metro&stopId=211310&route=Macquarie%20University` → 3 live M1 metro departures.
+- Deployed endpoint: `mode=metro&stopId=211310&route=Macquarie` → 3 live M1 metro departures.
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 151 tests, gen-l10n).
+- `deno fmt --check supabase/functions/tfnsw-proxy/index.ts` → pass.
+- `deno check supabase/functions/tfnsw-proxy/index.ts` → pass.
+- `ReadLints` on edited files → no linter errors.
+- Attempted `flutter run -d emulator-5554 --dart-define-from-file=.env`, but Gradle stalled at `assembleDebug`; the hung build processes were stopped.
+**Follow-ups:**
+- Rebuild/reinstall the Android app once Gradle is responsive so the local Dart stop-sheet sizing change is on the emulator. The deployed TfNSW route fallback is already live.
+
 ### Raouf: 2026-04-25 (AEST) — Stop picker overflow + live TfNSW departures fix
 **Scope:** Settings Preferred Stop sheet layout and Home commute live departure data.
 **Summary:** Removed the yellow Flutter overflow stripe by letting the Preferred Stop bottom sheet move above the keyboard using `MediaQuery.viewInsets`. Fixed the live TfNSW commute feed by parsing `stopEvents`, extracting the new departure event fields, enabling TfNSW real-time departure monitor output, and replacing the ineffective `itdMot` filter with official `excludedMeans`/`exclMOT_*` filtering. Redeployed `tfnsw-proxy` so Home now receives live metro and bus departures from the runtime backend.

@@ -88,6 +88,13 @@ Located in project root:
 
 See `CHANGELOG.md` for full development history.
 
+### Raouf: 2026-04-25 (AEST) — Emulator diagnosis + route fallback hardening
+**Scope:** Android runtime networking, Settings stop picker overflow, and TfNSW route filtering.
+**Summary:** Verified the emulator can reach Supabase and the installed app has `INTERNET` granted, so the live metro issue was not an emulator network block. Hardened the TfNSW proxy so an unmatched saved route such as a stop name falls back to live departures for the selected mode instead of returning an empty list. Resized the Preferred Stop sheet against the remaining keyboard-safe height and added `INTERNET` to the main Android manifest so release installs cannot lose network access.
+**Files Changed:** `android/app/src/main/AndroidManifest.xml`, `lib/features/settings/presentation/pages/settings_page.dart`, `supabase/functions/tfnsw-proxy/index.ts`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** Emulator shell ping to Supabase → success; installed app permissions showed `android.permission.INTERNET: granted=true`; deployed proxy with `mode=metro&stopId=211310&route=Macquarie%20University` → 3 live M1 departures; `./scripts/check.sh --quick` → 5/5 passed; `deno fmt --check supabase/functions/tfnsw-proxy/index.ts` → pass; `deno check supabase/functions/tfnsw-proxy/index.ts` → pass; `ReadLints` on edited files → no linter errors. Attempted `flutter run -d emulator-5554 --dart-define-from-file=.env`, but Gradle stalled at `assembleDebug` and was stopped.
+**Follow-ups:** Rebuild/reinstall the Android app from Android Studio or rerun `flutter run` after Gradle is unstuck so the local Dart layout change is present on the emulator.
+
 ### Raouf: 2026-04-25 (AEST) — Stop picker overflow + live TfNSW departures fix
 **Scope:** Settings stop picker layout and Home live commute departures.
 **Summary:** Fixed the yellow Flutter bottom overflow stripe by padding the Preferred Stop bottom sheet against the active keyboard inset. Fixed the deployed TfNSW departure proxy so live commute cards parse `stopEvents` responses, request real-time departure monitor output, and filter transport modes with TfNSW `excludedMeans`/`exclMOT_*` parameters instead of the ineffective `itdMot` parameter.

@@ -295,7 +295,7 @@ Deno.serve(async (req) => {
     };
 
     const rawDepartures = payload.stopEvents ?? payload.departures ?? [];
-    const departures: Departure[] = rawDepartures
+    const departuresForMode: Departure[] = rawDepartures
       .map((item) => {
         const itemObj = item as {
           departureTimeBaseTimetable?: string;
@@ -378,13 +378,19 @@ Deno.serve(async (req) => {
         commuteMode === "none" || item.mode === commuteMode ||
         item.mode === "unknown"
       )
-      .filter((item) =>
-        favoriteRoute.length === 0 ||
+      .sort((a, b) => a.minutesUntilDeparture - b.minutesUntilDeparture);
+
+    const departuresMatchingRoute = favoriteRoute.length === 0
+      ? departuresForMode
+      : departuresForMode.filter((item) =>
         item.destination.toLowerCase().includes(favoriteRoute) ||
         item.line.toLowerCase().includes(favoriteRoute)
-      )
-      .sort((a, b) => a.minutesUntilDeparture - b.minutesUntilDeparture)
-      .slice(0, 3);
+      );
+    const departures = (
+      departuresMatchingRoute.length > 0
+        ? departuresMatchingRoute
+        : departuresForMode
+    ).slice(0, 3);
 
     return new Response(JSON.stringify(departures), {
       headers: {
