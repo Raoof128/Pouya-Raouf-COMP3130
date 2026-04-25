@@ -94,6 +94,13 @@ See `CHANGELOG.md` for full development history.
 **Files Changed:** `lib/shared/models/user_preferences.dart`, `lib/features/settings/data/repositories/settings_repository.dart`, `lib/features/settings/presentation/controllers/settings_controller.dart`, `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/home/presentation/pages/home_page.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/app_*.arb` (34 locale files).
 **Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
 
+### Raouf: 2026-04-25 (AEST) — TfNSW stream disposal fix + deployed stop search
+**Scope:** Runtime stability for `tfnswMetroProvider` and Preferred Stop search availability.
+**Summary:** Fixed the Riverpod `Cannot use the Ref ... after it has been disposed` runtime error by guarding `tfnswMetroProvider` with `ref.mounted` checks after async gaps and avoiding `ref.read` inside the polling loop. Deployed `tfnsw-proxy` with the stop-search branch so Preferred Stop search no longer hits the stale departures-only function and now returns actual stop results from the deployed backend.
+**Files Changed:** `lib/features/transit/presentation/providers/tfnsw_provider.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** Focused Flutter tests → 12/12 passed; `supabase functions deploy tfnsw-proxy --no-verify-jwt` → success; deployed stop-search endpoint for `Macquarie University` → `HTTP 200` with 3 stop results including `Macquarie University Station`; `deno fmt --check supabase/functions/tfnsw-proxy/index.ts` → pass; `deno check supabase/functions/tfnsw-proxy/index.ts` → pass; `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 151 tests, gen-l10n); `ReadLints` on transit provider → no linter errors.
+**Follow-ups:** Reopen the app stop picker after deployment so it issues a fresh request to the updated Edge Function.
+
 ### Raouf: 2026-04-25 (AEST) — Preferred Stop implementation part-by-part verification
 **Scope:** Preferred Stop testing, persistence coverage, and live TfNSW request validation.
 **Summary:** Tested the Preferred Stop implementation in layers: controller, repository, stop entity parsing, localization parity, Edge Function type safety, full Flutter checks, and live TfNSW `stop_finder` request shape. Added repository and stop-entity tests for `favoriteStopId`/`favoriteStopName` persistence and JSON parsing. The live TfNSW check showed `type_sf=any` can return POIs, so `tfnsw-proxy` now filters stop-search results to stop/platform types before returning them to Flutter.

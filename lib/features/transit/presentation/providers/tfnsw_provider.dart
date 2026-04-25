@@ -15,23 +15,37 @@ final tfnswMetroProvider = StreamProvider.autoDispose<List<MetroDeparture>>((
   ref,
 ) async* {
   final preferences = await ref.watch(settingsControllerProvider.future);
+  if (!ref.mounted) {
+    return;
+  }
   if (preferences.commuteMode == 'none') {
     yield const [];
     return;
   }
 
+  final locationSource = ref.read(locationSourceProvider);
   while (true) {
-    final location = await ref
-        .read(locationSourceProvider)
-        .getCurrentLocation();
-    yield await _fetchDepartures(
+    final location = await locationSource.getCurrentLocation();
+    if (!ref.mounted) {
+      return;
+    }
+
+    final departures = await _fetchDepartures(
       favoriteRoute: preferences.favoriteRoute,
       favoriteStopId: preferences.favoriteStopId,
       mode: preferences.commuteMode,
       latitude: location?.latitude,
       longitude: location?.longitude,
     );
+    if (!ref.mounted) {
+      return;
+    }
+
+    yield departures;
     await Future<void>.delayed(const Duration(seconds: 60));
+    if (!ref.mounted) {
+      return;
+    }
   }
 });
 

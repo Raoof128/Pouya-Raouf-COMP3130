@@ -1,3 +1,21 @@
+### Raouf: 2026-04-25 (AEST) — TfNSW stream disposal fix + deployed stop search
+**Scope:** Runtime bug fix for Home transit stream and Preferred Stop search.
+**Summary:** Fixed a Riverpod runtime error where `tfnswMetroProvider` could read `ref` after disposal during async location/network gaps by checking `ref.mounted` after each await and capturing `locationSource` before the polling loop. Deployed the updated `tfnsw-proxy` so the app now reaches the new `action=stop-search` branch instead of the old departures-only handler, which was causing stop search to show no results. Verified the deployed endpoint returns stop results for `Macquarie University`, including `Macquarie University Station`.
+**Files Changed:**
+- `lib/features/transit/presentation/providers/tfnsw_provider.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `flutter test test/features/settings/settings_controller_test.dart test/features/settings/settings_repository_test.dart test/features/transit/transit_stop_test.dart` → **12/12 passed**.
+- `supabase functions deploy tfnsw-proxy --no-verify-jwt` → success.
+- Direct deployed endpoint check: `${SUPABASE_URL}/functions/v1/tfnsw-proxy?action=stop-search&q=Macquarie%20University` → `HTTP 200`, 3 stop results including `Macquarie University Station`.
+- `deno fmt --check supabase/functions/tfnsw-proxy/index.ts` → pass.
+- `deno check supabase/functions/tfnsw-proxy/index.ts` → pass.
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 151 tests, gen-l10n).
+- `ReadLints` on `lib/features/transit/presentation/providers/tfnsw_provider.dart` → no linter errors.
+**Follow-ups:**
+- Reopen the app and search `Macquarie University`; if the picker is already open, close and reopen it so Riverpod creates a fresh provider request against the deployed function.
+
 ### Raouf: 2026-04-25 (AEST) — Preferred Stop implementation part-by-part verification
 **Scope:** Test hardening and runtime validation for Preferred Stop name search.
 **Summary:** Added focused repository and stop-entity tests to verify `favoriteStopId`/`favoriteStopName` persistence and stop-search JSON parsing below the controller layer. Ran part-by-part validation for model/controller/repository, localization parity, Edge Function format/type checks, full Flutter checks, and live TfNSW `stop_finder` request shape. The live check exposed POI results from `type_sf=any`, so the edge search now filters results to stop/platform types before returning them to the picker.
