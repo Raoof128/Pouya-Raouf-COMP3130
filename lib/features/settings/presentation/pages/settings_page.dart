@@ -932,7 +932,6 @@ class _DangerZoneCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = context.isDarkMode;
     return Semantics(
       button: true,
       label: title,
@@ -944,22 +943,19 @@ class _DangerZoneCard extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsetsDirectional.all(MqSpacing.space6),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                MqColors.charcoal850,
-                MqColors.red.withValues(alpha: 0.2),
-              ],
+              colors: [MqColors.red, MqColors.red],
             ),
             borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-            border: Border.all(color: MqColors.red.withValues(alpha: 0.5)),
+            border: Border.all(color: MqColors.red),
           ),
           child: Row(
             children: [
               const Icon(
                 Icons.warning_amber_rounded,
-                color: MqColors.red,
+                color: Colors.white,
                 size: MqSpacing.iconLg,
               ),
               const SizedBox(width: MqSpacing.space4),
@@ -970,7 +966,7 @@ class _DangerZoneCard extends StatelessWidget {
                     Text(
                       title,
                       style: context.textTheme.titleSmall?.copyWith(
-                        color: MqColors.red,
+                        color: Colors.white,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -980,9 +976,7 @@ class _DangerZoneCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: context.textTheme.bodySmall?.copyWith(
-                        color: dark
-                            ? Colors.white.withValues(alpha: 0.75)
-                            : MqColors.contentSecondary.withValues(alpha: 0.85),
+                        color: Colors.white.withValues(alpha: 0.86),
                       ),
                     ),
                   ],
@@ -1061,50 +1055,55 @@ class _TapRow extends StatelessWidget {
       child: MqTactileButton(
         hapticsEnabled: hapticsEnabled,
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsetsDirectional.symmetric(
-            horizontal: MqSpacing.space4,
-            vertical: MqSpacing.space4,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 22,
-                color: dark ? MqColors.slate500 : MqColors.red,
-              ),
-              const SizedBox(width: MqSpacing.space4),
-              Expanded(
-                child: Text(
-                  label,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: dark
-                        ? MqColors.contentPrimaryDark
-                        : MqColors.contentPrimary,
-                  ),
+        child: ColoredBox(
+          color: dark ? MqColors.charcoal850 : Colors.white,
+          child: Padding(
+            padding: const EdgeInsetsDirectional.symmetric(
+              horizontal: MqSpacing.space4,
+              vertical: MqSpacing.space4,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 22,
+                  color: dark ? MqColors.slate500 : MqColors.red,
                 ),
-              ),
-              if (value.isNotEmpty) ...[
-                Flexible(
+                const SizedBox(width: MqSpacing.space4),
+                Expanded(
                   child: Text(
-                    value,
-                    textAlign: TextAlign.end,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: dark ? MqColors.slate500 : MqColors.contentPrimary,
+                    label,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: dark
+                          ? MqColors.contentPrimaryDark
+                          : MqColors.contentPrimary,
                     ),
                   ),
                 ),
-                const SizedBox(width: MqSpacing.space1),
+                if (value.isNotEmpty) ...[
+                  Flexible(
+                    child: Text(
+                      value,
+                      textAlign: TextAlign.end,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: dark
+                            ? MqColors.slate500
+                            : MqColors.contentPrimary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: MqSpacing.space1),
+                ],
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 20,
+                  color: dark ? MqColors.slate500 : MqColors.red,
+                ),
               ],
-              Icon(
-                Icons.chevron_right_rounded,
-                size: 20,
-                color: dark ? MqColors.slate500 : MqColors.red,
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -1140,45 +1139,48 @@ class _ToggleRow extends StatelessWidget {
       child: MqTactileButton(
         hapticsEnabled: hapticsEnabled,
         onTap: () => onChanged(!value),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.symmetric(
-            horizontal: MqSpacing.space4,
-            vertical: MqSpacing.space4,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 22,
-                color: dark ? MqColors.slate500 : MqColors.red,
-              ),
-              const SizedBox(width: MqSpacing.space4),
-              Expanded(
-                child: Text(
-                  label,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: dark
-                        ? MqColors.contentPrimaryDark
-                        : MqColors.contentPrimary,
+        child: ColoredBox(
+          color: dark ? MqColors.charcoal850 : Colors.white,
+          child: Padding(
+            padding: const EdgeInsetsDirectional.symmetric(
+              horizontal: MqSpacing.space4,
+              vertical: MqSpacing.space4,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 22,
+                  color: dark ? MqColors.slate500 : MqColors.red,
+                ),
+                const SizedBox(width: MqSpacing.space4),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: dark
+                          ? MqColors.contentPrimaryDark
+                          : MqColors.contentPrimary,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: MqSpacing.minTapTarget,
-                height: MqSpacing.space6,
-                child: Switch.adaptive(
-                  value: value,
-                  onChanged: onChanged,
-                  activeThumbColor: Colors.white,
-                  activeTrackColor: MqColors.red,
-                  inactiveThumbColor: Colors.white,
-                  inactiveTrackColor: dark
-                      ? Colors.white.withAlpha(26)
-                      : MqColors.red.withAlpha(48),
+                SizedBox(
+                  width: MqSpacing.minTapTarget,
+                  height: MqSpacing.space6,
+                  child: Switch.adaptive(
+                    value: value,
+                    onChanged: onChanged,
+                    activeThumbColor: Colors.white,
+                    activeTrackColor: MqColors.red,
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: dark
+                        ? Colors.white.withAlpha(26)
+                        : MqColors.red.withAlpha(48),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

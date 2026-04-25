@@ -1,3 +1,31 @@
+### Raouf: 2026-04-25 (AEST) — Danger Zone solid red parity
+**Scope:** Settings Danger Zone visual correction.
+**Summary:** Updated the Danger Zone action card so it renders as a solid danger-red surface in both light and dark mode instead of the previous charcoal/dark gradient. Switched the warning icon, title, and subtitle to white text/icons for contrast on the red danger background.
+**Files Changed:**
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format lib/features/settings/presentation/pages/settings_page.dart`
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 144 tests, gen-l10n).
+- `ReadLints` on `lib/features/settings/presentation/pages/settings_page.dart` → no linter errors.
+**Follow-ups:**
+- Visually confirm the Danger Zone card is red, not dark, in both app theme modes.
+
+### Raouf: 2026-04-25 (AEST) — Settings row shadow bleed white-surface fix
+**Scope:** Final Settings section surface correction for light-mode white/red theme.
+**Summary:** Fixed the remaining grey cast inside Settings sections by painting `_TapRow` and `_ToggleRow` row bodies white in light mode. This prevents the tactile button shadow from bleeding through transparent row content while preserving dark-mode charcoal surfaces and the existing red row accents.
+**Files Changed:**
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format lib/features/settings/presentation/pages/settings_page.dart`
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 144 tests, gen-l10n).
+- `ReadLints` on `lib/features/settings/presentation/pages/settings_page.dart` → no linter errors.
+**Follow-ups:**
+- Visually recheck the Settings tab on device/simulator to confirm the row interiors now render as white instead of grey.
+
 ### Raouf: 2026-04-25 (AEST) — Settings strict de-grey pass (light mode)
 **Scope:** Remove remaining grey tones from Settings rows/cards in light mode.
 **Summary:** Applied a strict white/red cleanup to Settings after visual QA screenshot feedback. Set light-mode settings cards to pure white, switched light-mode row icons/chevrons to red accents, promoted light-mode value/subtitle text from grey to primary content color, and replaced the light-mode inactive switch track grey with a subtle red tint for full white/red consistency.

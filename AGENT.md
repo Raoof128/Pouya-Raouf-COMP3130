@@ -94,6 +94,18 @@ See `CHANGELOG.md` for full development history.
 **Files Changed:** `lib/shared/models/user_preferences.dart`, `lib/features/settings/data/repositories/settings_repository.dart`, `lib/features/settings/presentation/controllers/settings_controller.dart`, `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/home/presentation/pages/home_page.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/app_*.arb` (34 locale files).
 **Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
 
+### Raouf: 2026-04-25 (AEST) — Danger Zone solid red parity
+**Scope:** Settings Danger Zone theme correction.
+**Summary:** Replaced the Danger Zone charcoal/dark gradient with a solid `MqColors.red` danger surface for both light and dark mode. Updated icon/title/subtitle colors to white so the action reads as danger red instead of dark while maintaining contrast.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `dart format lib/features/settings/presentation/pages/settings_page.dart`; `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n); `ReadLints` on `lib/features/settings/presentation/pages/settings_page.dart` → no linter errors.
+
+### Raouf: 2026-04-25 (AEST) — Settings row shadow bleed white-surface fix
+**Scope:** Final Settings row-surface correction for light mode.
+**Summary:** Fixed the remaining grey cast inside Settings sections by wrapping tactile `_TapRow` and `_ToggleRow` content in explicit white light-mode row backgrounds. This blocks `MqTactileButton` shadow bleed-through while retaining the white/red visual language and dark-mode charcoal surfaces.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `dart format lib/features/settings/presentation/pages/settings_page.dart`; `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n); `ReadLints` on `lib/features/settings/presentation/pages/settings_page.dart` → no linter errors.
+
 ### Raouf: 2026-04-25 (AEST) — Settings strict de-grey pass (light mode)
 **Scope:** Final white/red visual cleanup for `SettingsPage` light mode.
 **Summary:** Removed residual grey appearance from Settings cards/rows based on screenshot feedback by setting light-mode cards to pure white, changing row icon/chevron accents to red, using primary content color for light-mode value/subtitle text, and tinting inactive switch tracks red instead of neutral grey.
