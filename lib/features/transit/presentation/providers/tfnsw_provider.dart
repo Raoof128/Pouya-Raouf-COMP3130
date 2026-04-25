@@ -49,9 +49,11 @@ final tfnswMetroProvider = StreamProvider.autoDispose<List<MetroDeparture>>((
   }
 });
 
+typedef TfnswStopSearchQuery = ({String mode, String query});
+
 final tfnswStopSearchProvider = FutureProvider.autoDispose
-    .family<List<TransitStop>, String>((ref, query) {
-      return _searchStops(query);
+    .family<List<TransitStop>, TfnswStopSearchQuery>((ref, search) {
+      return _searchStops(mode: search.mode, query: search.query);
     });
 
 Future<List<MetroDeparture>> _fetchDepartures({
@@ -96,7 +98,10 @@ Future<List<MetroDeparture>> _fetchDepartures({
   }
 }
 
-Future<List<TransitStop>> _searchStops(String query) async {
+Future<List<TransitStop>> _searchStops({
+  required String mode,
+  required String query,
+}) async {
   final trimmed = query.trim();
   if (trimmed.length < 2) {
     return const [];
@@ -105,9 +110,9 @@ Future<List<TransitStop>> _searchStops(String query) async {
   try {
     final token = Supabase.instance.client.auth.currentSession?.accessToken;
     final response = await http.get(
-      Uri.parse(
-        '${EnvConfig.supabaseUrl}/functions/v1/tfnsw-proxy',
-      ).replace(queryParameters: {'action': 'stop-search', 'q': trimmed}),
+      Uri.parse('${EnvConfig.supabaseUrl}/functions/v1/tfnsw-proxy').replace(
+        queryParameters: {'action': 'stop-search', 'mode': mode, 'q': trimmed},
+      ),
       headers: {
         if (token != null) 'Authorization': 'Bearer $token',
         'apikey': EnvConfig.supabaseAnonKey,

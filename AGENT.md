@@ -94,6 +94,13 @@ See `CHANGELOG.md` for full development history.
 **Files Changed:** `lib/shared/models/user_preferences.dart`, `lib/features/settings/data/repositories/settings_repository.dart`, `lib/features/settings/presentation/controllers/settings_controller.dart`, `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/home/presentation/pages/home_page.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/app_*.arb` (34 locale files).
 **Verification:** `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 144 tests, gen-l10n).
 
+### Raouf: 2026-04-25 (AEST) — Mode-aware Preferred Stop picker + bottom-sheet lifecycle fix
+**Scope:** Preferred Stop picker runtime stability and mode-specific search.
+**Summary:** Replaced the Preferred Stop `AlertDialog` with a Settings-style modal bottom sheet to avoid the Flutter dirty-widget/build-scope error involving `AnimatedDefaultTextStyle`. Passed active commute mode from Settings into Flutter stop search and `tfnsw-proxy`, then filtered stop-search results server-side so Metro/Train show station results while Bus shows bus/interchange-style stops. Redeployed `tfnsw-proxy` and verified mode-specific deployed results.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/transit/presentation/providers/tfnsw_provider.dart`, `supabase/functions/tfnsw-proxy/index.ts`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `deno fmt --check supabase/functions/tfnsw-proxy/index.ts` → pass; `deno check supabase/functions/tfnsw-proxy/index.ts` → pass; focused Flutter tests → 12/12 passed; `supabase functions deploy tfnsw-proxy --no-verify-jwt` → success; deployed stop-search for `Macquarie University` returned `Macquarie University Station` for metro/train and bus/interchange stops for bus; `./scripts/check.sh --quick` → 5/5 passed (format, analyze, 151 tests, gen-l10n); `ReadLints` on edited Dart files → no linter errors.
+**Follow-ups:** Reopen the app and test the stop picker after changing Main Transport between Bus, Train, and Metro.
+
 ### Raouf: 2026-04-25 (AEST) — TfNSW stream disposal fix + deployed stop search
 **Scope:** Runtime stability for `tfnswMetroProvider` and Preferred Stop search availability.
 **Summary:** Fixed the Riverpod `Cannot use the Ref ... after it has been disposed` runtime error by guarding `tfnswMetroProvider` with `ref.mounted` checks after async gaps and avoiding `ref.read` inside the polling loop. Deployed `tfnsw-proxy` with the stop-search branch so Preferred Stop search no longer hits the stale departures-only function and now returns actual stop results from the deployed backend.

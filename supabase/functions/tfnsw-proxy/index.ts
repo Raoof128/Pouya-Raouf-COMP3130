@@ -120,9 +120,11 @@ async function resolveNearestStopId({
 
 async function searchStops({
   apiKey,
+  mode,
   query,
 }: {
   apiKey: string;
+  mode: "none" | "metro" | "bus" | "train";
   query: string;
 }): Promise<StopSearchResult[]> {
   if (query.trim().length < 2) {
@@ -170,6 +172,7 @@ async function searchStops({
       return { id, name };
     })
     .filter((stop) => stop.id.length > 0 && stop.name.length > 0)
+    .filter((stop) => stopMatchesMode(stop, mode))
     .filter((stop) => {
       if (seenIds.has(stop.id)) {
         return false;
@@ -178,6 +181,27 @@ async function searchStops({
       return true;
     })
     .slice(0, 8);
+}
+
+function stopMatchesMode(
+  stop: StopSearchResult,
+  mode: "none" | "metro" | "bus" | "train",
+): boolean {
+  if (mode === "none") {
+    return true;
+  }
+
+  const name = stop.name.toLowerCase();
+  if (mode === "metro" || mode === "train") {
+    return name.includes("station");
+  }
+
+  return (
+    name.includes("stand") ||
+    name.includes("interchange") ||
+    name.includes("bus") ||
+    !name.includes("station")
+  );
 }
 
 Deno.serve(async (req) => {
@@ -193,6 +217,7 @@ Deno.serve(async (req) => {
     if (url.searchParams.get("action") === "stop-search") {
       const stops = await searchStops({
         apiKey,
+        mode: normalizeMode(url.searchParams.get("mode")),
         query: url.searchParams.get("q") ?? "",
       });
       return new Response(JSON.stringify(stops), {

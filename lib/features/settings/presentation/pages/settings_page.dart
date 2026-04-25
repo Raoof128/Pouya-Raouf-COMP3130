@@ -309,6 +309,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             hapticsEnabled: preferences.hapticsEnabled,
                             onTap: () => _showStopSearchDialog(
                               context: context,
+                              mode: preferences.commuteMode,
                               ref: ref,
                             ),
                           ),
@@ -642,11 +643,14 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   Future<void> _showStopSearchDialog({
     required BuildContext context,
+    required String mode,
     required WidgetRef ref,
   }) async {
-    final selected = await showDialog<TransitStop>(
+    final selected = await showModalBottomSheet<TransitStop>(
       context: context,
-      builder: (_) => const _StopSearchDialog(),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => _StopSearchSheet(mode: mode),
     );
     if (selected != null && context.mounted) {
       final message = await ref
@@ -868,14 +872,16 @@ class _PickerItem<T> {
   final T value;
 }
 
-class _StopSearchDialog extends ConsumerStatefulWidget {
-  const _StopSearchDialog();
+class _StopSearchSheet extends ConsumerStatefulWidget {
+  const _StopSearchSheet({required this.mode});
 
   @override
-  ConsumerState<_StopSearchDialog> createState() => _StopSearchDialogState();
+  ConsumerState<_StopSearchSheet> createState() => _StopSearchSheetState();
+
+  final String mode;
 }
 
-class _StopSearchDialogState extends ConsumerState<_StopSearchDialog> {
+class _StopSearchSheetState extends ConsumerState<_StopSearchSheet> {
   late final TextEditingController _controller;
   String _query = '';
 
@@ -894,20 +900,30 @@ class _StopSearchDialogState extends ConsumerState<_StopSearchDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final dark = context.isDarkMode;
     final trimmedQuery = _query.trim();
-    final searchResults = ref.watch(tfnswStopSearchProvider(trimmedQuery));
+    final searchResults = ref.watch(
+      tfnswStopSearchProvider((mode: widget.mode, query: trimmedQuery)),
+    );
 
-    return AlertDialog(
-      backgroundColor: Colors.white,
-      title: Text(
-        l10n.favoriteStopIdTitle,
-        style: const TextStyle(color: MqColors.contentPrimary),
-      ),
-      content: SizedBox(
-        width: 420,
+    return MqBottomSheet(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * 0.72,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text(
+              l10n.favoriteStopIdTitle,
+              style: context.textTheme.titleMedium?.copyWith(
+                color: dark
+                    ? MqColors.contentPrimaryDark
+                    : MqColors.contentPrimary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: MqSpacing.space4),
             MqInput(
               controller: _controller,
               hint: l10n.favoriteStopIdHint,
@@ -916,75 +932,101 @@ class _StopSearchDialogState extends ConsumerState<_StopSearchDialog> {
               onChanged: (value) => setState(() => _query = value),
             ),
             const SizedBox(height: MqSpacing.space4),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 280),
-              child: trimmedQuery.length < 2
-                  ? _StopSearchMessage(text: l10n.favoriteStopSearchPrompt)
-                  : searchResults.when(
-                      data: (stops) {
-                        if (stops.isEmpty) {
-                          return _StopSearchMessage(
-                            text: l10n.favoriteStopSearchEmpty,
-                          );
-                        }
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: stops.length,
-                          separatorBuilder: (_, _) => const Divider(height: 1),
-                          itemBuilder: (context, index) {
-                            final stop = stops[index];
-                            return ListTile(
-                              leading: const Icon(
-                                Icons.train_rounded,
-                                color: MqColors.red,
-                              ),
-                              title: Text(
-                                stop.name,
-                                style: context.textTheme.titleSmall?.copyWith(
-                                  color: MqColors.contentPrimary,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              subtitle: Text(
-                                stop.id,
-                                style: context.textTheme.bodySmall?.copyWith(
-                                  color: MqColors.contentSecondary,
-                                ),
-                              ),
-                              onTap: () => Navigator.pop(context, stop),
+            Flexible(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 160),
+                child: trimmedQuery.length < 2
+                    ? _StopSearchMessage(text: l10n.favoriteStopSearchPrompt)
+                    : searchResults.when(
+                        data: (stops) {
+                          if (stops.isEmpty) {
+                            return _StopSearchMessage(
+                              text: l10n.favoriteStopSearchEmpty,
                             );
-                          },
-                        );
-                      },
-                      error: (_, _) => _StopSearchMessage(
-                        text: l10n.favoriteStopSearchError,
+                          }
+                          return ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: stops.length,
+                            separatorBuilder: (_, _) =>
+                                const Divider(height: 1),
+                            itemBuilder: (context, index) {
+                              final stop = stops[index];
+                              return ListTile(
+                                leading: Icon(
+                                  _stopIcon(widget.mode),
+                                  color: MqColors.red,
+                                ),
+                                title: Text(
+                                  stop.name,
+                                  style: context.textTheme.titleSmall?.copyWith(
+                                    color: dark
+                                        ? MqColors.contentPrimaryDark
+                                        : MqColors.contentPrimary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  stop.id,
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    color: dark
+                                        ? MqColors.contentSecondaryDark
+                                        : MqColors.contentSecondary,
+                                  ),
+                                ),
+                                onTap: () => Navigator.pop(context, stop),
+                              );
+                            },
+                          );
+                        },
+                        error: (_, _) => _StopSearchMessage(
+                          text: l10n.favoriteStopSearchError,
+                        ),
+                        loading: () => const Center(
+                          child: CircularProgressIndicator(color: MqColors.red),
+                        ),
                       ),
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(color: MqColors.red),
-                      ),
+              ),
+            ),
+            const SizedBox(height: MqSpacing.space3),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(
+                    context,
+                    const TransitStop(id: '', name: ''),
+                  ),
+                  child: Text(
+                    l10n.clearPreferredStop,
+                    style: const TextStyle(color: MqColors.red),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    l10n.cancel,
+                    style: TextStyle(
+                      color: dark
+                          ? MqColors.contentSecondaryDark
+                          : MqColors.contentSecondary,
                     ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () =>
-              Navigator.pop(context, const TransitStop(id: '', name: '')),
-          child: Text(
-            l10n.clearPreferredStop,
-            style: const TextStyle(color: MqColors.red),
-          ),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(
-            l10n.cancel,
-            style: const TextStyle(color: MqColors.contentSecondary),
-          ),
-        ),
-      ],
     );
+  }
+
+  static IconData _stopIcon(String mode) {
+    return switch (mode) {
+      'bus' => Icons.directions_bus_rounded,
+      'train' => Icons.train_rounded,
+      'metro' => Icons.directions_subway_rounded,
+      _ => Icons.location_on_rounded,
+    };
   }
 }
 

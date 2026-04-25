@@ -1,3 +1,23 @@
+### Raouf: 2026-04-25 (AEST) — Mode-aware Preferred Stop picker + bottom-sheet lifecycle fix
+**Scope:** Settings Preferred Stop picker stability and transport-mode filtering.
+**Summary:** Replaced the Preferred Stop `AlertDialog` with a Settings-style modal bottom sheet to avoid the Flutter `AnimatedDefaultTextStyle` dirty-widget/build-scope route error during picker rebuilds and dismissals. Passed the active commute mode into `tfnswStopSearchProvider` and `tfnsw-proxy?action=stop-search`, then added server-side mode filtering so metro/train searches show station results while bus searches show bus/interchange-style stops. Redeployed `tfnsw-proxy` and verified the deployed endpoint returns different results for metro/train/bus.
+**Files Changed:**
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/features/transit/presentation/providers/tfnsw_provider.dart`
+- `supabase/functions/tfnsw-proxy/index.ts`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `deno fmt --check supabase/functions/tfnsw-proxy/index.ts` → pass.
+- `deno check supabase/functions/tfnsw-proxy/index.ts` → pass.
+- Focused Flutter tests (`settings_controller_test.dart`, `settings_repository_test.dart`, `transit_stop_test.dart`) → **12/12 passed**.
+- `supabase functions deploy tfnsw-proxy --no-verify-jwt` → success.
+- Deployed stop-search endpoint for `Macquarie University`: `metro` → `Macquarie University Station`, `train` → `Macquarie University Station`, `bus` → bus/interchange stops and excludes `Macquarie University Station`.
+- `./scripts/check.sh --quick` → **5/5 passed** (pub get, format, analyze, 151 tests, gen-l10n).
+- `ReadLints` on edited Dart files → no linter errors.
+**Follow-ups:**
+- Reopen the app and test the stop picker after changing Main Transport between Bus, Train, and Metro.
+
 ### Raouf: 2026-04-25 (AEST) — TfNSW stream disposal fix + deployed stop search
 **Scope:** Runtime bug fix for Home transit stream and Preferred Stop search.
 **Summary:** Fixed a Riverpod runtime error where `tfnswMetroProvider` could read `ref` after disposal during async location/network gaps by checking `ref.mounted` after each await and capturing `locationSource` before the polling loop. Deployed the updated `tfnsw-proxy` so the app now reaches the new `action=stop-search` branch instead of the old departures-only handler, which was causing stop search to show no results. Verified the deployed endpoint returns stop results for `Macquarie University`, including `Macquarie University Station`.
