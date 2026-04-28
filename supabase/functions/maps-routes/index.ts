@@ -316,38 +316,6 @@ function normaliseGoogleRoute(
   };
 }
 
-function generateDemoCampusRoute(
-  origin: CoordinatePayload,
-  destination: CoordinatePayload,
-): {
-  coordinates: [number, number][];
-  distanceMeters: number;
-  durationSeconds: number;
-} {
-  const KM_PER_DEGREE_LAT = 111.32;
-  const KM_PER_DEGREE_LNG = 111.32 * Math.cos((-33.775 * Math.PI) / 180);
-  const latDiff = destination.latitude - origin.latitude;
-  const lngDiff = destination.longitude - origin.longitude;
-  const distanceKm = Math.sqrt(
-    Math.pow(latDiff * KM_PER_DEGREE_LAT, 2) +
-      Math.pow(lngDiff * KM_PER_DEGREE_LNG, 2),
-  );
-  const distanceMeters = distanceKm * 1000;
-  const durationSeconds = (distanceKm / 5) * 3600;
-  const numPoints = Math.max(5, Math.min(20, Math.ceil(distanceMeters / 50)));
-  const coordinates: [number, number][] = [];
-
-  for (let i = 0; i <= numPoints; i += 1) {
-    const t = i / numPoints;
-    coordinates.push([
-      origin.longitude + lngDiff * t,
-      origin.latitude + latDiff * t,
-    ]);
-  }
-
-  return { coordinates, distanceMeters, durationSeconds };
-}
-
 function normaliseCampusRoute(
   travelMode: string,
   orsData: Record<string, unknown>,
@@ -629,46 +597,15 @@ async function fetchCampusRoute(
   const orsApiKey = Deno.env.get("ORS_API_KEY");
 
   if (!orsApiKey) {
-    const demo = generateDemoCampusRoute(origin, destination);
-    return normaliseCampusRoute(travelMode, {
-      features: [
-        {
-          geometry: {
-            coordinates: demo.coordinates,
-          },
-          properties: {
-            summary: {
-              distance: demo.distanceMeters,
-              duration: demo.durationSeconds,
-            },
-            segments: [
-              {
-                steps: [
-                  {
-                    type: 11,
-                    instruction: "Head towards your destination",
-                    distance: demo.distanceMeters * 0.4,
-                    duration: demo.durationSeconds * 0.4,
-                  },
-                  {
-                    type: 4,
-                    instruction: "Continue on the campus pathway",
-                    distance: demo.distanceMeters * 0.4,
-                    duration: demo.durationSeconds * 0.4,
-                  },
-                  {
-                    type: 10,
-                    instruction: "Arrive at your destination",
-                    distance: demo.distanceMeters * 0.2,
-                    duration: demo.durationSeconds * 0.2,
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      ],
-    });
+    // Keep campus routes live/executable when ORS is unavailable by falling
+    // back to Google Routes WALK while preserving the campus renderer contract.
+    return await fetchGoogleRoute(
+      "campus",
+      origin,
+      destination,
+      "WALK",
+      "en-AU",
+    );
   }
 
   const upstream = await fetch(ORS_BASE_URL, {

@@ -90,6 +90,13 @@ lib/
 **Verification:** `flutter analyze lib/features/map lib/features/transit` (no issues); focused map tests (all passed); `deno fmt --check` + `deno check` for `maps-routes`, `maps-places`, `tfnsw-proxy` (pass after formatting); `./scripts/check.sh --quick` (5/5 passed, 154 tests); `ReadLints` on edited file (no linter errors).
 **Follow-ups:** Add edge-function unit/integration tests for runtime API behavior (maps-routes/maps-places/tfnsw-proxy) to complement current static/type checks.
 
+### Raouf: 2026-04-28 (AEST) — Functional vs decorative map-file audit + live campus fallback fix
+**Scope:** File-by-file functional audit of map/routing stack and immediate removal of decorative routing fallback.
+**Summary:** Audited map/routing files for live execution quality (data source integrity, event handling, routing/provider integration, and error fallback behavior). Identified one decorative path in campus routing: synthetic demo coordinates when ORS key is missing. Replaced this with API-backed Google Routes WALK fallback so campus responses remain live and executable instead of dummy-generated.
+**Files Changed:** `supabase/functions/maps-routes/index.ts`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `deno fmt supabase/functions/maps-routes/index.ts`; `deno check supabase/functions/maps-routes/index.ts`; `flutter analyze lib/features/map` (no issues); `flutter test test/features/map/map_controller_test.dart test/features/map/map_route_test.dart` (all passed); `ReadLints` on edited file (no linter errors).
+**Follow-ups:** Evaluate replacing bundled building coordinate fallback (`assets/data/buildings.json`) with first-run server hydration for stricter live-data guarantees.
+
 ### Raouf: 2026-04-22 (AEST) — Zero-data features & settings implementation
 **Scope:** Architecture & UI improvement.
 **Summary:** Implemented the "zero-data" features blueprint. Updated `UserPreferences` and `SettingsRepository` to support default renderer, travel mode, low data mode, and reduced motion. Implemented "Low Data Guard" in building search and "Reduced Motion Guard" in animations. Added a "Nuclear Reset" (wipe data) feature. Built the corresponding UI in `SettingsPage`.

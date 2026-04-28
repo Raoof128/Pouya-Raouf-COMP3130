@@ -1,3 +1,19 @@
+### Raouf: 2026-04-28 (AEST) — Functional vs decorative map-file audit + live campus fallback fix
+**Scope:** File-by-file functional audit of map/routing stack and immediate removal of decorative routing fallback.
+**Summary:** Audited map/routing files across data sources, controller, renderers, route panel, and edge functions for live execution paths (events, provider integration, dynamic coordinates, and error handling). Found one decorative fallback path in `maps-routes` campus routing that generated synthetic straight-line coordinates when ORS was missing. Replaced it with a real Google Routes WALK fallback while preserving the campus renderer response contract so campus routes remain API-backed and live.
+**Files Changed:**
+- `supabase/functions/maps-routes/index.ts`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `deno fmt supabase/functions/maps-routes/index.ts` → pass.
+- `deno check supabase/functions/maps-routes/index.ts` → pass.
+- `flutter analyze lib/features/map` → no issues.
+- `flutter test test/features/map/map_controller_test.dart test/features/map/map_route_test.dart` → all passed.
+- `ReadLints` on edited file → no linter errors.
+**Follow-ups:**
+- Consider migrating building registry fallback asset (`assets/data/buildings.json`) to guaranteed server hydration at first run for stricter “no hardcoded coordinates” policy.
+
 ### Raouf: 2026-04-28 (AEST) — Full map/navigation API and function verification run
 **Scope:** End-to-end validation of map/navigation Flutter flows plus Supabase map edge functions.
 **Summary:** Executed a comprehensive verification sweep across map/navigation analyzers, map domain/controller tests, edge-function format/type checks, and the project quick-check pipeline. The only blocker found was a formatting drift in `maps-places` edge function, which was fixed with `deno fmt`; all subsequent checks passed with no functional failures.
