@@ -157,7 +157,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
     return GoogleMap(
       initialCameraPosition: const CameraPosition(
-        target: LatLng(-33.7738, 151.1130),
+        target: LatLng(-33.77388, 151.11275),
         zoom: 15.5,
       ),
       onMapCreated: (controller) {
