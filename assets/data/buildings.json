@@ -13,11 +13,22 @@
     "googlePlaceId": "ChIJ1-VKYet6kWsRMUE4VYvdBK4",
     "campusX": 2201,
     "campusY": 1882,
-    "aliases": [],
+    "aliases": [
+      "Tech Bar",
+      "Service Connect",
+      "Admissions and Scholarships",
+      "Financial Services",
+      "Human Resources",
+      "Information Technology",
+      "Campus Life",
+      "Property",
+      "Group Marketing"
+    ],
     "tags": [
       "services",
       "administration",
-      "study"
+      "study",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "N16",
@@ -38,11 +49,15 @@
     "googlePlaceId": "ChIJZUF9Xut6kWsRFApfJUMU9gk",
     "campusX": 2345,
     "campusY": 2388,
-    "aliases": [],
+    "aliases": [
+      "Lachlan Macquarie Room",
+      "Library Café"
+    ],
     "tags": [
       "academic",
       "study",
-      "resources"
+      "resources",
+      "campus hub"
     ],
     "searchTokens": [],
     "gridRef": "Q17",
@@ -67,7 +82,8 @@
     "tags": [
       "services",
       "safety",
-      "emergency"
+      "emergency",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "P2",
@@ -88,11 +104,19 @@
     "googlePlaceId": null,
     "campusX": 1687,
     "campusY": 1913,
-    "aliases": [],
+    "aliases": [
+      "Faculty of Arts",
+      "Department of History and Archaeology",
+      "Department of Critical Indigenous Studies",
+      "Macquarie School of Education",
+      "Macquarie School of Social Sciences",
+      "Department of Security Studies & Criminology"
+    ],
     "tags": [
       "academic",
       "arts",
-      "teaching"
+      "teaching",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "O13",
@@ -113,11 +137,16 @@
     "googlePlaceId": null,
     "campusX": 2436,
     "campusY": 1883,
-    "aliases": [],
+    "aliases": [
+      "Macquarie Law School",
+      "Department of Philosophy",
+      "Department of Media, Communication, Creative Arts"
+    ],
     "tags": [
       "academic",
       "law",
-      "media"
+      "media",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "O19",
@@ -138,11 +167,20 @@
     "googlePlaceId": null,
     "campusX": 3066,
     "campusY": 2352,
-    "aliases": [],
+    "aliases": [
+      "Faculty of Macquarie Business School",
+      "Department of Accounting & Corporate Governance",
+      "Department of Actuarial Studies",
+      "Department of Economics",
+      "Department of Applied Finance",
+      "Department of Management",
+      "Department of Marketing"
+    ],
     "tags": [
       "academic",
       "business",
-      "teaching"
+      "teaching",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "Q22",
@@ -163,11 +201,16 @@
     "googlePlaceId": null,
     "campusX": 4024,
     "campusY": 1585,
-    "aliases": [],
+    "aliases": [
+      "Mindspot",
+      "Macquarie Medical School",
+      "Australian Institute of Health Innovation"
+    ],
     "tags": [
       "academic",
       "health",
-      "research"
+      "research",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "M28",
@@ -188,11 +231,17 @@
     "googlePlaceId": null,
     "campusX": 1748,
     "campusY": 2689,
-    "aliases": [],
+    "aliases": [
+      "Speech & Hearing Clinic",
+      "Psychology Clinic",
+      "Reading Clinic",
+      "Centre for Emotional Health"
+    ],
     "tags": [
       "academic",
       "psychology",
-      "health"
+      "health",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "T14",
@@ -213,11 +262,15 @@
     "googlePlaceId": null,
     "campusX": 3098,
     "campusY": 1906,
-    "aliases": [],
+    "aliases": [
+      "School of Engineering",
+      "Australian Astronomical Optics"
+    ],
     "tags": [
       "academic",
       "engineering",
-      "labs"
+      "labs",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "O22",
@@ -238,11 +291,14 @@
     "googlePlaceId": null,
     "campusX": 3653,
     "campusY": 1975,
-    "aliases": [],
+    "aliases": [
+      "School of Computing"
+    ],
     "tags": [
       "academic",
       "technology",
-      "labs"
+      "labs",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "O26",
@@ -263,11 +319,14 @@
     "googlePlaceId": "ChIJo7_ByOt6kWsRG3j_0x7XALM",
     "campusX": 2790,
     "campusY": 1882,
-    "aliases": [],
+    "aliases": [
+      "School of Mathematical & Physical Sciences"
+    ],
     "tags": [
       "academic",
       "science",
-      "research"
+      "research",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "N20",
@@ -288,11 +347,16 @@
     "googlePlaceId": null,
     "campusX": 3060,
     "campusY": 1830,
-    "aliases": [],
+    "aliases": [
+      "School of Natural Sciences",
+      "Herbarium"
+    ],
     "tags": [
       "academic",
       "science",
-      "research"
+      "research",
+      "faculty",
+      "campus hub"
     ],
     "searchTokens": [],
     "gridRef": "M23",
@@ -317,7 +381,8 @@
     "tags": [
       "academic",
       "research",
-      "labs"
+      "labs",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "M24",
@@ -461,11 +526,16 @@
     "googlePlaceId": null,
     "campusX": 3735,
     "campusY": 1622,
-    "aliases": [],
+    "aliases": [
+      "Macquarie Medical Imaging",
+      "MMI",
+      "Pharmacy (Hospital)"
+    ],
     "tags": [
       "health",
       "medical",
-      "services"
+      "services",
+      "campus hub"
     ],
     "searchTokens": [],
     "gridRef": "L27",
@@ -486,11 +556,16 @@
     "googlePlaceId": null,
     "campusX": 3646,
     "campusY": 1472,
-    "aliases": [],
+    "aliases": [
+      "Specialist Clinics",
+      "GP Clinic",
+      "Physiotherapy Clinic"
+    ],
     "tags": [
       "health",
       "medical",
-      "services"
+      "services",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "K26",
@@ -535,11 +610,14 @@
     "googlePlaceId": null,
     "campusX": 1568,
     "campusY": 1210,
-    "aliases": [],
+    "aliases": [
+      "Sporting Hall of Fame Museum"
+    ],
     "tags": [
       "sports",
       "recreation",
-      "fitness"
+      "fitness",
+      "campus hub"
     ],
     "searchTokens": [],
     "gridRef": "J12",
@@ -658,11 +736,20 @@
     "googlePlaceId": null,
     "campusX": 2722,
     "campusY": 2224,
-    "aliases": [],
+    "aliases": [
+      "Future Students",
+      "MQ Academy",
+      "IELTS",
+      "PTE Test Centre",
+      "Macquarie University College",
+      "Prayer Room",
+      "Access and Widening Participation"
+    ],
     "tags": [
       "services",
       "student",
-      "administration"
+      "administration",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "P20",
@@ -683,10 +770,15 @@
     "googlePlaceId": null,
     "campusX": 2378,
     "campusY": 1884,
-    "aliases": [],
+    "aliases": [
+      "Graduate Research Academy",
+      "Research Services",
+      "Office of Commercialisation and Innovation"
+    ],
     "tags": [
       "research",
-      "services"
+      "services",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "N18",
@@ -707,11 +799,16 @@
     "googlePlaceId": null,
     "campusX": 2142,
     "campusY": 2115,
-    "aliases": [],
+    "aliases": [
+      "Student Wellbeing",
+      "Student Engagement",
+      "Graduation Unit"
+    ],
     "tags": [
       "services",
       "student",
-      "wellbeing"
+      "wellbeing",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "P16",
@@ -732,11 +829,15 @@
     "googlePlaceId": null,
     "campusX": 2969,
     "campusY": 1290,
-    "aliases": [],
+    "aliases": [
+      "Chancellery",
+      "Archives & Records Management"
+    ],
     "tags": [
       "administration",
       "gallery",
-      "arts"
+      "arts",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "H20",
@@ -757,11 +858,15 @@
     "googlePlaceId": null,
     "campusX": 1665,
     "campusY": 480,
-    "aliases": [],
+    "aliases": [
+      "Astronomy",
+      "Observatory"
+    ],
     "tags": [
       "research",
       "science",
-      "astronomy"
+      "astronomy",
+      "campus hub"
     ],
     "searchTokens": [],
     "gridRef": "C12",
@@ -786,7 +891,8 @@
     "tags": [
       "services",
       "business",
-      "innovation"
+      "innovation",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "S8",
@@ -810,7 +916,8 @@
     "aliases": [],
     "tags": [
       "services",
-      "spiritual"
+      "spiritual",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "R6",
@@ -835,7 +942,8 @@
     "tags": [
       "services",
       "indigenous",
-      "culture"
+      "culture",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "N11",
@@ -859,7 +967,8 @@
     "aliases": [],
     "tags": [
       "services",
-      "childcare"
+      "childcare",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "P8",
@@ -883,7 +992,8 @@
     "aliases": [],
     "tags": [
       "services",
-      "childcare"
+      "childcare",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "V15",
@@ -907,7 +1017,8 @@
     "aliases": [],
     "tags": [
       "services",
-      "childcare"
+      "childcare",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "N11",
@@ -931,7 +1042,8 @@
     "aliases": [],
     "tags": [
       "services",
-      "childcare"
+      "childcare",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "W17",
@@ -981,7 +1093,8 @@
     "tags": [
       "services",
       "education",
-      "accessibility"
+      "accessibility",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "G7",
@@ -1006,7 +1119,8 @@
     "tags": [
       "services",
       "engineering",
-      "workshop"
+      "workshop",
+      "student services"
     ],
     "searchTokens": [],
     "gridRef": "K24",
@@ -1153,7 +1267,8 @@
     "tags": [
       "arts",
       "gallery",
-      "culture"
+      "culture",
+      "campus hub"
     ],
     "searchTokens": [],
     "gridRef": "H20",
@@ -1178,7 +1293,8 @@
     "tags": [
       "science",
       "museum",
-      "education"
+      "education",
+      "campus hub"
     ],
     "searchTokens": [],
     "gridRef": "L23",
@@ -1202,7 +1318,8 @@
     "aliases": [],
     "tags": [
       "academic",
-      "teaching"
+      "teaching",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "N22",
@@ -1250,7 +1367,8 @@
     "aliases": [],
     "tags": [
       "academic",
-      "teaching"
+      "teaching",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "Q21",
@@ -1271,10 +1389,14 @@
     "googlePlaceId": "ChIJ79q0w-t6kWsRD6lLJV1tWfo",
     "campusX": 2467,
     "campusY": 1618,
-    "aliases": [],
+    "aliases": [
+      "Graduation Venue",
+      "UBar"
+    ],
     "tags": [
       "services",
-      "student"
+      "student",
+      "campus hub"
     ],
     "searchTokens": [],
     "gridRef": "K19",
@@ -1371,7 +1493,8 @@
     "aliases": [],
     "tags": [
       "academic",
-      "teaching"
+      "teaching",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "P22",
@@ -1421,7 +1544,8 @@
     "tags": [
       "academic",
       "education",
-      "services"
+      "services",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "O10",
@@ -1446,7 +1570,8 @@
     "tags": [
       "academic",
       "teaching",
-      "exams"
+      "exams",
+      "faculty"
     ],
     "searchTokens": [],
     "gridRef": "N20",
@@ -2170,7 +2295,8 @@
       "academic",
       "study",
       "library",
-      "resources"
+      "resources",
+      "campus hub"
     ],
     "searchTokens": [],
     "gridRef": null,
@@ -3716,6 +3842,39 @@
     ],
     "searchTokens": [],
     "gridRef": null,
+    "levels": null,
+    "wheelchair": false
+  },
+  {
+    "id": "GALEHIST",
+    "code": "GALEHIST",
+    "name": "The Gale History Museum",
+    "description": "Macquarie University history museum housing artefacts, archives, and exhibits about the University and the Wallumattagal Campus.",
+    "address": "25C Wally's Walk",
+    "category": "venue",
+    "latitude": -33.7745932,
+    "longitude": 151.1113971,
+    "entranceLatitude": null,
+    "entranceLongitude": null,
+    "googlePlaceId": null,
+    "campusX": 1747,
+    "campusY": 1903,
+    "aliases": [
+      "Gale Museum",
+      "History Museum"
+    ],
+    "tags": [
+      "venue",
+      "museum",
+      "history",
+      "campus hub"
+    ],
+    "searchTokens": [
+      "gale",
+      "history",
+      "museum"
+    ],
+    "gridRef": "O13",
     "levels": null,
     "wheelchair": false
   }

@@ -493,42 +493,52 @@ class _HeroSection extends StatelessWidget {
       },
       child: Column(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _MqShieldLogo(asset: logoAsset, size: 72),
-              const SizedBox(width: MqSpacing.space4),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      l10n.home_welcomeTitle,
-                      style: context.textTheme.headlineLarge?.copyWith(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        height: 1.15,
-                        letterSpacing: -0.4,
-                        color: titleColor,
-                        shadows: heroTextShadow,
+          // Logo + welcome copy. The logo is sized to span the full
+          // height of the two-line text block so the brand mark feels
+          // like a true hero anchor — not an afterthought icon.
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Aspect-ratio-aware: the shield asset is taller than wide,
+                // so we let height drive layout and let width fall out
+                // naturally via `BoxFit.contain`. 100px gives the logo
+                // visual mass equal to title + subtitle stacked.
+                _MqShieldLogo(asset: logoAsset, size: 100),
+                const SizedBox(width: MqSpacing.space4),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        l10n.home_welcomeTitle,
+                        style: context.textTheme.headlineLarge?.copyWith(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w800,
+                          height: 1.15,
+                          letterSpacing: -0.4,
+                          color: titleColor,
+                          shadows: heroTextShadow,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: MqSpacing.space1),
-                    Text(
-                      l10n.home_welcomeSubtitle,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: subtitleColor,
-                        fontSize: 14,
-                        height: 1.4,
-                        fontWeight: FontWeight.w500,
-                        shadows: heroTextShadow,
+                      const SizedBox(height: MqSpacing.space1),
+                      Text(
+                        l10n.home_welcomeSubtitle,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: subtitleColor,
+                          fontSize: 14,
+                          height: 1.4,
+                          fontWeight: FontWeight.w500,
+                          shadows: heroTextShadow,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: MqSpacing.space5),
           SizedBox(
@@ -655,6 +665,9 @@ class _QuickAccessSection extends StatelessWidget {
       children: [
         _SectionHeader(title: l10n.home_quickAccess),
         // Two featured tiles, equal width, equal hierarchy.
+        // Each tap dispatches a query that matches a tag we apply
+        // in `assets/data/buildings.json` — see that file's tagging
+        // convention for the canonical mapping.
         SizedBox(
           height: 200,
           child: Row(
@@ -666,7 +679,7 @@ class _QuickAccessSection extends StatelessWidget {
                   icon: Icons.support_agent,
                   isDark: dark,
                   label: l10n.home_studentServices,
-                  onTap: () => onTapCategory('services'),
+                  onTap: () => onTapCategory('student services'),
                 ),
               ),
               const SizedBox(width: MqSpacing.space4),
