@@ -548,13 +548,14 @@ class _CategoryFilterChips extends StatelessWidget {
   final String activeQuery;
   final ValueChanged<String> onSelect;
 
+  // Transport intentionally absent — surfaced via Home's Metro Countdown
+  // card, so a duplicate Map filter chip would only add noise.
   static const List<({IconData icon, String label, String query})> _categories =
       [
         (icon: Icons.restaurant, label: 'Food', query: 'food'),
         (icon: Icons.local_parking, label: 'Parking', query: 'parking'),
         (icon: Icons.menu_book, label: 'Library', query: 'library'),
         (icon: Icons.school, label: 'Student Centre', query: 'student'),
-        (icon: Icons.directions_bus, label: 'Transport', query: 'bus'),
         (icon: Icons.support_agent, label: 'Services', query: 'services'),
       ];
 

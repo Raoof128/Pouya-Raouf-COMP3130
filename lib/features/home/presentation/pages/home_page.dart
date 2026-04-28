@@ -16,18 +16,22 @@ import 'package:mq_navigation/shared/widgets/mq_tactile_button.dart';
 /// Home screen for the MQ Navigation app.
 ///
 /// Structure (top → bottom):
-///   1. Branded header
-///   2. Hero (welcome + CTA)
-///   3. Metro Countdown glanceable card (configurable from Settings)
-///   4. Quick Access bento grid — campus navigation categories only
+///   1. Hero — official MQ shield logo + welcome copy + CTA
+///   2. Metro Countdown glanceable card (configurable from Settings)
+///   3. Quick Access — 2 featured tiles + 3 supporting tiles
 ///
-/// Removed intentionally: "Next Class" card (no timetable ingestion) and
-/// the "Events" tile from Quick Access — both sit outside the app's
-/// navigation-focused scope.
+/// Removed intentionally:
+///   - The dedicated top app-bar / branded header. The hero now carries
+///     the brand identity via the official MQ shield logo, eliminating
+///     vertical clutter and the prior "icon + wordmark" duplication.
+///   - "Transport" Quick Access item — the Metro Countdown card already
+///     covers the same intent in a more glanceable form.
+///   - "Next Class" card and "Events" tile — outside the navigation scope.
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   static const _backgroundAsset = 'assets/images/campus_background.jpg';
+  static const _logoAsset = 'assets/images/mq_logo.png';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,18 +68,17 @@ class HomePage extends ConsumerWidget {
           SafeArea(
             child: CustomScrollView(
               slivers: [
-                const SliverToBoxAdapter(child: _HomeHeader()),
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(
                       MqSpacing.space5,
-                      MqSpacing.space6,
+                      MqSpacing.space8,
                       MqSpacing.space5,
                       MqSpacing.space12,
                     ),
                     child: Column(
                       children: [
-                        const _HeroSection(),
+                        const _HeroSection(logoAsset: _logoAsset),
                         const SizedBox(height: MqSpacing.space8),
                         _MetroCountdownCard(
                           commuteMode: preferences.commuteMode,
@@ -443,57 +446,17 @@ class _CampusBackground extends StatelessWidget {
 }
 
 // -------------------------------------------------------------------------- //
-// BRANDED TOP HEADER                                                         //
-// -------------------------------------------------------------------------- //
-
-class _HomeHeader extends StatelessWidget {
-  const _HomeHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final dark = context.isDarkMode;
-
-    final borderColor = dark ? Colors.white.withAlpha(13) : MqColors.sand200;
-    final surfaceColor = dark
-        ? MqColors.charcoal850.withValues(alpha: 0.92)
-        : MqColors.alabasterLight.withValues(alpha: 0.92);
-    const accent = MqColors.red;
-
-    return Container(
-      padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: MqSpacing.space4,
-        vertical: MqSpacing.space3,
-      ),
-      decoration: BoxDecoration(
-        color: surfaceColor,
-        border: Border(bottom: BorderSide(color: borderColor, width: 1)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.school, color: accent, size: MqSpacing.iconDefault),
-          const SizedBox(width: MqSpacing.space2),
-          Text(
-            l10n.home_brandTitle,
-            style: const TextStyle(
-              color: accent,
-              fontWeight: FontWeight.w700,
-              fontSize: 16,
-              letterSpacing: 2.0,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// -------------------------------------------------------------------------- //
 // WELCOME + CTA HERO                                                         //
 // -------------------------------------------------------------------------- //
 
+/// Hero block. Lays out the official MQ shield logo to the left of the
+/// welcome copy so the brand identity travels with the message — replacing
+/// the prior top branding bar — while the CTA button remains full-width
+/// below for one-handed reachability.
 class _HeroSection extends StatelessWidget {
-  const _HeroSection();
+  const _HeroSection({required this.logoAsset});
+
+  final String logoAsset;
 
   @override
   Widget build(BuildContext context) {
@@ -530,32 +493,46 @@ class _HeroSection extends StatelessWidget {
       },
       child: Column(
         children: [
-          Text(
-            l10n.home_welcomeTitle,
-            textAlign: TextAlign.center,
-            style: context.textTheme.headlineLarge?.copyWith(
-              fontSize: 32,
-              fontWeight: FontWeight.w800,
-              height: 1.2,
-              letterSpacing: -0.5,
-              color: titleColor,
-              shadows: heroTextShadow,
-            ),
-          ),
-          const SizedBox(height: MqSpacing.space2),
-          Text(
-            l10n.home_welcomeSubtitle,
-            textAlign: TextAlign.center,
-            style: context.textTheme.bodyLarge?.copyWith(
-              color: subtitleColor,
-              fontSize: 16,
-              height: 1.4,
-              fontWeight: FontWeight.w500,
-              shadows: heroTextShadow,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _MqShieldLogo(asset: logoAsset, size: 72),
+              const SizedBox(width: MqSpacing.space4),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      l10n.home_welcomeTitle,
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        height: 1.15,
+                        letterSpacing: -0.4,
+                        color: titleColor,
+                        shadows: heroTextShadow,
+                      ),
+                    ),
+                    const SizedBox(height: MqSpacing.space1),
+                    Text(
+                      l10n.home_welcomeSubtitle,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: subtitleColor,
+                        fontSize: 14,
+                        height: 1.4,
+                        fontWeight: FontWeight.w500,
+                        shadows: heroTextShadow,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: MqSpacing.space5),
           SizedBox(
+            width: double.infinity,
             height: 52,
             child: FilledButton.icon(
               onPressed: () => context.goNamed(RouteNames.map),
@@ -587,13 +564,78 @@ class _HeroSection extends StatelessWidget {
   }
 }
 
+/// Renders the official MQ shield logo at a given size, with a graceful
+/// fallback shield in case the asset isn't bundled. The fallback keeps
+/// the layout stable during initial onboarding of the asset and on any
+/// device where the asset failed to load.
+class _MqShieldLogo extends StatelessWidget {
+  const _MqShieldLogo({required this.asset, required this.size});
+
+  final String asset;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Macquarie University',
+      image: true,
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: Image.asset(
+          asset,
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.high,
+          errorBuilder: (_, _, _) => _LogoFallback(size: size),
+        ),
+      ),
+    );
+  }
+}
+
+class _LogoFallback extends StatelessWidget {
+  const _LogoFallback({required this.size});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    // Pentagon-ish red shield placeholder — preserves visual mass and
+    // brand color until the official asset ships.
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: MqColors.red,
+        borderRadius: BorderRadius.circular(size * 0.18),
+        boxShadow: [
+          BoxShadow(
+            color: MqColors.red.withValues(alpha: 0.30),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Icon(
+          Icons.school_rounded,
+          color: Colors.white,
+          size: size * 0.55,
+        ),
+      ),
+    );
+  }
+}
+
 // -------------------------------------------------------------------------- //
 // QUICK ACCESS                                                               //
 // -------------------------------------------------------------------------- //
 
-/// Bento layout tuned for balance without Events:
-///   Row 1  |  Hero: Student Services  |  Stack: Parking + Campus Hub
-///   Row 2  |  3 equal tiles:  Faculty · Food & Drink · Transport
+/// Quick Access bento layout, post-Transport removal:
+///   Row 1 — two equal featured tiles: Student Services · Faculty
+///   Row 2 — three supporting compact tiles: Parking · Campus Hub · Food & Drink
+///
+/// Transport is intentionally absent — the Metro Countdown card above
+/// already covers the same intent in a more glanceable form, so a
+/// duplicate Quick Access tile would only add noise.
 class _QuickAccessSection extends StatelessWidget {
   const _QuickAccessSection({
     required this.hapticsEnabled,
@@ -612,8 +654,9 @@ class _QuickAccessSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(title: l10n.home_quickAccess),
+        // Two featured tiles, equal width, equal hierarchy.
         SizedBox(
-          height: 280,
+          height: 200,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -628,51 +671,36 @@ class _QuickAccessSection extends StatelessWidget {
               ),
               const SizedBox(width: MqSpacing.space4),
               Expanded(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: _BentoCompactCard(
-                        hapticsEnabled: hapticsEnabled,
-                        icon: Icons.local_parking,
-                        isDark: dark,
-                        label: l10n.home_parking,
-                        onTap: () => onTapCategory('parking'),
-                      ),
-                    ),
-                    const SizedBox(height: MqSpacing.space4),
-                    Expanded(
-                      child: _BentoCompactCard(
-                        hapticsEnabled: hapticsEnabled,
-                        icon: Icons.account_balance,
-                        isDark: dark,
-                        label: l10n.home_campusHub,
-                        onTap: () => onTapCategory('campus hub'),
-                      ),
-                    ),
-                  ],
+                child: _BentoHeroCard(
+                  hapticsEnabled: hapticsEnabled,
+                  icon: Icons.school,
+                  isDark: dark,
+                  label: l10n.home_faculty,
+                  onTap: () => onTapCategory('faculty'),
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(height: MqSpacing.space4),
+        // Three supporting tiles, lower visual weight.
         _TertiaryQuickRow(
           hapticsEnabled: hapticsEnabled,
           items: [
             _QuickAccessItem(
-              icon: Icons.school,
-              label: l10n.home_faculty,
-              searchQuery: 'faculty',
+              icon: Icons.local_parking,
+              label: l10n.home_parking,
+              searchQuery: 'parking',
+            ),
+            _QuickAccessItem(
+              icon: Icons.account_balance,
+              label: l10n.home_campusHub,
+              searchQuery: 'campus hub',
             ),
             _QuickAccessItem(
               icon: Icons.restaurant,
               label: l10n.home_foodDrink,
               searchQuery: 'food',
-            ),
-            _QuickAccessItem(
-              icon: Icons.directions_bus,
-              label: l10n.home_transport,
-              searchQuery: 'bus',
             ),
           ],
           onTapCategory: onTapCategory,
@@ -694,6 +722,9 @@ class _QuickAccessItem {
   final String searchQuery;
 }
 
+/// Prominent section header. Larger than a Material label so it actually
+/// reads as a section title at a glance — the prior `labelMedium` size
+/// was lost against the campus background photo.
 class _SectionHeader extends StatelessWidget {
   const _SectionHeader({required this.title});
 
@@ -701,76 +732,26 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = context.isDarkMode;
     return Padding(
       padding: const EdgeInsetsDirectional.only(
-        start: MqSpacing.space2,
-        bottom: MqSpacing.space3,
+        start: MqSpacing.space1,
+        bottom: MqSpacing.space4,
       ),
       child: Text(
         title.toUpperCase(),
-        style: context.textTheme.labelMedium?.copyWith(
-          fontWeight: FontWeight.w700,
-          letterSpacing: 1.2,
-          color: MqColors.red,
-        ),
-      ),
-    );
-  }
-}
-
-class _BentoCompactCard extends StatelessWidget {
-  const _BentoCompactCard({
-    required this.hapticsEnabled,
-    required this.icon,
-    required this.isDark,
-    required this.label,
-    required this.onTap,
-  });
-
-  final bool hapticsEnabled;
-  final IconData icon;
-  final bool isDark;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: label,
-      child: MqTactileButton(
-        hapticsEnabled: hapticsEnabled,
-        onTap: onTap,
-        borderRadius: MqSpacing.radiusXl,
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: isDark
-                ? MqColors.charcoal850
-                : Colors.white.withValues(alpha: 0.88),
-            borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-            border: Border.all(
-              color: isDark ? Colors.white.withAlpha(13) : MqColors.sand200,
+        style: context.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w800,
+          letterSpacing: 1.6,
+          fontSize: 15,
+          color: dark ? MqColors.vividRed : MqColors.red,
+          shadows: [
+            Shadow(
+              blurRadius: 12,
+              color: Colors.black.withValues(alpha: dark ? 0.30 : 0.18),
+              offset: const Offset(0, 1),
             ),
-          ),
-          padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: MqColors.red, size: MqSpacing.iconLg),
-              const SizedBox(height: MqSpacing.space2),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? MqColors.contentPrimaryDark
-                      : MqColors.contentPrimary,
-                ),
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );

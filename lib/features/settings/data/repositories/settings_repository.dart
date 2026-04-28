@@ -27,9 +27,16 @@ const _favoriteStopNameKey = 'settings.favorite_stop_name';
 
 /// Data source for persisting and retrieving user settings.
 ///
-/// Uses secure storage under the hood. Fails safely on read by returning
-/// defaults, but throws on write so the UI controller can show an error
-/// and revert any optimistic updates.
+/// **Architectural note — settings are device-local by design.**
+/// Every key in this repository is a per-device UX preference (theme,
+/// language, haptics, low-data, quiet hours, commute setup, etc.).
+/// None of them carry cross-device value, so they are persisted via
+/// `flutter_secure_storage` (Keychain on iOS, EncryptedSharedPreferences
+/// on Android) — *not* Supabase. Supabase coupling is reserved for
+/// features that genuinely require server-backed state.
+///
+/// Fails safely on read by returning defaults, but throws on write so
+/// the UI controller can show an error and revert any optimistic updates.
 abstract interface class SettingsRepository {
   Future<UserPreferences> loadPreferences();
   Future<UserPreferences> savePreferences(UserPreferences preferences);
