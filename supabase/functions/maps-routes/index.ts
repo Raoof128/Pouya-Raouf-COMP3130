@@ -7,16 +7,11 @@ import {
   createClient,
   type User,
 } from "https://esm.sh/@supabase/supabase-js@2";
-import {
-  corsHeaders,
-  handleCors,
-  jsonCorsHeaders,
-} from "../_shared/cors.ts";
+import { corsHeaders, handleCors, jsonCorsHeaders } from "../_shared/cors.ts";
 
 const GOOGLE_ROUTES_URL =
   "https://routes.googleapis.com/directions/v2:computeRoutes";
-const TFNSW_TRIP_PLANNER_URL =
-  "https://api.transport.nsw.gov.au/v1/tp/trip";
+const TFNSW_TRIP_PLANNER_URL = "https://api.transport.nsw.gov.au/v1/tp/trip";
 const ORS_BASE_URL = Deno.env.get("ORS_BASE_URL") ??
   "https://api.openrouteservice.org/v2/directions/foot-walking/geojson";
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -427,8 +422,21 @@ function normaliseTfnswTransitRoute(
       if (coord.length < 2) {
         continue;
       }
-      const point = { lat: Number(coord[0]), lng: Number(coord[1]) };
-      if (!Number.isFinite(point.lat) || !Number.isFinite(point.lng)) {
+      const first = Number(coord[0]);
+      const second = Number(coord[1]);
+      if (!Number.isFinite(first) || !Number.isFinite(second)) {
+        continue;
+      }
+      const firstLooksLikeLat = first >= -90 && first <= 90;
+      const secondLooksLikeLng = second >= -180 && second <= 180;
+      const firstLooksLikeLng = first >= -180 && first <= 180;
+      const secondLooksLikeLat = second >= -90 && second <= 90;
+      const point = firstLooksLikeLat && secondLooksLikeLng
+        ? { lat: first, lng: second }
+        : firstLooksLikeLng && secondLooksLikeLat
+        ? { lat: second, lng: first }
+        : null;
+      if (point == null) {
         continue;
       }
       const previous = points[points.length - 1];
@@ -443,7 +451,8 @@ function normaliseTfnswTransitRoute(
     }
 
     const pathDescriptions =
-      (leg.pathDescriptions as Array<Record<string, unknown>> | undefined) ?? [];
+      (leg.pathDescriptions as Array<Record<string, unknown>> | undefined) ??
+        [];
     for (const path of pathDescriptions) {
       const instruction = String(path.desc ?? "").trim();
       if (instruction.length === 0) {
@@ -483,9 +492,12 @@ async function fetchTfnswTransitRoute(
 ): Promise<NormalizedRoute> {
   const apiKey = requireEnv("TFNSW_API_KEY");
   const now = new Date();
-  const itdDate = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
-  const itdTime =
-    `${String(now.getHours()).padStart(2, "0")}${String(now.getMinutes()).padStart(2, "0")}`;
+  const itdDate = `${now.getFullYear()}${
+    String(now.getMonth() + 1).padStart(2, "0")
+  }${String(now.getDate()).padStart(2, "0")}`;
+  const itdTime = `${String(now.getHours()).padStart(2, "0")}${
+    String(now.getMinutes()).padStart(2, "0")
+  }`;
 
   const params = new URLSearchParams({
     outputFormat: "rapidJSON",

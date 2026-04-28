@@ -1,3 +1,26 @@
+### Raouf: 2026-04-28 (AEST) — Live navigation/routing validation with Context7 alignment
+**Scope:** Full map routing audit against latest `google_maps_flutter` and `flutter_map` documentation patterns.
+**Summary:** Pulled current docs via Context7 (`/websites/pub_dev_google_maps_flutter`, `/fleaflet/flutter_map`) and validated local map/routing behavior end-to-end. Fixed campus renderer mode mismatch by constraining campus route modes to walking and normalizing controller state when switching renderers/modes. Prevented non-navigation camera snapback by removing passive location-update recenter branches so camera now recenters only on explicit recenter requests or active navigation follow. Corrected navigation action semantics by relabeling in-route stop action to localized `stopNavigation`. Hardened TfNSW transit coordinate parsing in `maps-routes` with lat/lng range validation and automatic coordinate-order swap fallback for mixed payload ordering.
+**Files Changed:**
+- `lib/features/map/presentation/widgets/route_panel.dart`
+- `lib/features/map/presentation/pages/map_page.dart`
+- `lib/features/map/presentation/controllers/map_controller.dart`
+- `lib/features/map/presentation/widgets/google/google_map_view.dart`
+- `lib/features/map/presentation/widgets/google/desktop_map_fallback_view.dart`
+- `test/features/map/map_controller_test.dart`
+- `supabase/functions/maps-routes/index.ts`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format` on edited Dart files → pass.
+- `deno fmt supabase/functions/maps-routes/index.ts` → pass.
+- `deno check supabase/functions/maps-routes/index.ts` → pass.
+- `flutter analyze lib/features/map` → no issues.
+- `flutter test test/features/map/map_controller_test.dart` → **12/12 passed**.
+- `ReadLints` on edited Dart/TS files → no linter errors.
+**Follow-ups:**
+- Add focused unit tests for `normaliseTfnswTransitRoute` covering both `[lat,lng]` and `[lng,lat]` coordinate arrays.
+
 ### Raouf: 2026-04-28 (AEST) — Map i18n hardcoded-text cleanup (next audit pass)
 **Scope:** Map UI localization hardening after functional audit.
 **Summary:** Continued the map audit by replacing remaining hardcoded user-visible map labels with localization keys. Category chips in `MapPage` now use `AppLocalizations` keys (`food`, `parking`, `services`, `home_studentServices`, `mapCategoryLibrary`) and the desktop OSM fallback badge now uses a dedicated `mapOsmFallbackBadge` key instead of inline text.

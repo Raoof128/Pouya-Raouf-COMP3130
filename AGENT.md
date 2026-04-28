@@ -76,6 +76,13 @@ lib/
 **Verification:** `dart format` on edited files; `flutter analyze lib/features/map` (no issues); `flutter test test/features/map/map_controller_test.dart` (10/10 passed); `ReadLints` on edited files (no linter errors).
 **Follow-ups:** Add the new map localization keys to non-English `app_*.arb` files to restore full locale parity.
 
+### Raouf: 2026-04-28 (AEST) — Live navigation/routing validation with Context7 alignment
+**Scope:** Full map routing audit against latest `google_maps_flutter` and `flutter_map` documentation patterns.
+**Summary:** Validated map routing and live navigation behavior against Context7 docs and fixed key mismatches: campus mode now enforces walking-only travel mode in UI/controller, passive non-navigation location updates no longer force camera recenter, in-route stop action now uses `stopNavigation` semantics, and TfNSW transit coordinate normalization now supports mixed coordinate ordering with range validation and swap fallback.
+**Files Changed:** `lib/features/map/presentation/widgets/route_panel.dart`, `lib/features/map/presentation/pages/map_page.dart`, `lib/features/map/presentation/controllers/map_controller.dart`, `lib/features/map/presentation/widgets/google/google_map_view.dart`, `lib/features/map/presentation/widgets/google/desktop_map_fallback_view.dart`, `test/features/map/map_controller_test.dart`, `supabase/functions/maps-routes/index.ts`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` on edited Dart files; `deno fmt supabase/functions/maps-routes/index.ts`; `deno check supabase/functions/maps-routes/index.ts`; `flutter analyze lib/features/map` (no issues); `flutter test test/features/map/map_controller_test.dart` (12/12 passed); `ReadLints` on edited files (no linter errors).
+**Follow-ups:** Add dedicated unit tests for TfNSW transit coordinate-order normalization.
+
 ### Raouf: 2026-04-22 (AEST) — Zero-data features & settings implementation
 **Scope:** Architecture & UI improvement.
 **Summary:** Implemented the "zero-data" features blueprint. Updated `UserPreferences` and `SettingsRepository` to support default renderer, travel mode, low data mode, and reduced motion. Implemented "Low Data Guard" in building search and "Reduced Motion Guard" in animations. Added a "Nuclear Reset" (wipe data) feature. Built the corresponding UI in `SettingsPage`.

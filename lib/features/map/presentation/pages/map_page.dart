@@ -8,6 +8,7 @@ import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/map/data/datasources/location_source.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
+import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/features/map/presentation/controllers/map_controller.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/building_search_sheet.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/campus/campus_map_view.dart';
@@ -172,6 +173,10 @@ class _MapPageState extends ConsumerState<MapPage> {
                     selectedBuilding: mapState.selectedBuilding,
                     route: mapState.route,
                     travelMode: mapState.travelMode,
+                    supportedTravelModes:
+                        mapState.renderer == MapRendererType.campus
+                        ? const [TravelMode.walk]
+                        : TravelMode.values,
                     isLoading: mapState.isLoadingRoute,
                     isNavigating: mapState.isNavigating,
                     hasArrived: mapState.hasArrived,

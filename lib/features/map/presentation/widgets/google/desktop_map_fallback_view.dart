@@ -103,19 +103,6 @@ class _DesktopMapFallbackViewState
       _fitRouteBounds();
       return;
     }
-
-    // Focus on location changes when not navigating
-    final newLocation = widget.currentLocation;
-    final oldLocation = oldWidget.currentLocation;
-    if (!widget.isNavigating &&
-        newLocation != null &&
-        (oldLocation == null ||
-            newLocation.latitude != oldLocation.latitude ||
-            newLocation.longitude != oldLocation.longitude)) {
-      _moveToLatLng(
-        latlong.LatLng(newLocation.latitude, newLocation.longitude),
-      );
-    }
   }
 
   @override

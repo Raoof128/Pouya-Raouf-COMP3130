@@ -163,6 +163,16 @@ class MapController extends AsyncNotifier<MapState> {
   static const _recalcThresholdMetres = 80.0;
   static const _offRouteThresholdMetres = 50.0;
 
+  TravelMode _normalizeTravelModeForRenderer(
+    MapRendererType renderer,
+    TravelMode mode,
+  ) {
+    if (renderer == MapRendererType.campus && mode != TravelMode.walk) {
+      return TravelMode.walk;
+    }
+    return mode;
+  }
+
   StreamSubscription<LocationSample>? _locationSubscription;
   int _routeRequestVersion = 0;
   LocationSample? _lastRouteFetchLocation;
@@ -186,9 +196,14 @@ class MapController extends AsyncNotifier<MapState> {
       var changed = false;
 
       if (currentMapState.renderer != nextPrefs.defaultRenderer) {
+        final normalizedTravelMode = _normalizeTravelModeForRenderer(
+          nextPrefs.defaultRenderer,
+          currentMapState.travelMode,
+        );
         _invalidateRouteRequest();
         updatedState = updatedState.copyWith(
           renderer: nextPrefs.defaultRenderer,
+          travelMode: normalizedTravelMode,
           clearRoute: true,
           isLoadingRoute: false,
           isNavigating: false,
@@ -199,9 +214,13 @@ class MapController extends AsyncNotifier<MapState> {
       }
 
       if (currentMapState.travelMode != nextPrefs.defaultTravelMode) {
+        final normalizedTravelMode = _normalizeTravelModeForRenderer(
+          currentMapState.renderer,
+          nextPrefs.defaultTravelMode,
+        );
         _invalidateRouteRequest();
         updatedState = updatedState.copyWith(
-          travelMode: nextPrefs.defaultTravelMode,
+          travelMode: normalizedTravelMode,
           isLoadingRoute: false,
           isNavigating: false,
           hasArrived: false,
@@ -475,10 +494,14 @@ class MapController extends AsyncNotifier<MapState> {
     if (current == null) {
       return;
     }
+    final normalizedMode = _normalizeTravelModeForRenderer(
+      current.renderer,
+      travelMode,
+    );
     _invalidateRouteRequest();
     state = AsyncData(
       current.copyWith(
-        travelMode: travelMode,
+        travelMode: normalizedMode,
         isLoadingRoute: false,
         isNavigating: false,
         hasArrived: false,
@@ -501,9 +524,14 @@ class MapController extends AsyncNotifier<MapState> {
     }
     _invalidateRouteRequest();
 
+    final normalizedTravelMode = _normalizeTravelModeForRenderer(
+      renderer,
+      current.travelMode,
+    );
     state = AsyncData(
       current.copyWith(
         renderer: renderer,
+        travelMode: normalizedTravelMode,
         clearRoute: true,
         isLoadingRoute: false,
         isNavigating: false,

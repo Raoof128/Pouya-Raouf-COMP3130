@@ -104,18 +104,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       _fitRouteBounds();
       return;
     }
-
-    // Focus on location changes when not navigating
-    final newLocation = widget.currentLocation;
-    final oldLocation = oldWidget.currentLocation;
-    if (!widget.isNavigating &&
-        _controller != null &&
-        newLocation != null &&
-        (oldLocation == null ||
-            newLocation.latitude != oldLocation.latitude ||
-            newLocation.longitude != oldLocation.longitude)) {
-      _focusLocation(newLocation);
-    }
   }
 
   @override

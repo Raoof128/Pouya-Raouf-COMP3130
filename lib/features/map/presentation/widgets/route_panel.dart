@@ -22,6 +22,7 @@ class RoutePanel extends StatefulWidget {
     required this.selectedBuilding,
     required this.route,
     required this.travelMode,
+    required this.supportedTravelModes,
     required this.isLoading,
     required this.isNavigating,
     required this.hasArrived,
@@ -39,6 +40,7 @@ class RoutePanel extends StatefulWidget {
   final Building? selectedBuilding;
   final MapRoute? route;
   final TravelMode travelMode;
+  final List<TravelMode> supportedTravelModes;
   final bool isLoading;
   final bool isNavigating;
   final bool hasArrived;
@@ -241,6 +243,7 @@ class _RoutePanelState extends State<RoutePanel> {
                 if (!widget.isNavigating) ...[
                   const SizedBox(height: MqSpacing.space4),
                   _TravelModePills(
+                    supportedTravelModes: widget.supportedTravelModes,
                     travelMode: widget.travelMode,
                     isDark: isDark,
                     l10n: l10n,
@@ -279,7 +282,7 @@ class _RoutePanelState extends State<RoutePanel> {
                 if (widget.route != null) ...[
                   if (widget.isNavigating)
                     _GlassOutlinedButton(
-                      label: l10n.clear,
+                      label: l10n.stopNavigation,
                       isDark: isDark,
                       onPressed: widget.onStopNavigation,
                     )
@@ -433,12 +436,14 @@ class _RouteInfoRow extends StatelessWidget {
 class _TravelModePills extends StatelessWidget {
   const _TravelModePills({
     required this.travelMode,
+    required this.supportedTravelModes,
     required this.isDark,
     required this.l10n,
     required this.onChanged,
   });
 
   final TravelMode travelMode;
+  final List<TravelMode> supportedTravelModes;
   final bool isDark;
   final AppLocalizations l10n;
   final ValueChanged<TravelMode> onChanged;
@@ -448,7 +453,7 @@ class _TravelModePills extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: TravelMode.values.map((mode) {
+        children: supportedTravelModes.map((mode) {
           final isSelected = mode == travelMode;
           return Padding(
             padding: const EdgeInsetsDirectional.only(end: MqSpacing.space2),

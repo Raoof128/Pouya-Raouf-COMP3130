@@ -86,6 +86,50 @@ void main() {
       expect(container.read(mapControllerProvider).value!.isNavigating, isTrue);
     });
 
+    test('coerces unsupported campus travel modes to walk', () async {
+      final repository = _FakeMapRepository(buildings: [building]);
+      final container = ProviderContainer(
+        overrides: [
+          mapRepositoryProvider.overrideWithValue(repository),
+          settingsControllerProvider.overrideWith(
+            () => _FakeSettingsController(),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(mapControllerProvider.future);
+      final notifier = container.read(mapControllerProvider.notifier);
+
+      await notifier.setTravelMode(TravelMode.drive);
+      final driveState = container.read(mapControllerProvider).value!;
+      expect(driveState.travelMode, TravelMode.walk);
+    });
+
+    test('forces walk mode when switching back to campus renderer', () async {
+      final repository = _FakeMapRepository(buildings: [building]);
+      final container = ProviderContainer(
+        overrides: [
+          mapRepositoryProvider.overrideWithValue(repository),
+          settingsControllerProvider.overrideWith(
+            () => _FakeSettingsController(),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container.read(mapControllerProvider.future);
+      final notifier = container.read(mapControllerProvider.notifier);
+
+      notifier.setRenderer(MapRendererType.google);
+      await notifier.setTravelMode(TravelMode.transit);
+      notifier.setRenderer(MapRendererType.campus);
+
+      final state = container.read(mapControllerProvider).value!;
+      expect(state.renderer, MapRendererType.campus);
+      expect(state.travelMode, TravelMode.walk);
+    });
+
     test('ignores stale route responses after destination changes', () async {
       final repository = _FakeMapRepository(
         buildings: [building, secondBuilding],
