@@ -1,0 +1,118 @@
+id,name,category,lat,lng,information,img,keywords
+PARKING-SOUTH_2,Carpark - P South 2,Parking,-33.776533,151.114171,Located near the Library,,"drive,car,vehicle"
+PARKING-EAST_2,Carpark - P East 2,Parking,-33.7745669,151.1169688,"Located near the Faculty of Science, Engineering and IT Services",,"drive,car,vehicle"
+PARKING-EAST_3,Carpark - P East 3,Parking,-33.7754464,151.1167938,Located near Macquarie Business School,,"drive,car,vehicle"
+PARKING-WEST_3,Carpark - P West 3,Parking,-33.7756671,151.1102466,Located near the History Museum,,"drive,car,vehicle"
+PARKING-WEST_4,Carpark - P West 4,Parking,-33.777012,151.1091793,"Located near the Department of Media, Music, Communication and Cultural Studies",,"drive,car,vehicle"
+PARKING-WEST_5,Carpark - P West 5,Parking,-33.77350126,151.109232,Located near the Arts Precinct,,"drive,car,vehicle"
+PARKING-NORTH_3,Carpark - P North 3,Parking,-33.77070862344246,151.1105289685588,Located near the Macquarie University Astronomical Observatory,,"drive,car,vehicle"
+MUH-PARKING-1,Macquarie University Health - Disability Parking for Macquarie University Clinic,Hospital parking,-33.77247765163512,151.11743077709622,Disability parking availble near Macquarie University Clinic,https://web.archive.org/web/20250731020534/https://lh5.googleusercontent.com/p/AF1QipM0oJREwFEscu6QMfq04JscZ6uLfWi2ULHnK1U=w203-h114-k-no,"drive,car,vehicle,hospital,clinic"
+MUH-PARKING-2,Macquarie University Health - Parking for Macquarie University Hospital and Clinic,Hospital parking,-33.774099977944545,151.1174419615402,Parking availble for Macquarie University Hospital and Clinic,https://web.archive.org/web/20250731020534/https://lh5.googleusercontent.com/p/AF1QipN_79li_GfgAnxcQKrSwV5UkRvUKii_XR977ok0=w426-h240-k-no,"drive,car,vehicle,hospital,clinic"
+FOOD-1919_LANZHOU_BEEF_NOODLE,1919 Lanzhou Beef Noodle,Food & drink,-33.77341399,151.11386,Located in the Central Courtyard at 16 Wally's Walk,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0020/1181144/1919-2.jpg,"asian,chinese,lunch"
+FOOD-BAP_KOREAN,BAP Korean,Food & drink,-33.77405805,151.1137786,Located in the Central Courtyard at 16 Wally's Walk,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0019/1194202/BAP-Korean.jpg,"asian,lunch"
+FOOD-BOOST_JUICE,Boost Juice,Food & drink,-33.77358072,151.1127937,Located in the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0005/1181147/Boost-Juice.jpg,"smoothie,fruit"
+FOOD-CHATIME,Chatime,Food & drink,-33.774235,151.1137857,Located at 16 Wally's Walk in the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0007/1181149/Chat-time.jpg,"boba,tea"
+FOOD-CRUNCH_CAFE,Crunch Café,Food & drink,-33.77221448,151.1105538,Located at the Sport & Aquatic Centre,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0018/1181151/Crunch.jpg,"cafe,coffee,brunch,lunch"
+FOOD-CULT_EATERY,Cult Eatery,Food & drink,-33.77568721,151.1075423,Located at 25 Wally's Walk in the Arts Precinct,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0003/1181154/cultcafe-2.jpg,"cafe,coffee,brunch,pastries"
+FOOD-CULT,Cult Bake Bar,Food & drink,-33.77358072,151.1127937,Located in the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0019/1181152/Cult-Cafe-1cc-1.jpg,"cafe,coffee,brunch,pastries,breakfast"
+FOOD-EAT_INSTANBUL,Eat Istanbul,Food & drink,-33.77330296,151.1138202,Located within the foodcourt at the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0005/1181156/Eat-Instanbul-2.jpg,"pide,kebab,lunch"
+FOOD-ESC_CAFE,esc Café,Food & drink,-33.77462792,151.1176924,Located at 4 Research Park Drive in the School of Computing,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0017/1194200/ESC.jpg,"cafe,coffee,brunch,breakfast"
+FOOD-HARLEYS_CAFE,Harley's Cafe,Food & drink,-33.77339207769571,151.11828762736866,"Located at 2 Technology Place, Macquarie University Hospital",https://web.archive.org/web/20250731020534/https://s3.studentvip.com.au/photos/cafe-199901-small.jpg,"cafe,coffee,brunch,pastries,breakfast"
+FOOD-IGUANAS_MEXICANA,Iguanas Mexicana,Food & drink,-33.77358741,151.1128098,Located in the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0007/1181158/Iguanas-Mexican.jpg,"mexican,burritos,quesadilla,tacos,lunch"
+FOOD-INDI_GO_GO,Indi Go-Go,Food & drink,-33.77358741,151.1128098,Located in the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0008/1181159/Indi-GO-GO.jpg,"indian,curry,lunch"
+FOOD-LASHINGS_GOURMET_BURGERS,Lashings Gourmet Burgers,Food & drink,-33.77356169,151.1132151,Located within the foodcourt at the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0020/1181162/Lashings-1.jpg,"lunch,snack pack,rolls,breakfast"
+FOOD-LIBRARY_CAFE,Library Café,Food & drink,-33.77563477,151.1128363,Located within the Macquarie University Library,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0004/1181164/library-cafe-1.jpg,"breakfast,brunch,coffee,cafe"
+FOOD-LITTLE_ASIA,Little Asia,Food & drink,-33.77329908,151.1137998,Located in the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0007/1181167/Little-Asia-2.jpg,"asian,chinese,thai,lunch"
+FOOD-MONSTER_SUSHI,Monster Sushi,Food & drink,-33.7741708,151.1137516,Located in the Central Courtyard at 16 Wally's Walk,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0008/1181168/Monster-sushi-1.jpg,"asian,japanese,curry,ramen,lunch"
+FOOD-PAPPARICH,PappaRich,Food & drink,-33.7742137,151.1137763,Located in the Central Courtyard at 16 Wally's Walk,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0020/1181171/Pappa-Rich.jpg,"asian,malaysian,boba,coffee,lunch"
+FOOD-PERFECT_BREW_CAFE,Perfect Brew Café,Food & drink,-33.7734493,151.1183316,Located within the Australian Hearing Hub,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0003/1181172/Piccolo-Me.jpg,"cafe,brunch,breakfast,coffee"
+FOOD-ROLLD,Roll'd,Food & drink,-33.77419794,151.112661,Located within the foodcourt at the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0004/1181173/Rolld.jpg,"asian,vietnamese,pho,banh mi,lunch"
+FOOD-SOUL_ORIGIN,Soul Origin,Food & drink,-33.77315872,151.1115614,Located within the foodcourt at the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0005/1181174/Soul-Origin-1.jpg,"lunch,sandwich,roll,banh mi,wrap,coffee"
+FOOD-ST_LAURENT_COFFEE,St Laurent Coffee,Food & drink,-33.77384459,151.1125918,Located within the foodcourt at the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0008/1181177/St.jpg,"breakfast,sandwich,wrap,jaffle,salad,coffee"
+FOOD-SUSHI_WORLD,Sushi World,Food & drink,-33.77546325,151.1142273,Located within the foodcourt at the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0009/1181178/Sushi-World.jpg,"lunch,japanese,asian"
+FOOD-TASTE_BAGUETTE,Taste Baguette,Food & drink,-33.77341553,151.1138663,Located at 16 Wally's Walk in the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0010/1181179/Taste-Baguette.jpg,"breakfast,lunch,vietnamese,french,cakes,pies,coffee,pastries,banh mi,quiche"
+FOOD-UBAR,Ubar,Food & drink,-33.77328122,151.1133729,Located within the foodcourt at the Central Courtyard,https://web.archive.org/web/20250731020534/https://www.mq.edu.au/__data/assets/image/0020/1181180/Ubar-1.jpg,"breakfast,lunch,drinks,pizza"
+FOOD-WALLYS_COFFEE_AND_TOASTIES,Wally's Coffee & Toasties,Food & drink,-33.774213057544124,151.11225203950696,Located on the side of 18 Wally's Walk,,"breakfast,lunch,coffee,toasties"
+FOOD-PICCOLO_LANE,Piccolo Lane,Food & drink,-33.77672328,151.1120151,Located at 4 Eastern Rd beside the Macquarie Business School,,"breakfast,cofffee"
+SMOKE-AREA_01,Smoking area 1,Smoking areas,-33.77617232,151.1127007,Located near the Library,,smoke
+SMOKE-AREA_02,Smoking area 2,Smoking areas,-33.77548989,151.1087204,"Located near the Department of Media, Music, Communication and Cultural Studies",,smoke
+SMOKE-AREA_03,Smoking area 3,Smoking areas,-33.77417067,151.1116475,Located between the Arts Precinct and 18 Wally's Walk,,smoke
+SMOKE-AREA_04,Smoking area 4,Smoking areas,-33.77188061,151.1114789,Located near the Sport & Aquatic Centre,,smoke
+SMOKE-AREA_05,Smoking area 5,Smoking areas,-33.77227974,151.1166718,Located near Macquarie University Hospital,,smoke
+SMOKE-AREA_06,Smoking area 6,Smoking areas,-33.77460014,151.118728,Located near the Australian Institute of Health Innovation,,smoke
+ACCOM-DUNMORE_LANG_COLLEGE,Dunmore Lang College,Accommodation,-33.778191,151.11645,"Dunmore Lang College provides fully catered accommodation and is ideal if you are a new international or domestic student, or straight out of home.",https://web.archive.org/web/20250731020534/https://students.mq.edu.au/__data/assets/image/0003/1116165/dlc-wide-banner-507x290.jpg,
+ACCOM-ROBERT_MENZIES_COLLEGE,Robert Menzies College,Accommodation,-33.777341,151.116736,An Anglican residential college on Macquarie University located near shopping centre and public transport (train and bus).,https://web.archive.org/web/20250731020534/https://students.mq.edu.au/__data/assets/image/0011/1189253/robert-menzies-wide-image-290x255.jpg,
+ACCOM-STUDENT_VILLAGE_NORTH_RYDE,Student Village North Ryde,Accommodation,-33.771177,151.108596,"Macquarie University Student Village provides affordable, self-catered student accommodation on campus at Macquarie University in Sydney, New South Wales.",https://web.archive.org/web/20250731020534/https://students.mq.edu.au/__data/assets/image/0004/1263910/Student-Village-North-Ryde-507x290.jpg,
+ACCOM-CENTRAL_COURTYARD_ACCOMODATION,Central Courtyard Accomodation,Accommodation,-33.77363081,151.1139523,Central Courtyard Accommodation is the only accommodation managed and operated by Macquarie University,https://web.archive.org/web/20250731020534/https://students.mq.edu.au/__data/assets/image/0011/1183925/basketball.jpg,
+ACCOM-MORLING_RESIDENTIAL_COTTAGE,Morling Residential Cottage,Accommodation,-33.77837763,151.114336,Morling Residential College (MRC) is within a 5-minute walk of Macquarie University,https://web.archive.org/web/20250731020534/https://students.mq.edu.au/__data/assets/image/0007/1172572/morling-residential-image-507x290.jpg,
+ACCOM-DAYMAN_APARTMENTS,Dayman Apartments,Accommodation,-33.77216009,151.1018923,Dayman Apartments opened in 2014 and provides a boutique accommodation block for students and private guests,https://web.archive.org/web/20250731020534/https://students.mq.edu.au/__data/assets/image/0006/1198311/dayman-common-room-507x290.jpg,
+BIKE-RACK_01,Bike rack - Department of Media 1,Bike facilities,-33.77641107,151.108324,Located near the front of the Department of Media,,
+BIKE-RACK_02,Bike rack - Department of Media 2,Bike facilities,-33.77619307,151.1084343,Located within in the Department of Media,,
+BIKE-RACK_03,Bike rack - Department of Media 3,Bike facilities,-33.77598002,151.1087144,Located between the Department of Media and the Incubator,,
+BIKE-RACK_04,Bike rack - Incubator,Bike facilities,-33.77641107,151.1091227,Located near the Incubator,,
+BIKE-RACK_05,Bike rack - 13 Hadenfield Avenue,Bike facilities,-33.77615001,151.1071254,Located at 13 Hadenfield Avenue,,
+BIKE-RACK_06,Bike rack - P West 4,Bike facilities,-33.7760039,151.1066164,Located near P West 4,,
+BIKE-RACK_07,Bike rack - Mars Creek,Bike facilities,-33.77410046,151.1093134,Located near Mars Creek,,
+BIKE-RACK_08,Bike rack - 29WW,Bike facilities,-33.77440482,151.1104507,Located near 29WW,,
+BIKE-RACK_09,Bike rack - Faculty of Arts,Bike facilities,-33.7750265,151.110563,Located near the Faculty of Arts,,
+BIKE-RACK_10,Bike rack - Price Theatre,Bike facilities,-33.77449034,151.1115363,Located near Price Theatre,,
+BIKE-RACK_11,Bike rack - MUSE 1,Bike facilities,-33.77427408,151.1121306,"Located beside MUSE, opposite Macquarie Theatre",,
+BIKE-RACK_12,Bike rack - MUSE 2,Bike facilities,-33.77441106,151.113239,Located near MUSE and 17WW,,
+BIKE-RACK_13,Bike rack - Library 1,Bike facilities,-33.77476997,151.1126063,Located between Macquarie Theatre and the Library,,
+BIKE-RACK_14,Bike rack - Library 2,Bike facilities,-33.77552195,151.1135006,Located near the Library,,
+BIKE-RACK_15,Bike rack - Central Avenue,Bike facilities,-33.77522113,151.1137101,Located near Central Avenue,,
+BIKE-RACK_16,Bike rack - Wally's Walk,Bike facilities,-33.77443686,151.1144011,Located on Wally's Walk,,
+BIKE-RACK_17,Bike rack - IELTS building,Bike facilities,-33.77514276,151.1145138,Located near the IELTS building,,
+BIKE-RACK_18,Bike rack - Mason Theatre 1,Bike facilities,-33.77367682,151.1146611,Located near Mason Theatre along Sir Christopher Ondaatje Avenue,,
+BIKE-RACK_19,Bike rack - Mason Theatre 2,Bike facilities,-33.77431012,151.1154038,Located near Mason Theatre along Wally's Walk,,
+BIKE-RACK_20,Bike rack - Eastern Road,Bike facilities,-33.77563367,151.1157062,Located on Eastern Road,,
+BIKE-RACK_21,Bike rack - P East 2,Bike facilities,-33.77497028,151.1163492,Located near P East 2,,
+BIKE-RACK_22,Bike rack - Sport & Aquatic Centre,Bike facilities,-33.77220385,151.110692,Located near the Sport & Aquatic Centre,,
+BIKE-RACK_23,Bike rack - MGSM,Bike facilities,-33.77231686,151.1157649,Located near the MGSM Carpark,,
+BIKE-RACK_24,Bike rack - Culliden Road,Bike facilities,-33.76902772,151.1116207,Located on Culliden Road,,
+BIKE-RACK_25,Bike rack - Metro,Bike facilities,-33.77680857,151.1175848,Located near Macquarie University metro station,,
+BIKE-HUB_01,Central bike hub,Bike facilities,-33.7750461,151.112583,Located near the Library,,
+BIKE-HUB_02,Eastern bike hub,Bike facilities,-33.77384218,151.1154089,Located near Mason Theatre,,
+BIKE-REPAIR_01,Central bike repair,Bike facilities,-33.77486665,151.1126361,Located near the Library,,
+BIKE-REPAIR_02,Eastern bike repair,Bike facilities,-33.77395499,151.1154055,Located near Mason Theatre,,
+STUDY-LIBRARY,Macquarie University Library,Study spaces,-33.775705,151.1130991,Macquarie University Library is located just south of the Central Courtyard,https://web.archive.org/web/20250731020534/https://s3.studentvip.com.au/photos/library-126832-small.jpg,
+STUDY-MUSE,Macquarie University Spatial Experience (MUSE),Study spaces,-33.774174862833156,151.11278841349466,"Located at 18 Wally's Walk, along with Service Connect and Macshop",https://web.archive.org/web/20250731020534/https://jadecross.com.au/wp-content/uploads/2022/11/2225_032_2000x1333.jpg,
+STUDY-INCUBATOR,Incubator,Study spaces,-33.776352,151.109073,"Located beside the Department of Media, Music, Communication and Cultural Studies",https://web.archive.org/web/20250731020534/https://www.mq.edu.au/media/images/gallery/incubator/incubator3.jpg,
+SPORTS-SPORT_AND_AQUATIC_CENTRE,Macquarie University Sport & Aquatic Centre,Sports facilities,-33.772308,151.110904,Located in the north west corner of campus — a short walk from the Central Courtyard,https://web.archive.org/web/20250731020534/https://lh3.googleusercontent.com/p/AF1QipMZQh8J51DzyaTBlUFp9XGI-EKfAOdwWjcZ1PDt=w768-h768-n-o-v1,
+SPORTS-BASKETBALL_COURTS_01,Basketball courts,Sports facilities,-33.77186885,151.1114753,Located near the Sport & Aquatic Centre,,
+SPORTS-BASKETBALL_COURTS_02,Basketball courts,Sports facilities,-33.77311074,151.1114156,Located near the Sport & Aquatic Centre,,
+SEC-CAMPUS_SECURITY,Campus security,Security,-33.7752438,151.1061794,Emergency & First Aid services - please call 9850 9999 or 000 for emergency situations,https://web.archive.org/web/20250731020534/https://s3.studentvip.com.au/photos/y4a-133486-small.jpg,
+SEC-HELP_POINT_01,Help point - Incubator,Security,-33.77636288,151.1087742,Located near Macquarie University Incubator,,
+SEC-HELP_POINT_02,Help point - Banksia Cottage,Security,-33.77524637,151.1089138,Located near Banksia Cottage,,
+SEC-HELP_POINT_03,Help point - P West 5 1,Security,-33.77469041,151.1085235,Located on the south corner of P West 5,,
+SEC-HELP_POINT_04,Help point - P West 5 2,Security,-33.77417282,151.1092779,Located near P West 5,,
+SEC-HELP_POINT_05,Help point - 29 Wally's Walk,Security,-33.77435915,151.1103531,Located at 29 Wally's Walk,,
+SEC-HELP_POINT_06,Help point - Special Education Centre,Security,-33.77507498,151.1101188,Located near the Special Education Centre,,
+SEC-HELP_POINT_07,Help point - Sport & Aquatic Centre,Security,-33.772655,151.1115454,Located near the Sport & Aquatic Centre,,
+SEC-HELP_POINT_08,Help Point - 18 Wally's Walk 1,Security,-33.77368777,151.1119653,Located near 18 Wally's Walk,,
+SEC-HELP_POINT_09,Help point - Department of Mathematics and Statistics,Security,-33.77438078,151.1115204,Located near the Department of Mathematics and Statistics,,
+SEC-HELP_POINT_10,Help point - 23 Wally's Walk,Security,-33.77519775,151.111601,Located near 23 Wally's Walk,,
+SEC-HELP_POINT_11,Help point - Library,Security,-33.77542999,151.1124205,Located behind the Library,,
+SEC-HELP_POINT_12,Help point - 18 Wally's Walk 2,Security,-33.77452952,151.1125991,Located in front of 18 Wally's Walk,,
+SEC-HELP_POINT_13,Help point - Graduation Hall,Security,-33.77322443,151.1131018,Located behind the Graduation Hall,,
+SEC-HELP_POINT_14,Help point - Central Avenue,Security,-33.77517299,151.1135897,Located between the Library and the Central Courtyard,,
+SEC-HELP_POINT_15,Help point - Central Courtyard,Security,-33.77351083,151.1146878,Located near the Central Courtyard,,
+SEC-HELP_POINT_16,Help point - Faculty of Science and Engineering,Security,-33.77350715,151.115437,Located near the Faculty of Science and Engineering,,
+SEC-HELP_POINT_17,Help point - 12 Wally's Walk,Security,-33.77442569,151.1145088,Located near 12 Wally's Walk,,
+SEC-HELP_POINT_18,Help point - 9 Wally's Walk,Security,-33.77434302,151.1155696,Located near 9 Wally's Walk,,
+SEC-HELP_POINT_19,Help point - Macquarie University College,Security,-33.77584059,151.1145618,Located near Macquarie University College,,
+SEC-HELP_POINT_20,Help point - Macquarie Business School,Security,-33.7758608,151.1153906,Located near Macquarie Business School,,
+SEC-HELP_POINT_21,Help point - Macquarie University Hospital,Security,-33.7735085,151.1163829,Located near Macquarie University Hospital,,
+SEC-HELP_POINT_22,Help point - Department of Molecular Sciences,Security,-33.77432657,151.1167344,Located near the Department of Molecular Sciences,,
+SEC-HELP_POINT_23,Help point - South east,Security,-33.77631054,151.1167042,Located near the south east corner of campus,,
+BUS-STOP_01,Shuttle bus stop,Shuttle stops,-33.77692396,151.1177015,Located at Macquarie University Train Station,,
+BUS-STOP_02,Shuttle bus stop,Shuttle stops,-33.77488221,151.118977,Located at 3 Innovation Rd,,
+BUS-STOP_03,Shuttle bus stop,Shuttle stops,-33.77329291,151.1178865,Located at Macquarie University Hospital,,
+BUS-STOP_04,Shuttle bus stop,Shuttle stops,-33.77170511,151.1167632,Located on the corner of Management Drive and Research Park Drive,,
+BUS-STOP_05,Shuttle bus stop,Shuttle stops,-33.76917306,151.1115045,Located at 205a Culloden Rd,,
+BUS-STOP_06,Shuttle bus stop,Shuttle stops,-33.76979082,151.1076022,Located at MQ Village (Waterloo Rd),,
+BUS-STOP_07,Shuttle bus stop,Shuttle stops,-33.77231606,151.101883,Located at Dayman Apartments,,
+BUS-STOP_08,Shuttle bus stop,Shuttle stops,-33.77642842,151.1083383,Located at 10 Hadenfeld Ave,,
+BUS-STOP_09,Shuttle bus stop,Shuttle stops,-33.77366935,151.1122149,Located behind MUSE,,
+BUS-STOP_10,Shuttle bus stop,Shuttle stops,-33.77400493,151.1094553,Located beside Carpark West 5,,
+BUS-STOP_11,Shuttle bus stop,Shuttle stops,-33.77689969,151.1121331,Located at the Australian Hearing Hub,,
