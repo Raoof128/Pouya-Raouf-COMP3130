@@ -1,0 +1,49 @@
+{
+  "//": "Open Day dataset for MQ Navigation. Schema is intentionally simple so that an updated XLSX can be transformed into this JSON without Dart changes. Source: 2026 Open Day FSE Info Session Schedule (re-cycled from `For_my_awesome_students.xlsx` embedded image, originally 2025-08-09). Treated as the release dataset for the 2026 cycle. Replace the file in place to ship updated data — Dart code never needs to change.",
+  "openDayDate": "2026-08-08",
+  "lastUpdated": "2026-04-29",
+  "studyAreas": [
+    { "id": "fse",   "name": "Science & Engineering",  "icon": "science" },
+    { "id": "fmhhs", "name": "Medicine, Health & Human Sciences", "icon": "medical_services" },
+    { "id": "arts",  "name": "Arts",                   "icon": "palette" },
+    { "id": "mbs",   "name": "Macquarie Business School", "icon": "business_center" }
+  ],
+  "bachelors": [
+    { "id": "computing",        "name": "Bachelor of Computing",                              "studyAreaId": "fse" },
+    { "id": "it",               "name": "Bachelor of Information Technology",                 "studyAreaId": "fse" },
+    { "id": "it-cyber",         "name": "Bachelor of Information Technology (Cyber Security)","studyAreaId": "fse" },
+    { "id": "engineering",      "name": "Bachelor of Engineering (Honours)",                  "studyAreaId": "fse" },
+    { "id": "engineering-tech", "name": "Bachelor of Engineering and Technology (Honours)",   "studyAreaId": "fse" },
+    { "id": "mechatronic",      "name": "Bachelor of Mechatronic Engineering (Honours)",      "studyAreaId": "fse" },
+    { "id": "science",          "name": "Bachelor of Science",                                "studyAreaId": "fse" },
+    { "id": "marine-science",   "name": "Bachelor of Marine Science",                         "studyAreaId": "fse" },
+    { "id": "medical-sciences", "name": "Bachelor of Medical Sciences",                       "studyAreaId": "fmhhs" },
+    { "id": "clinical-sciences","name": "Bachelor of Clinical Sciences",                      "studyAreaId": "fmhhs" },
+    { "id": "psychology",       "name": "Bachelor of Psychology (Honours)",                   "studyAreaId": "fmhhs" },
+    { "id": "speech-hearing",   "name": "Bachelor of Speech and Hearing Sciences",            "studyAreaId": "fmhhs" },
+    { "id": "cognitive-brain",  "name": "Bachelor of Cognitive and Brain Sciences",           "studyAreaId": "fmhhs" },
+    { "id": "music",            "name": "Bachelor of Music",                                  "studyAreaId": "arts" },
+    { "id": "business",         "name": "Bachelor of Commerce",                               "studyAreaId": "mbs" }
+  ],
+  "events": [
+    { "id": "evt-eng-1000",   "title": "Engineering & Technology Info Session",       "startTime": "2026-08-08T10:00:00+10:00", "endTime": "2026-08-08T10:30:00+10:00", "venueName": "Macquarie Theatre",     "buildingCode": "MQTH",  "bachelorIds": ["engineering","engineering-tech","mechatronic"] },
+    { "id": "evt-it-1000",    "title": "Information Technology Info Session",         "startTime": "2026-08-08T10:00:00+10:00", "endTime": "2026-08-08T10:30:00+10:00", "venueName": "Lotus Theatre",         "buildingCode": "LOTUS", "bachelorIds": ["it","it-cyber"] },
+    { "id": "evt-comp-1030",  "title": "Computing Info Session",                      "startTime": "2026-08-08T10:30:00+10:00", "endTime": "2026-08-08T11:00:00+10:00", "venueName": "Price Theatre",         "buildingCode": "PRICE", "bachelorIds": ["computing"] },
+    { "id": "evt-sci-1100",   "title": "Bachelor of Science Info Session",            "startTime": "2026-08-08T11:00:00+10:00", "endTime": "2026-08-08T11:30:00+10:00", "venueName": "Macquarie Theatre",     "buildingCode": "MQTH",  "bachelorIds": ["science"] },
+    { "id": "evt-marine-1100","title": "Marine Science Info Session",                 "startTime": "2026-08-08T11:00:00+10:00", "endTime": "2026-08-08T11:30:00+10:00", "venueName": "Lotus Theatre",         "buildingCode": "LOTUS", "bachelorIds": ["marine-science","science"] },
+    { "id": "evt-psych-1130", "title": "Psychology & Cognitive Sciences Info Session","startTime": "2026-08-08T11:30:00+10:00", "endTime": "2026-08-08T12:00:00+10:00", "venueName": "Price Theatre",         "buildingCode": "PRICE", "bachelorIds": ["psychology","cognitive-brain"] },
+    { "id": "evt-speech-1130","title": "Speech & Hearing Sciences Info Session",      "startTime": "2026-08-08T11:30:00+10:00", "endTime": "2026-08-08T12:00:00+10:00", "venueName": "16 University Ave Theatre","buildingCode": "16UA",  "bachelorIds": ["speech-hearing"] },
+    { "id": "evt-eng-1200",   "title": "Engineering & Technology Info Session",       "startTime": "2026-08-08T12:00:00+10:00", "endTime": "2026-08-08T12:30:00+10:00", "venueName": "Macquarie Theatre",     "buildingCode": "MQTH",  "bachelorIds": ["engineering","engineering-tech","mechatronic"] },
+    { "id": "evt-med-1200",   "title": "Medical & Clinical Sciences Info Session",    "startTime": "2026-08-08T12:00:00+10:00", "endTime": "2026-08-08T12:30:00+10:00", "venueName": "Lotus Theatre",         "buildingCode": "LOTUS", "bachelorIds": ["medical-sciences","clinical-sciences"] },
+    { "id": "evt-comp-1230",  "title": "Computing Info Session",                      "startTime": "2026-08-08T12:30:00+10:00", "endTime": "2026-08-08T13:00:00+10:00", "venueName": "Price Theatre",         "buildingCode": "PRICE", "bachelorIds": ["computing","it","it-cyber"] },
+    { "id": "evt-sci-1300",   "title": "Bachelor of Science Info Session",            "startTime": "2026-08-08T13:00:00+10:00", "endTime": "2026-08-08T13:30:00+10:00", "venueName": "Macquarie Theatre",     "buildingCode": "MQTH",  "bachelorIds": ["science","marine-science"] },
+    { "id": "evt-music-1300", "title": "Bachelor of Music Info Session",              "startTime": "2026-08-08T13:00:00+10:00", "endTime": "2026-08-08T13:30:00+10:00", "venueName": "Lotus Theatre",         "buildingCode": "LOTUS", "bachelorIds": ["music"] },
+    { "id": "evt-cyber-1330", "title": "IT (Cyber Security) Info Session",            "startTime": "2026-08-08T13:30:00+10:00", "endTime": "2026-08-08T14:00:00+10:00", "venueName": "Price Theatre",         "buildingCode": "PRICE", "bachelorIds": ["it-cyber"] },
+    { "id": "evt-psych-1400", "title": "Psychology Info Session",                     "startTime": "2026-08-08T14:00:00+10:00", "endTime": "2026-08-08T14:30:00+10:00", "venueName": "16 University Ave Theatre","buildingCode": "16UA",  "bachelorIds": ["psychology"] },
+    { "id": "evt-eng-1400",   "title": "Engineering & Technology Info Session",       "startTime": "2026-08-08T14:00:00+10:00", "endTime": "2026-08-08T14:30:00+10:00", "venueName": "Macquarie Theatre",     "buildingCode": "MQTH",  "bachelorIds": ["engineering","engineering-tech","mechatronic"] },
+    { "id": "evt-business-1430","title": "Bachelor of Commerce Info Session",         "startTime": "2026-08-08T14:30:00+10:00", "endTime": "2026-08-08T15:00:00+10:00", "venueName": "4 Eastern Road Theatre","buildingCode": "4ER",   "bachelorIds": ["business"] },
+    { "id": "evt-it-1430",    "title": "Information Technology Info Session",         "startTime": "2026-08-08T14:30:00+10:00", "endTime": "2026-08-08T15:00:00+10:00", "venueName": "Lotus Theatre",         "buildingCode": "LOTUS", "bachelorIds": ["it","it-cyber"] },
+    { "id": "evt-cog-1500",   "title": "Cognitive & Brain Sciences Info Session",     "startTime": "2026-08-08T15:00:00+10:00", "endTime": "2026-08-08T15:30:00+10:00", "venueName": "Price Theatre",         "buildingCode": "PRICE", "bachelorIds": ["cognitive-brain","psychology"] },
+    { "id": "evt-sci-1500",   "title": "Bachelor of Science Info Session",            "startTime": "2026-08-08T15:00:00+10:00", "endTime": "2026-08-08T15:30:00+10:00", "venueName": "Macquarie Theatre",     "buildingCode": "MQTH",  "bachelorIds": ["science","marine-science","medical-sciences"] }
+  ]
+}

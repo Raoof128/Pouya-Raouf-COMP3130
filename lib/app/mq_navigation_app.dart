@@ -8,6 +8,7 @@ import 'package:mq_navigation/app/router/app_router.dart';
 import 'package:mq_navigation/app/theme/mq_theme.dart';
 import 'package:mq_navigation/core/error/error_boundary.dart';
 import 'package:mq_navigation/features/notifications/presentation/controllers/notifications_controller.dart';
+import 'package:mq_navigation/features/open_day/data/open_day_reminder_scheduler.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 
 /// The root Flutter application widget.
@@ -74,6 +75,12 @@ class _MqNavigationAppState extends ConsumerState<MqNavigationApp> {
     // This triggers FCM permission requests and token sync side effects
     // independently of whether the user is on the notifications page.
     ref.watch(notificationsControllerProvider);
+
+    // Keep the Open Day reminder scheduler alive for the app lifetime.
+    // The scheduler installs Riverpod listeners on bachelor selection,
+    // notification toggles, and lead time — so reminders rebuild
+    // automatically whenever the user changes any of those.
+    ref.watch(openDayReminderSchedulerProvider);
 
     return MaterialApp.router(
       // The builder is used to wrap the entire app with a custom error widget.

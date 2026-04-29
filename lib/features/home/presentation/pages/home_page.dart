@@ -6,6 +6,7 @@ import 'package:mq_navigation/app/router/route_names.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/map/presentation/controllers/map_controller.dart';
+import 'package:mq_navigation/features/open_day/presentation/widgets/open_day_home_card.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:mq_navigation/features/transit/domain/entities/metro_departure.dart';
 import 'package:mq_navigation/features/transit/presentation/providers/tfnsw_provider.dart';
@@ -89,6 +90,11 @@ class HomePage extends ConsumerWidget {
                           onRefreshTap: () =>
                               ref.invalidate(tfnswMetroProvider),
                         ),
+                        const SizedBox(height: MqSpacing.space4),
+                        // Open Day enhancement — hides itself when the
+                        // dataset isn't loaded, morphs between onboarding
+                        // and preview based on whether a bachelor is set.
+                        const OpenDayHomeCard(),
                         const SizedBox(height: MqSpacing.space8),
                         _QuickAccessSection(
                           hapticsEnabled: hapticsEnabled,

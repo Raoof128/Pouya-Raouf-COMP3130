@@ -24,6 +24,9 @@ const _favoriteDirectionKey = 'settings.favorite_direction';
 const _favoriteRouteKey = 'settings.favorite_route';
 const _favoriteStopIdKey = 'settings.favorite_stop_id';
 const _favoriteStopNameKey = 'settings.favorite_stop_name';
+const _selectedBachelorIdKey = 'settings.open_day.bachelor_id';
+const _openDayRemindersEnabledKey = 'settings.open_day.reminders_enabled';
+const _openDayReminderMinutesKey = 'settings.open_day.reminder_minutes';
 
 /// Data source for persisting and retrieving user settings.
 ///
@@ -81,6 +84,13 @@ class LocalSettingsRepository implements SettingsRepository {
       final favoriteRoute = await _storage.read(_favoriteRouteKey);
       final favoriteStopId = await _storage.read(_favoriteStopIdKey);
       final favoriteStopName = await _storage.read(_favoriteStopNameKey);
+      final selectedBachelorId = await _storage.read(_selectedBachelorIdKey);
+      final openDayRemindersEnabled = await _storage.read(
+        _openDayRemindersEnabledKey,
+      );
+      final openDayReminderMinutes = await _storage.read(
+        _openDayReminderMinutesKey,
+      );
 
       final localThemeMode = ThemeMode.values.firstWhere(
         (mode) => mode.name == themeModeString,
@@ -116,6 +126,12 @@ class LocalSettingsRepository implements SettingsRepository {
         favoriteRoute: favoriteRoute ?? '',
         favoriteStopId: favoriteStopId ?? '',
         favoriteStopName: favoriteStopName ?? '',
+        selectedBachelorId:
+            (selectedBachelorId != null && selectedBachelorId.trim().isNotEmpty)
+            ? selectedBachelorId
+            : null,
+        openDayRemindersEnabled: openDayRemindersEnabled != 'false',
+        openDayReminderMinutesBefore: _parseMinutes(openDayReminderMinutes),
       );
     } catch (error, stackTrace) {
       AppLogger.error('Failed to load user preferences', error, stackTrace);
@@ -175,6 +191,24 @@ class LocalSettingsRepository implements SettingsRepository {
       await _storage.write(_favoriteRouteKey, preferences.favoriteRoute);
       await _storage.write(_favoriteStopIdKey, preferences.favoriteStopId);
       await _storage.write(_favoriteStopNameKey, preferences.favoriteStopName);
+      // Open Day study-interest preference. Treated as nullable: a missing
+      // entry signals "not chosen" so the Home onboarding card surfaces.
+      if (preferences.selectedBachelorId != null) {
+        await _storage.write(
+          _selectedBachelorIdKey,
+          preferences.selectedBachelorId!,
+        );
+      } else {
+        await _storage.delete(_selectedBachelorIdKey);
+      }
+      await _storage.write(
+        _openDayRemindersEnabledKey,
+        preferences.openDayRemindersEnabled.toString(),
+      );
+      await _storage.write(
+        _openDayReminderMinutesKey,
+        preferences.openDayReminderMinutesBefore.toString(),
+      );
       return preferences;
     } catch (error, stackTrace) {
       AppLogger.error('Failed to save user preferences', error, stackTrace);
@@ -192,6 +226,14 @@ class LocalSettingsRepository implements SettingsRepository {
       rethrow;
     }
   }
+}
+
+/// Clamps the persisted reminder lead time into the allowed range.
+/// Defaults to 15 minutes when the stored value is missing or malformed.
+int _parseMinutes(String? raw) {
+  final parsed = int.tryParse(raw ?? '');
+  if (parsed == null) return 15;
+  return parsed.clamp(5, 60);
 }
 
 String _normalizeCommuteMode(String? mode) {

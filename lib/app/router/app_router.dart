@@ -8,6 +8,7 @@ import 'package:mq_navigation/features/deep_link/deep_link_contract.dart';
 import 'package:mq_navigation/features/home/presentation/pages/home_page.dart';
 import 'package:mq_navigation/features/map/presentation/pages/map_page.dart';
 import 'package:mq_navigation/features/notifications/presentation/pages/notifications_page.dart';
+import 'package:mq_navigation/features/open_day/presentation/pages/open_day_page.dart';
 import 'package:mq_navigation/features/settings/presentation/pages/settings_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -55,6 +56,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/notifications',
         name: RouteNames.notifications,
         builder: (context, state) => const NotificationsPage(),
+      ),
+      // Open Day — dedicated screen, deliberately *outside* the bottom-nav
+      // shell so it doesn't permanently consume one of the three tabs.
+      // Open Day is a temporal feature; pushing it here keeps the nav
+      // surface stable post-Open-Day.
+      GoRoute(
+        path: '/open-day',
+        name: RouteNames.openDay,
+        builder: (context, state) => const OpenDayPage(),
       ),
       // The shell route handles the bottom navigation bar and nested routing.
       StatefulShellRoute.indexedStack(

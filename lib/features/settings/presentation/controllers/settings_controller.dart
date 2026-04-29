@@ -136,6 +136,40 @@ class SettingsController extends AsyncNotifier<UserPreferences> {
     );
   }
 
+  /// Toggle local Open Day reminders on or off. When disabled, any
+  /// previously scheduled Open Day reminders are cleared by the listener
+  /// in `OpenDayReminderScheduler` — this method itself only persists.
+  Future<String?> updateOpenDayRemindersEnabled(bool enabled) async {
+    final currentPreferences = state.value ?? const UserPreferences();
+    return _save(
+      currentPreferences.copyWith(openDayRemindersEnabled: enabled),
+    );
+  }
+
+  /// Update reminder lead time (minutes before each event). Clamped to
+  /// the same 5–60 minute window used at the persistence layer.
+  Future<String?> updateOpenDayReminderMinutesBefore(int minutes) async {
+    final clamped = minutes.clamp(5, 60);
+    final currentPreferences = state.value ?? const UserPreferences();
+    return _save(
+      currentPreferences.copyWith(openDayReminderMinutesBefore: clamped),
+    );
+  }
+
+  /// Updates the user's Open Day study-interest preference.
+  ///
+  /// Pass `null` to clear the selection (re-triggers the Home onboarding
+  /// card). The selection is per-device and never leaves secure storage.
+  Future<String?> updateSelectedBachelorId(String? bachelorId) async {
+    final currentPreferences = state.value ?? const UserPreferences();
+    return _save(
+      currentPreferences.copyWith(
+        selectedBachelorId: bachelorId,
+        clearSelectedBachelor: bachelorId == null,
+      ),
+    );
+  }
+
   /// Wipes all local data and resets the controller to its initial state.
   ///
   /// This will reset theme, locale, and all other preferences to defaults.

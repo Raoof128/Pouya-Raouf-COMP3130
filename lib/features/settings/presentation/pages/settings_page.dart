@@ -7,6 +7,8 @@ import 'package:mq_navigation/core/utils/haptics.dart';
 import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/features/map/data/services/offline_maps_service.dart';
+import 'package:mq_navigation/features/open_day/data/open_day_providers.dart';
+import 'package:mq_navigation/features/open_day/presentation/widgets/bachelor_picker_sheet.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:mq_navigation/features/transit/domain/entities/transit_stop.dart';
 import 'package:mq_navigation/features/transit/presentation/providers/tfnsw_provider.dart';
@@ -374,6 +376,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           ),
                       ],
                     ),
+                    const SizedBox(height: MqSpacing.space6),
+
+                    // ── Open Day section ──────────────────────────
+                    //
+                    // Three minimal rows: change study interest, toggle
+                    // local event reminders, and choose the reminder
+                    // lead time. The bachelor selection itself drives
+                    // both the Home preview card and the local
+                    // notification schedule (see OpenDayReminderScheduler).
+                    const _SectionHeader(title: 'Open Day'),
+                    _OpenDaySection(preferences: preferences),
                     const SizedBox(height: MqSpacing.space6),
 
                     // ── Accessibility & Data section ────────────
@@ -1278,6 +1291,107 @@ class _DangerZoneCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Open Day settings cluster. Kept as a single private widget so the
+/// main page build method stays scannable. Reads bachelor/area joins
+/// from the Open Day data provider so the displayed value reflects the
+/// canonical bachelor name, not the raw stored ID.
+class _OpenDaySection extends ConsumerWidget {
+  const _OpenDaySection({required this.preferences});
+
+  final UserPreferences preferences;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected = ref.watch(selectedBachelorProvider);
+    final remindersEnabled = preferences.openDayRemindersEnabled;
+    return _SettingsCard(
+      children: [
+        _TapRow(
+          icon: Icons.school_outlined,
+          label: 'Study interest',
+          value: selected?.name ?? 'Not set',
+          semanticLabel: 'Open Day study interest',
+          hapticsEnabled: preferences.hapticsEnabled,
+          onTap: () => BachelorPickerSheet.show(context),
+        ),
+        _ToggleRow(
+          icon: Icons.notifications_active_outlined,
+          label: 'Event reminders',
+          value: remindersEnabled,
+          semanticLabel: 'Open Day event reminders',
+          hapticsEnabled: preferences.hapticsEnabled,
+          onChanged: (v) => ref
+              .read(settingsControllerProvider.notifier)
+              .updateOpenDayRemindersEnabled(v),
+        ),
+        if (remindersEnabled)
+          _TapRow(
+            icon: Icons.timer_outlined,
+            label: 'Remind me before',
+            value: '${preferences.openDayReminderMinutesBefore} min',
+            semanticLabel: 'Open Day reminder lead time',
+            hapticsEnabled: preferences.hapticsEnabled,
+            onTap: () => _showLeadTimePicker(context, ref),
+          ),
+      ],
+    );
+  }
+
+  Future<void> _showLeadTimePicker(BuildContext context, WidgetRef ref) async {
+    final dark = context.isDarkMode;
+    const options = <int>[5, 10, 15, 30, 60];
+    final current = preferences.openDayReminderMinutesBefore;
+
+    final picked = await showModalBottomSheet<int>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => MqBottomSheet(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(
+                MqSpacing.space2,
+                0,
+                MqSpacing.space2,
+                MqSpacing.space2,
+              ),
+              child: Text(
+                'Remind me before',
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: dark
+                      ? MqColors.contentPrimaryDark
+                      : MqColors.contentPrimary,
+                ),
+              ),
+            ),
+            for (final m in options)
+              ListTile(
+                title: Text('$m minutes'),
+                trailing: m == current
+                    ? const Icon(
+                        Icons.check_rounded,
+                        color: MqColors.vividRed,
+                        size: 20,
+                      )
+                    : null,
+                onTap: () => Navigator.pop(context, m),
+              ),
+          ],
+        ),
+      ),
+    );
+
+    if (picked != null) {
+      await ref
+          .read(settingsControllerProvider.notifier)
+          .updateOpenDayReminderMinutesBefore(picked);
+    }
   }
 }
 
