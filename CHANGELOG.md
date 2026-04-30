@@ -1,3 +1,24 @@
+### Raouf: 2026-04-30 (AEST) — Locate-me accuracy fix (raw GPS + last-known fallback + honest error banner)
+**Scope:** `LocationSource.getCurrentLocation`, `LocationSource.watch`, and `MapController.centerOnCurrentLocation`.
+**Summary:** User reported the locate-me dot showing a wrong location. Root cause: `getCurrentLocation` used base `LocationSettings(accuracy: high, distanceFilter: 5)` which on Android dispatches through Google Play Services' Fused Location Provider — that provider blends Wi-Fi triangulation, cell-tower estimates, and stale cached fixes, and frequently returns a position hundreds of metres off the true device location (especially indoors or on emulators). On top of that, when the fresh fix timed out the controller silently snapped to the hardcoded `_campusFallback` (`-33.77388, 151.11275`), so the user was effectively shown a synthetic campus-centre dot dressed up as their real location. Fixed by:
+1. Switching to `AndroidSettings(accuracy: bestForNavigation, forceLocationManager: true, timeLimit: 15s, distanceFilter: 0)` on Android — `forceLocationManager: true` bypasses Play-Services and uses the raw OS LocationManager + GPS provider directly. iOS uses `AppleSettings(bestForNavigation, fitness, pauseUpdatesAutomatically: false)`.
+2. Adding `Geolocator.getLastKnownPosition()` as the second-line fallback so a real but cached fix is still returned instead of teleporting to campus.
+3. Removing the `_campusFallback` snap from `MapController.centerOnCurrentLocation` — when GPS legitimately fails, the controller now surfaces the existing permission/unavailable banner (using `_errorForPermission`) so the user can re-grant permission or open OS settings instead of being shown a silently-faked dot.
+4. Mirroring the same platform-specific settings on the streaming `watch()` so live navigation tracks the user with raw GPS too (no Wi-Fi-triangulation jitter pulling the dot off the polyline).
+**Files Changed:**
+- `lib/features/map/data/datasources/location_source.dart`
+- `lib/features/map/presentation/controllers/map_controller.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format` → no diff after run.
+- `flutter analyze lib/features/map test/features/map` → no issues.
+- `flutter test test/features/map` → 70/70 passed (including all `MapController` permission/error and navigation tests).
+- `./scripts/check.sh --quick` → 5/5 passed.
+**Follow-ups:**
+- On real devices, validate that pressing locate-me with location services off / permission denied now shows the banner and the dot stays put, instead of jumping to 18 Wally's Walk.
+- Consider exposing a small "Improve accuracy" tip in the banner the first time `getCurrentLocation` falls back to last-known so users on Wi-Fi-only emulators understand why the fix is slightly stale.
+
 ### Raouf: 2026-04-30 (AEST) — maps-routes 500 fix + L10n parity for two stale map keys
 **Scope:** Production resilience for Google Routes empty responses, plus a real l10n parity gap detected at `flutter run` startup.
 **Summary:**

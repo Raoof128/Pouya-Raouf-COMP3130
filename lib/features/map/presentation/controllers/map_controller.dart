@@ -454,17 +454,13 @@ class MapController extends AsyncNotifier<MapState> {
     }
   }
 
-  /// 18 Wally's Walk entrance — used when real GPS is unavailable.
-  static const _campusFallback = LocationSample(
-    latitude: -33.77388,
-    longitude: 151.11275,
-    accuracy: 100,
-  );
-
   /// Centers the map on the user's current GPS location.
   ///
-  /// Requests location permissions if needed. Falls back to a default campus
-  /// coordinate if GPS is unavailable so the map always has a valid center.
+  /// Requests location permissions if needed. If GPS legitimately fails
+  /// (no permission, no fix, no last-known), surfaces the appropriate
+  /// permission/unavailable banner instead of silently snapping to a
+  /// campus-centre fallback that would look like a wrong real location
+  /// to the user.
   Future<void> centerOnCurrentLocation() async {
     final current = state.value;
     if (current == null) {
@@ -474,12 +470,21 @@ class MapController extends AsyncNotifier<MapState> {
         .read(mapRepositoryProvider)
         .ensureLocationPermission();
     final location = await ref.read(mapRepositoryProvider).getCurrentLocation();
-    // Always provide a location — fall back to campus center on emulators /
-    // when permissions are denied so the button never feels broken.
-    final effectiveLocation = location ?? _campusFallback;
+    if (location == null) {
+      // No real fix available — show a banner so the user understands why
+      // the dot didn't move, and offer the existing settings/permission
+      // recovery actions.
+      state = AsyncData(
+        current.copyWith(
+          permissionState: permissionState,
+          error: _errorForPermission(permissionState),
+        ),
+      );
+      return;
+    }
     state = AsyncData(
       current.copyWith(
-        currentLocation: effectiveLocation,
+        currentLocation: location,
         locationCenterRequestToken: current.locationCenterRequestToken + 1,
         permissionState: permissionState,
         clearError: true,

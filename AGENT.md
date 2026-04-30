@@ -55,6 +55,13 @@ lib/
 **Files Changed:** `.env` (new, gitignored)
 **Verification:** File exists and matches `.env.example` structure.
 
+### Raouf: 2026-04-30 (AEST) — Locate-me accuracy fix (raw GPS + last-known fallback + honest error banner)
+**Scope:** `LocationSource.getCurrentLocation` / `watch`, and `MapController.centerOnCurrentLocation`.
+**Summary:** Locate-me was showing a wrong location because `getCurrentLocation` used base `LocationSettings` which on Android dispatches via Play-Services' Fused Location Provider (Wi-Fi triangulation + cached fixes, often hundreds of metres off), and when that timed out the controller silently snapped to the hardcoded campus-centre fallback. Switched to `AndroidSettings(bestForNavigation, forceLocationManager: true, timeLimit: 15s)` to use raw GPS, added `getLastKnownPosition` as a real cached-fix fallback before giving up, and removed the synthetic campus-centre snap so when GPS truly fails the controller now surfaces the proper permission/unavailable banner instead of a fake dot. Same platform-tuned settings applied to the streaming `watch()` so live navigation no longer jitters off the route polyline.
+**Files Changed:** `lib/features/map/data/datasources/location_source.dart`, `lib/features/map/presentation/controllers/map_controller.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `dart format` → no diff; `flutter analyze lib/features/map test/features/map` → no issues; `flutter test test/features/map` → 70/70 passed; `./scripts/check.sh --quick` → 5/5 passed.
+**Follow-ups:** Real-device validation of the new banner path when location services are off / permission denied. Consider an inline "improve accuracy" hint when the last-known fallback is used.
+
 ### Raouf: 2026-04-30 (AEST) — maps-routes 500 fix + L10n parity for two stale map keys
 **Scope:** Edge Function resilience for Google Routes empty responses + l10n parity restored.
 **Summary:** Fixed `maps-routes error 500: "No Google routes were returned"` by retrying Google Routes with WALK when a non-WALK mode returns zero results (handles campus buildings with no drivable snap point), and emitting a structured 404 with `code: 'NO_ROUTE'` when even WALK fails — instead of the previous opaque 500 that crashed `loadRoute`. Added `untranslated-messages-file: /tmp/untranslated.json` to `l10n.yaml`, identified that `mapCategoryLibrary` and `mapOsmFallbackBadge` had been added to `app_en.arb` in earlier sessions but never propagated, and added both keys (English fallback) to all 34 non-English ARB files so `flutter run` no longer warns about untranslated messages.

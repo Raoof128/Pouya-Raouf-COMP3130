@@ -75,13 +75,31 @@ class LocationSource {
       return null;
     }
 
+    // Platform-specific settings give a substantially more accurate fix on
+    // Android: `forceLocationManager: true` bypasses the Play-Services Fused
+    // Location Provider (which often returns Wi-Fi-triangulated estimates
+    // that can be hundreds of metres off the true position) and uses the raw
+    // OS LocationManager + GPS provider directly.
+    final LocationSettings locationSettings =
+        defaultTargetPlatform == TargetPlatform.android
+        ? AndroidSettings(
+            accuracy: LocationAccuracy.bestForNavigation,
+            distanceFilter: 0,
+            forceLocationManager: true,
+            timeLimit: const Duration(seconds: 15),
+          )
+        : AppleSettings(
+            accuracy: LocationAccuracy.bestForNavigation,
+            distanceFilter: 0,
+            activityType: ActivityType.fitness,
+            pauseLocationUpdatesAutomatically: false,
+            showBackgroundLocationIndicator: false,
+          );
+
     try {
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 5,
-        ),
-      ).timeout(const Duration(seconds: 10));
+        locationSettings: locationSettings,
+      ).timeout(const Duration(seconds: 15));
       return LocationSample(
         latitude: position.latitude,
         longitude: position.longitude,
@@ -89,9 +107,27 @@ class LocationSource {
         timestamp: position.timestamp,
       );
     } catch (e) {
-      // GPS failed (common on emulators) — fall back to campus center.
-      debugPrint('LocationSource: GPS failed ($e), using campus fallback');
-      return _campusFallback;
+      // Fresh fix failed (slow GPS lock, emulator without mock provider,
+      // indoors with weak signal). Try the OS's last-known fix — for a
+      // real device this is the user's actual most-recent location, not
+      // a synthetic campus fallback. Only as a last resort do we return
+      // null so the controller can show the "location unavailable" banner
+      // instead of silently teleporting the user to the campus centre.
+      debugPrint('LocationSource: fresh fix failed ($e), trying last known');
+      try {
+        final lastKnown = await Geolocator.getLastKnownPosition();
+        if (lastKnown != null) {
+          return LocationSample(
+            latitude: lastKnown.latitude,
+            longitude: lastKnown.longitude,
+            accuracy: lastKnown.accuracy,
+            timestamp: lastKnown.timestamp,
+          );
+        }
+      } catch (e2) {
+        debugPrint('LocationSource: last-known lookup failed ($e2)');
+      }
+      return null;
     }
   }
 
@@ -106,12 +142,26 @@ class LocationSource {
       return;
     }
 
-    yield* Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 5,
-      ),
-    ).map(
+    // Same platform-specific tuning as `getCurrentLocation` — raw GPS on
+    // Android avoids Wi-Fi-triangulation jitter that can pull the
+    // navigation dot tens of metres off the route polyline.
+    final LocationSettings locationSettings =
+        defaultTargetPlatform == TargetPlatform.android
+        ? AndroidSettings(
+            accuracy: LocationAccuracy.bestForNavigation,
+            distanceFilter: 5,
+            forceLocationManager: true,
+            intervalDuration: const Duration(seconds: 2),
+          )
+        : AppleSettings(
+            accuracy: LocationAccuracy.bestForNavigation,
+            distanceFilter: 5,
+            activityType: ActivityType.fitness,
+            pauseLocationUpdatesAutomatically: false,
+            showBackgroundLocationIndicator: false,
+          );
+
+    yield* Geolocator.getPositionStream(locationSettings: locationSettings).map(
       (position) => LocationSample(
         latitude: position.latitude,
         longitude: position.longitude,
