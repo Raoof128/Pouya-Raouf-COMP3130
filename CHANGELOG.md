@@ -1,3 +1,27 @@
+### Raouf: 2026-04-30 (AEST) — maps-routes 500 fix + L10n parity for two stale map keys
+**Scope:** Production resilience for Google Routes empty responses, plus a real l10n parity gap detected at `flutter run` startup.
+**Summary:**
+- **Symptom A (`maps-routes error 500: {"error":"No Google routes were returned"}`)** — when the Google Routes API returned zero results for non-WALK travel modes, the Edge Function threw a generic `Error` that surfaced as HTTP 500 to the Flutter client, which then crashed `loadRoute` with `Bad state: No Google routes were returned`. Updated `fetchGoogleRoute` so it now (a) automatically retries with `WALK` when the original mode returned zero routes (Google often has no driving snap-point for buildings without road access — a walkable route is almost always available between any two campus points), and (b) when the WALK fallback also fails, throws a structured error with `status: 404` and `code: 'NO_ROUTE'` instead of an opaque 500. The top-level handler now propagates the `code` field on the JSON response so future client logic can branch on it.
+- **Symptom B (`"ar": 2 untranslated message(s).` … repeated for all 34 locales)** — `flutter gen-l10n` warned that two map keys (`mapCategoryLibrary`, `mapOsmFallbackBadge`) had been added to `app_en.arb` but were never propagated to the 34 non-English ARB files. Identified the exact missing keys via the new `untranslated-messages-file` directive in `l10n.yaml`, then propagated both keys with English fallback to all 34 locales.
+**Files Changed:**
+- `supabase/functions/maps-routes/index.ts`
+- `l10n.yaml`
+- `lib/app/l10n/app_*.arb` (34 non-English locales — added `mapCategoryLibrary`, `mapOsmFallbackBadge`)
+- `lib/app/l10n/generated/*` (regenerated)
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `deno fmt supabase/functions/maps-routes/index.ts` → pass.
+- `deno check supabase/functions/maps-routes/index.ts` → pass.
+- `supabase functions deploy maps-routes --no-verify-jwt` → success.
+- `flutter gen-l10n` → 0 untranslated.
+- `flutter analyze lib/features/map test/features/map` → no issues.
+- `flutter test test/features/map` → 70/70 passed.
+- `./scripts/check.sh --quick` → 5/5 passed.
+**Follow-ups:**
+- Wire the `NO_ROUTE` code into Flutter so `MapsRoutesRemoteSource` distinguishes "no route exists" from other server errors and `MapPage` can show a tailored message ("No route between these points") instead of the generic `routeUnavailable` banner.
+- Backfill native translations for `mapCategoryLibrary` / `mapOsmFallbackBadge` in priority locales (zh, ar, fa, hi, ko, ja, vi) instead of leaving them as English fallback strings.
+
 ### Raouf: 2026-04-30 (AEST) — Map UX fixes: locate-me, campus zoom restriction, Google live navigation
 **Scope:** Bug fixes for three user-reported map regressions across both renderers + the desktop OSM fallback.
 **Summary:** (1) **Google Maps locate-me appeared dead** because `_focusLocation` called `animateCamera(newLatLng(...))` with no zoom — when the locate-me fallback coordinate matched the map's initial camera position the call was a silent no-op. Replaced with `newLatLngZoom(point, 17)` so a press always produces a visible animation, even on repeat presses. Same fix applied to the desktop OSM fallback for parity. (2) **Campus map allowed zooming past raster clarity** — the previous bounds (`minZoom: -5`, `maxZoom: meta.maxZoom = 1.5`) let users pinch out into empty space and pinch in past the raster's pixel-density. Tightened to `minZoom: -4` and a hard `mapMaxZoom = min(meta.maxZoom, 1.0)` so future metadata updates cannot accidentally relax the cap. Documented the policy inline. (3) **Google Maps live navigation looked frozen** because the navigation tick used `animateCamera(newLatLng(...))` and inherited whatever zoom the route-bounds-fit produced (~14), so the camera followed the user but never read as "navigating". Now snaps to a navigation-grade `_navigationFollowZoom = 18` on the first navigation tick (`justStartedNavigating`) and on every subsequent location update, mirrored across the desktop fallback view.

@@ -583,7 +583,30 @@ async function fetchGoogleRoute(
 
   const routes = (upstreamJson?.routes as Array<Record<string, unknown>>) ?? [];
   if (routes.length === 0) {
-    throw new Error("No Google routes were returned");
+    // Google legitimately returns zero routes when the destination snap-point
+    // is unreachable by the requested mode (e.g. a campus building with no
+    // drivable road access). Try WALK once as a graceful fallback before
+    // giving up — a walkable route from anywhere on campus to a building
+    // entrance almost always exists.
+    if (travelMode !== "WALK") {
+      try {
+        return await fetchGoogleRoute(
+          renderer,
+          origin,
+          destination,
+          "WALK",
+          languageCode,
+        );
+      } catch (_) {
+        // fall through to the structured NO_ROUTE error below
+      }
+    }
+    const noRouteErr = new Error(
+      "No route exists between origin and destination",
+    ) as Error & { status?: number; code?: string };
+    noRouteErr.status = 404;
+    noRouteErr.code = "NO_ROUTE";
+    throw noRouteErr;
   }
 
   return normaliseGoogleRoute(renderer, travelMode, routes[0]);
@@ -704,8 +727,10 @@ Deno.serve(async (req) => {
       },
     });
   } catch (err) {
-    const error = err as Error & { status?: number };
-    return new Response(JSON.stringify({ error: error.message }), {
+    const error = err as Error & { status?: number; code?: string };
+    const payload: Record<string, unknown> = { error: error.message };
+    if (error.code) payload.code = error.code;
+    return new Response(JSON.stringify(payload), {
       status: error.status ?? 500,
       headers: {
         ...jsonCorsHeaders(req, { allowedOrigins }),

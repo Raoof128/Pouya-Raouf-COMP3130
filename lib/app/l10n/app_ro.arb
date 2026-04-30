@@ -2168,5 +2168,7 @@
     }
   },
   "diagnosticsRendererCampus": "Campus (illustrated)",
-  "diagnosticsRendererGoogle": "Google Maps"
+  "diagnosticsRendererGoogle": "Google Maps",
+  "mapCategoryLibrary": "Library",
+  "mapOsmFallbackBadge": "OpenStreetMap fallback · add a Maps API key to use Google"
 }
