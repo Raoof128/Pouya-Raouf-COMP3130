@@ -366,6 +366,11 @@ class _CategoryBuildingList extends StatelessWidget {
   final ValueChanged<Building> onSelectBuilding;
   final VoidCallback onClear;
 
+  static String _capitalize(String value) {
+    if (value.isEmpty) return value;
+    return '${value[0].toUpperCase()}${value.substring(1)}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDarkMode;
@@ -442,7 +447,7 @@ class _CategoryBuildingList extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        '${searchQuery[0].toUpperCase()}${searchQuery.substring(1)} (${validBuildings.length})',
+                        '${_capitalize(searchQuery.trim())} (${validBuildings.length})',
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(
                               fontWeight: FontWeight.w600,

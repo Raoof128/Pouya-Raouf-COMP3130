@@ -1,3 +1,41 @@
+### Raouf: 2026-04-30 (AEST) — Settings menu file-by-file audit + decorative wiring fixes
+**Scope:** End-to-end audit of `lib/features/settings` plus consumers of every persisted preference, with i18n hardening.
+**Summary:** Traced every public method on `SettingsController` and every preference on `UserPreferences` to a real consumer (mq_animations, notification scheduler, tfnsw_provider, campus_map_route_layer, building_search_sheet, open_day_reminder_scheduler, mq_tactile_button) — confirmed no dead preferences. Fixed four real issues: (1) the dev-diagnostics easter-egg panel showed only static labels, now shows the actual app version, active default-renderer label, and Supabase edge proxy host; (2) the entire Open Day section had hardcoded English strings (section header, study-interest row, event-reminders toggle, lead-time picker), now driven by new `openDay_*` ARB keys propagated to all 35 locales; (3) `_selectTime` parsed persisted `HH:mm` strings with `int.parse` and would have thrown on corrupted storage — replaced with `tryParse` + bounds-checked midday fallback so the picker always opens; (4) `_CommutePreviewTile` only displayed `#stopId` even when a human-readable `favoriteStopName` was persisted — now prefers the name and falls back to the ID, matching the existing `_preferredStopLabel` row.
+**Files Changed:**
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/app/l10n/app_en.arb`
+- `lib/app/l10n/app_*.arb` (34 non-English locales — English fallback for new `openDay_*` and `diagnosticsRenderer*` keys)
+- `lib/app/l10n/generated/*` (regenerated via `flutter gen-l10n`)
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format lib/features/settings/presentation/pages/settings_page.dart` → already formatted.
+- `flutter analyze lib/features/settings test/features/settings` → no issues.
+- `flutter gen-l10n` → 0 untranslated messages.
+- `flutter test test/features/settings test/features/map` → 80/80 passed.
+- `./scripts/check.sh --quick` → 5/5 passed (format, analyze, test, gen-l10n, summary).
+**Follow-ups:**
+- Replace the hardcoded `appVersion = '1.0.0'` in the dev diagnostics panel with `package_info_plus.PackageInfo.fromPlatform()` once the package is added as a direct dependency, so the version stays in sync with `pubspec.yaml` automatically.
+- Consider clearing `favoriteRoute`/`favoriteDirection`/`favoriteStopId/Name` when `commuteMode` changes between disjoint modes (e.g. metro → bus) so stale metro-line data doesn't surface in the bus row.
+
+### Raouf: 2026-04-30 (AEST) — Map menu full file-by-file audit + decorative wiring fixes
+**Scope:** Production-readiness audit of `lib/features/map` covering controller, repository, data sources, both renderers, desktop fallback, all map layers (overlay/markers/route/location), routing panel, search sheet, overlay picker, and shared helpers.
+**Summary:** Traced every public method on `MapController` to a UI call site and confirmed wiring for `selectBuilding`, `selectBuildingById`, `selectMeetPoint`, `loadRoute`, `centerOnCurrentLocation`, `setTravelMode`, `setRenderer`, `clearRoute`, `clearSelection`, `startNavigation`, `stopNavigation`, `toggleOverlay`, `dismissArrival`, `openStreetView`, `openInGoogleMaps`, `openLocationSettings`, and `openAppSettings`. Found and fixed five issues: (1) `clearOverlays` was declared on the controller but had **no UI call site** — wired to a new "Clear All" `TextButton.icon` in the overlay picker sheet that only renders when at least one overlay is active, using the existing `l10n.clearAll` key (no new translations needed); (2) `desktop_map_fallback_view.dart` opened on `(-33.7738, 151.1130)` while every other renderer used `(-33.77388, 151.11275)` — synced so all three renderers (campus, native Google, desktop OSM fallback) open on the official 18 Wally's Walk entrance; (3) `campus_map_view.dart` had a no-op ternary `initialZoom: isValidBounds ? -3 : -3` — collapsed to a constant; (4) `MapsRoutesRemoteSource` called `jsonDecode(response.body)` unconditionally on both error and success branches — an HTML/gateway error page would surface as an opaque `FormatException` to the user; both call sites are now wrapped to produce meaningful `StateError` messages; (5) `_CategoryBuildingList` header used `searchQuery[0].toUpperCase()` directly, which produced a leading space when the query had whitespace and was unsafe on empty input — now goes through a guarded `_capitalize(searchQuery.trim())` helper.
+**Files Changed:**
+- `lib/features/map/presentation/widgets/google/desktop_map_fallback_view.dart`
+- `lib/features/map/presentation/widgets/campus/campus_map_view.dart`
+- `lib/features/map/data/datasources/maps_routes_remote_source.dart`
+- `lib/features/map/presentation/pages/map_page.dart`
+- `lib/features/map/presentation/widgets/overlay_picker_sheet.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format` on all edited files → already formatted.
+- `flutter analyze lib/features/map test/features/map` → no issues.
+- `flutter test test/features/map` → 70/70 passed (including the 5 `MapsRoutesRemoteSource` HTTP error-path tests).
+**Follow-ups:**
+- None blocking; consider extracting the campus fallback coordinate `(-33.77388, 151.11275)` to a single shared constant in `core/config` so future renderer additions can't drift again.
+
 ### Raouf: 2026-04-28 (AEST) — Functional vs decorative map-file audit + live campus fallback fix
 **Scope:** File-by-file functional audit of map/routing stack and immediate removal of decorative routing fallback.
 **Summary:** Audited map/routing files across data sources, controller, renderers, route panel, and edge functions for live execution paths (events, provider integration, dynamic coordinates, and error handling). Found one decorative fallback path in `maps-routes` campus routing that generated synthetic straight-line coordinates when ORS was missing. Replaced it with a real Google Routes WALK fallback while preserving the campus renderer response contract so campus routes remain API-backed and live.

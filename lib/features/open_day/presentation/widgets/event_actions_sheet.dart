@@ -153,9 +153,7 @@ class EventActionsSheet extends ConsumerWidget {
         'https://www.google.com/maps/search/?api=1&query=${b.latitude},${b.longitude}',
       );
     } else {
-      final q = Uri.encodeQueryComponent(
-        '${e.venueName} Macquarie University',
-      );
+      final q = Uri.encodeQueryComponent('${e.venueName} Macquarie University');
       uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$q');
     }
     await launchUrl(uri, mode: LaunchMode.externalApplication);

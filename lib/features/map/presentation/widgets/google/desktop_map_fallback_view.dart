@@ -51,7 +51,10 @@ class _DesktopMapFallbackViewState
   late final TileProvider _tileProvider;
   bool _hasFitRouteBounds = false;
 
-  static const _campusCenter = latlong.LatLng(-33.7738, 151.1130);
+  // 18 Wally's Walk entrance — kept in sync with MapController._campusFallback
+  // and GoogleMapView's initial camera position so all renderers open on the
+  // same point when no GPS fix is available.
+  static const _campusCenter = latlong.LatLng(-33.77388, 151.11275);
   static const _initialZoom = 15.5;
 
   @override

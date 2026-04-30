@@ -46,9 +46,7 @@ final relevantOpenDayEventsProvider = Provider<List<OpenDayEvent>>((ref) {
       .watch(settingsControllerProvider)
       .value
       ?.selectedBachelorId;
-  final filtered = data.events
-      .where((e) => e.isRelevantTo(selectedId))
-      .toList()
+  final filtered = data.events.where((e) => e.isRelevantTo(selectedId)).toList()
     ..sort((a, b) => a.startTime.compareTo(b.startTime));
   return filtered;
 });

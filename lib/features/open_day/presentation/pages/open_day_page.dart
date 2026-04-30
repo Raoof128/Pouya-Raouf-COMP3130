@@ -49,11 +49,8 @@ class OpenDayPage extends ConsumerWidget {
             ),
           ),
         ),
-        data: (data) => _OpenDayBody(
-          data: data,
-          selected: selected,
-          events: events,
-        ),
+        data: (data) =>
+            _OpenDayBody(data: data, selected: selected, events: events),
       ),
     );
   }

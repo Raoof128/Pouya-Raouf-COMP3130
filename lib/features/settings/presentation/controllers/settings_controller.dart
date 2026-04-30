@@ -141,9 +141,7 @@ class SettingsController extends AsyncNotifier<UserPreferences> {
   /// in `OpenDayReminderScheduler` — this method itself only persists.
   Future<String?> updateOpenDayRemindersEnabled(bool enabled) async {
     final currentPreferences = state.value ?? const UserPreferences();
-    return _save(
-      currentPreferences.copyWith(openDayRemindersEnabled: enabled),
-    );
+    return _save(currentPreferences.copyWith(openDayRemindersEnabled: enabled));
   }
 
   /// Update reminder lead time (minutes before each event). Clamped to

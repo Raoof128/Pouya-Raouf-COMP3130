@@ -2146,5 +2146,27 @@
       }
     }
   },
-  "clearPreferredStop": "Clear Stop"
+  "clearPreferredStop": "Clear Stop",
+  "openDay_section": "Open Day",
+  "openDay_studyInterest": "Study interest",
+  "openDay_studyInterestNotSet": "Not set",
+  "openDay_studyInterestSemantic": "Open Day study interest",
+  "openDay_eventReminders": "Event reminders",
+  "openDay_eventRemindersSemantic": "Open Day event reminders",
+  "openDay_remindMeBefore": "Remind me before",
+  "openDay_remindLeadTimeSemantic": "Open Day reminder lead time",
+  "openDay_minutesValue": "{minutes} min",
+  "@openDay_minutesValue": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "openDay_minutesOption": "{minutes} minutes",
+  "@openDay_minutesOption": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "diagnosticsRendererCampus": "Campus (illustrated)",
+  "diagnosticsRendererGoogle": "Google Maps"
 }

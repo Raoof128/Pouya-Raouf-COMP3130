@@ -67,10 +67,7 @@ class OpenDayReminderScheduler {
         return;
       }
 
-      final leadMinutes = preferences.openDayReminderMinutesBefore.clamp(
-        5,
-        60,
-      );
+      final leadMinutes = preferences.openDayReminderMinutesBefore.clamp(5, 60);
       final lead = Duration(minutes: leadMinutes);
       final cutoff = now ?? DateTime.now();
 
@@ -154,47 +151,41 @@ class OpenDayReminderScheduler {
 /// `main.dart` (or via an app-startup listener) it stays subscribed for
 /// the app's lifetime. Disposing it would cancel the listener and stop
 /// rescheduling, which we never want.
-final openDayReminderSchedulerProvider =
-    Provider<OpenDayReminderScheduler>((ref) {
-      final scheduler = OpenDayReminderScheduler(
-        localNotifications: ref.watch(localNotificationsServiceProvider),
-      );
+final openDayReminderSchedulerProvider = Provider<OpenDayReminderScheduler>((
+  ref,
+) {
+  final scheduler = OpenDayReminderScheduler(
+    localNotifications: ref.watch(localNotificationsServiceProvider),
+  );
 
-      // Reactive trigger: combine the four inputs that influence the
-      // schedule into one watched record. When any of them changes,
-      // recompute. Returning the record from `select` lets Riverpod
-      // do equality-based change detection so we don't reschedule on
-      // unrelated preference updates (e.g. theme toggles).
-      ref.listen<({
-        bool master,
-        bool openDay,
-        int minutes,
-        String? bachelorId,
-      })>(
-        settingsControllerProvider.select(
-          (async) {
-            final p = async.value ?? const UserPreferences();
-            return (
-              master: p.notificationsEnabled,
-              openDay: p.openDayRemindersEnabled,
-              minutes: p.openDayReminderMinutesBefore,
-              bachelorId: p.selectedBachelorId,
-            );
-          },
-        ),
-        (_, _) => _reconcile(ref, scheduler),
-        fireImmediately: true,
+  // Reactive trigger: combine the four inputs that influence the
+  // schedule into one watched record. When any of them changes,
+  // recompute. Returning the record from `select` lets Riverpod
+  // do equality-based change detection so we don't reschedule on
+  // unrelated preference updates (e.g. theme toggles).
+  ref.listen<({bool master, bool openDay, int minutes, String? bachelorId})>(
+    settingsControllerProvider.select((async) {
+      final p = async.value ?? const UserPreferences();
+      return (
+        master: p.notificationsEnabled,
+        openDay: p.openDayRemindersEnabled,
+        minutes: p.openDayReminderMinutesBefore,
+        bachelorId: p.selectedBachelorId,
       );
+    }),
+    (_, _) => _reconcile(ref, scheduler),
+    fireImmediately: true,
+  );
 
-      // The events list also changes when the dataset finishes loading
-      // for the first time. Watch it separately so we react to that.
-      ref.listen<List<OpenDayEvent>>(
-        relevantOpenDayEventsProvider,
-        (_, _) => _reconcile(ref, scheduler),
-      );
+  // The events list also changes when the dataset finishes loading
+  // for the first time. Watch it separately so we react to that.
+  ref.listen<List<OpenDayEvent>>(
+    relevantOpenDayEventsProvider,
+    (_, _) => _reconcile(ref, scheduler),
+  );
 
-      return scheduler;
-    });
+  return scheduler;
+});
 
 void _reconcile(Ref ref, OpenDayReminderScheduler scheduler) {
   final prefs =

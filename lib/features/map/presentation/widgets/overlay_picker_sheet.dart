@@ -48,17 +48,36 @@ class OverlayPickerSheet extends ConsumerWidget {
               ),
             ),
 
-            // Title
+            // Title row + clear-all action
             Padding(
               padding: const EdgeInsetsDirectional.only(
                 start: MqSpacing.space1,
                 bottom: MqSpacing.space3,
               ),
-              child: Text(
-                l10n.mapLayers,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.mapLayers,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  if (activeIds.isNotEmpty)
+                    TextButton.icon(
+                      onPressed: controller.clearOverlays,
+                      icon: const Icon(Icons.layers_clear_outlined, size: 18),
+                      label: Text(l10n.clearAll),
+                      style: TextButton.styleFrom(
+                        foregroundColor: MqColors.vividRed,
+                        minimumSize: const Size(
+                          MqSpacing.minTapTarget,
+                          MqSpacing.minTapTarget,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
 

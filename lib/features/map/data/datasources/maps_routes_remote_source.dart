@@ -85,14 +85,24 @@ class MapsRoutesRemoteSource {
             'maps-routes error ${response.statusCode}: ${response.body}',
           );
         }
-        final errorPayload = jsonDecode(response.body) as Map<String, dynamic>?;
+        Map<String, dynamic>? errorPayload;
+        try {
+          errorPayload = jsonDecode(response.body) as Map<String, dynamic>?;
+        } on FormatException {
+          errorPayload = null;
+        }
         final message =
             errorPayload?['error'] as String? ??
             'maps-routes returned ${response.statusCode}';
         throw StateError(message);
       }
 
-      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      final Map<String, dynamic> json;
+      try {
+        json = jsonDecode(response.body) as Map<String, dynamic>;
+      } on FormatException catch (e) {
+        throw StateError('maps-routes returned invalid JSON: ${e.message}');
+      }
       return MapRoute.fromJson(json, travelMode);
     } finally {
       if (_httpClient == null) {

@@ -231,7 +231,7 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
                     meta.centerLatitude,
                     meta.centerLongitude,
                   ),
-                  initialZoom: isValidBounds ? -3 : -3,
+                  initialZoom: -3,
                   initialCameraFit: isValidBounds
                       ? CameraFit.bounds(
                           bounds: bounds,

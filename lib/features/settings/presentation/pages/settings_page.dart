@@ -50,21 +50,36 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       MqHaptics.heavy(true); // Always vibrate for the easter egg!
 
       final l10n = AppLocalizations.of(context)!;
+      final preferences = ref.read(settingsControllerProvider).value;
+      final rendererLabel =
+          preferences?.defaultRenderer == MapRendererType.google
+          ? l10n.diagnosticsRendererGoogle
+          : l10n.diagnosticsRendererCampus;
+      // App version mirrors the value declared in pubspec.yaml. It is
+      // surfaced here for the dev-only easter egg, not for end-user
+      // marketing — keep both values in sync when bumping the release.
+      const appVersion = '1.0.0';
+      const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
+      final edgeProxyHost = supabaseUrl.isEmpty
+          ? '—'
+          : Uri.tryParse(supabaseUrl)?.host ?? supabaseUrl;
+
       showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
         builder: (context) => MqBottomSheet(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 '🛠️ ${l10n.devDiagnostics}',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: MqSpacing.space2),
-              Text(l10n.buildVersion),
-              Text(l10n.renderer),
-              Text(l10n.edgeProxy),
+              Text('${l10n.buildVersion}: $appVersion'),
+              Text('${l10n.renderer}: $rendererLabel'),
+              Text('${l10n.edgeProxy}: $edgeProxyHost'),
             ],
           ),
         ),
@@ -267,6 +282,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       mode: preferences.commuteMode,
                       route: preferences.favoriteRoute,
                       stopId: preferences.favoriteStopId,
+                      stopName: preferences.favoriteStopName,
                       l10n: l10n,
                     ),
                     _SettingsCard(
@@ -385,7 +401,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     // lead time. The bachelor selection itself drives
                     // both the Home preview card and the local
                     // notification schedule (see OpenDayReminderScheduler).
-                    const _SectionHeader(title: 'Open Day'),
+                    _SectionHeader(title: l10n.openDay_section),
                     _OpenDaySection(preferences: preferences),
                     const SizedBox(height: MqSpacing.space6),
 
@@ -611,16 +627,21 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     String current,
     Function(String) onSelect,
   ) async {
+    // Defensive parsing — if storage was ever corrupted to a non-`HH:mm`
+    // value, fall back to a midday default rather than throwing in the
+    // picker and leaving the user with a dead row.
     final parts = current.split(':');
+    final hour = parts.isEmpty ? null : int.tryParse(parts[0]);
+    final minute = parts.length < 2 ? null : int.tryParse(parts[1]);
     final initial = TimeOfDay(
-      hour: int.parse(parts[0]),
-      minute: int.parse(parts[1]),
+      hour: (hour != null && hour >= 0 && hour < 24) ? hour : 12,
+      minute: (minute != null && minute >= 0 && minute < 60) ? minute : 0,
     );
     final picked = await showTimePicker(context: context, initialTime: initial);
     if (picked != null) {
-      final hour = picked.hour.toString().padLeft(2, '0');
-      final minute = picked.minute.toString().padLeft(2, '0');
-      onSelect('$hour:$minute');
+      final hh = picked.hour.toString().padLeft(2, '0');
+      final mm = picked.minute.toString().padLeft(2, '0');
+      onSelect('$hh:$mm');
     }
   }
 
@@ -1305,23 +1326,24 @@ class _OpenDaySection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final selected = ref.watch(selectedBachelorProvider);
     final remindersEnabled = preferences.openDayRemindersEnabled;
     return _SettingsCard(
       children: [
         _TapRow(
           icon: Icons.school_outlined,
-          label: 'Study interest',
-          value: selected?.name ?? 'Not set',
-          semanticLabel: 'Open Day study interest',
+          label: l10n.openDay_studyInterest,
+          value: selected?.name ?? l10n.openDay_studyInterestNotSet,
+          semanticLabel: l10n.openDay_studyInterestSemantic,
           hapticsEnabled: preferences.hapticsEnabled,
           onTap: () => BachelorPickerSheet.show(context),
         ),
         _ToggleRow(
           icon: Icons.notifications_active_outlined,
-          label: 'Event reminders',
+          label: l10n.openDay_eventReminders,
           value: remindersEnabled,
-          semanticLabel: 'Open Day event reminders',
+          semanticLabel: l10n.openDay_eventRemindersSemantic,
           hapticsEnabled: preferences.hapticsEnabled,
           onChanged: (v) => ref
               .read(settingsControllerProvider.notifier)
@@ -1330,9 +1352,11 @@ class _OpenDaySection extends ConsumerWidget {
         if (remindersEnabled)
           _TapRow(
             icon: Icons.timer_outlined,
-            label: 'Remind me before',
-            value: '${preferences.openDayReminderMinutesBefore} min',
-            semanticLabel: 'Open Day reminder lead time',
+            label: l10n.openDay_remindMeBefore,
+            value: l10n.openDay_minutesValue(
+              preferences.openDayReminderMinutesBefore,
+            ),
+            semanticLabel: l10n.openDay_remindLeadTimeSemantic,
             hapticsEnabled: preferences.hapticsEnabled,
             onTap: () => _showLeadTimePicker(context, ref),
           ),
@@ -1341,6 +1365,7 @@ class _OpenDaySection extends ConsumerWidget {
   }
 
   Future<void> _showLeadTimePicker(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final dark = context.isDarkMode;
     const options = <int>[5, 10, 15, 30, 60];
     final current = preferences.openDayReminderMinutesBefore;
@@ -1361,7 +1386,7 @@ class _OpenDaySection extends ConsumerWidget {
                 MqSpacing.space2,
               ),
               child: Text(
-                'Remind me before',
+                l10n.openDay_remindMeBefore,
                 style: context.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: dark
@@ -1372,7 +1397,7 @@ class _OpenDaySection extends ConsumerWidget {
             ),
             for (final m in options)
               ListTile(
-                title: Text('$m minutes'),
+                title: Text(l10n.openDay_minutesOption(m)),
                 trailing: m == current
                     ? const Icon(
                         Icons.check_rounded,
@@ -1661,6 +1686,7 @@ class _CommutePreviewTile extends StatelessWidget {
     required this.mode,
     required this.route,
     required this.stopId,
+    required this.stopName,
     required this.l10n,
   });
 
@@ -1668,6 +1694,7 @@ class _CommutePreviewTile extends StatelessWidget {
   final String mode;
   final String route;
   final String stopId;
+  final String stopName;
   final AppLocalizations l10n;
 
   @override
@@ -1694,10 +1721,16 @@ class _CommutePreviewTile extends StatelessWidget {
     final directionLabel = mode == 'metro'
         ? _SettingsPageState._metroDirectionLabel(direction, l10n)
         : '';
+    // Prefer the human-readable stop name when available (set when the
+    // user picks a stop from the search sheet); fall back to the raw ID
+    // for users who entered an ID directly or pre-name-search builds.
+    final stopLabel = stopName.trim().isNotEmpty
+        ? stopName.trim()
+        : (stopId.trim().isNotEmpty ? '#${stopId.trim()}' : '');
     final detailParts = <String>[
       if (configured && routeLabel.trim().isNotEmpty) routeLabel.trim(),
       if (configured && directionLabel.trim().isNotEmpty) directionLabel.trim(),
-      if (stopId.trim().isNotEmpty) '#${stopId.trim()}',
+      if (stopLabel.isNotEmpty) stopLabel,
     ];
     final detail = detailParts.isEmpty
         ? l10n.setRoutePrompt
