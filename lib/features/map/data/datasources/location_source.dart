@@ -28,6 +28,9 @@ const _campusFallback = LocationSample(
 /// live coordinate streaming during active navigation.
 class LocationSource {
   const LocationSource();
+  static const double _googleplexLatitude = 37.4219983;
+  static const double _googleplexLongitude = -122.084;
+  static const double _googleplexTolerance = 0.0025;
 
   // We explicitly disable native location services on unsupported platforms
   // (like Web or Desktop) to avoid crashes when calling platform channels.
@@ -100,6 +103,13 @@ class LocationSource {
       final position = await Geolocator.getCurrentPosition(
         locationSettings: locationSettings,
       ).timeout(const Duration(seconds: 15));
+      if (_isLikelyEmulatorDefaultMock(position)) {
+        debugPrint(
+          'LocationSource: ignoring emulator default mock location '
+          '(${position.latitude}, ${position.longitude})',
+        );
+        return null;
+      }
       return LocationSample(
         latitude: position.latitude,
         longitude: position.longitude,
@@ -117,6 +127,13 @@ class LocationSource {
       try {
         final lastKnown = await Geolocator.getLastKnownPosition();
         if (lastKnown != null) {
+          if (_isLikelyEmulatorDefaultMock(lastKnown)) {
+            debugPrint(
+              'LocationSource: ignoring last-known emulator default mock '
+              'location (${lastKnown.latitude}, ${lastKnown.longitude})',
+            );
+            return null;
+          }
           return LocationSample(
             latitude: lastKnown.latitude,
             longitude: lastKnown.longitude,
@@ -129,6 +146,15 @@ class LocationSource {
       }
       return null;
     }
+  }
+
+  bool _isLikelyEmulatorDefaultMock(Position position) {
+    if (!position.isMocked) {
+      return false;
+    }
+    final latDelta = (position.latitude - _googleplexLatitude).abs();
+    final lngDelta = (position.longitude - _googleplexLongitude).abs();
+    return latDelta <= _googleplexTolerance && lngDelta <= _googleplexTolerance;
   }
 
   Stream<LocationSample> watch() async* {

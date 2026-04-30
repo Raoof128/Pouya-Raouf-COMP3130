@@ -1,3 +1,17 @@
+### Raouf: 2026-04-30 (AEST) — Ignore Android emulator default mock location for locate-me
+**Scope:** `LocationSource.getCurrentLocation` fallback hygiene for Google-map locate-me.
+**Summary:** Investigated why pressing locate-me in Google Maps jumped to a building in the US. Root cause: on Android emulators with no simulated location set, `Geolocator` can return the default mocked coordinate near Googleplex (`37.4219983, -122.084`) as both fresh and last-known fixes. Added a defensive guard to treat this known mocked default as invalid and return `null` so the controller surfaces the existing location-unavailable/permission banner instead of animating to a misleading US coordinate.
+**Files Changed:**
+- `lib/features/map/data/datasources/location_source.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format lib/features/map/data/datasources/location_source.dart` → already formatted.
+- `flutter analyze lib/features/map` → no issues.
+- `flutter test test/features/map` → 70/70 passed.
+**Follow-ups:**
+- In Android Emulator extended controls, set a simulated device location before testing locate-me to receive expected local coordinates.
+
 ### Raouf: 2026-04-30 (AEST) — Locate-me accuracy fix (raw GPS + last-known fallback + honest error banner)
 **Scope:** `LocationSource.getCurrentLocation`, `LocationSource.watch`, and `MapController.centerOnCurrentLocation`.
 **Summary:** User reported the locate-me dot showing a wrong location. Root cause: `getCurrentLocation` used base `LocationSettings(accuracy: high, distanceFilter: 5)` which on Android dispatches through Google Play Services' Fused Location Provider — that provider blends Wi-Fi triangulation, cell-tower estimates, and stale cached fixes, and frequently returns a position hundreds of metres off the true device location (especially indoors or on emulators). On top of that, when the fresh fix timed out the controller silently snapped to the hardcoded `_campusFallback` (`-33.77388, 151.11275`), so the user was effectively shown a synthetic campus-centre dot dressed up as their real location. Fixed by:

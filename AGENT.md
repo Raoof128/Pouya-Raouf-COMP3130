@@ -55,6 +55,13 @@ lib/
 **Files Changed:** `.env` (new, gitignored)
 **Verification:** File exists and matches `.env.example` structure.
 
+### Raouf: 2026-04-30 (AEST) — Ignore Android emulator default mock location for locate-me
+**Scope:** `LocationSource.getCurrentLocation` fallback hygiene for Google-map locate-me.
+**Summary:** Investigated why pressing locate-me in Google Maps jumped to a building in the US. Root cause: Android emulators without a simulated location can return the default mocked Googleplex coordinate (`37.4219983, -122.084`) from both `getCurrentPosition` and `getLastKnownPosition`. Added a guard that rejects this mocked default fix so locate-me no longer animates to a misleading US coordinate; instead the existing location-unavailable/permission flow is used.
+**Files Changed:** `lib/features/map/data/datasources/location_source.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `dart format lib/features/map/data/datasources/location_source.dart` (no diff); `flutter analyze lib/features/map` (no issues); `flutter test test/features/map` (70/70 passed).
+**Follow-ups:** Set an explicit mock GPS point in Android Emulator Extended Controls when testing locate-me.
+
 ### Raouf: 2026-04-30 (AEST) — Locate-me accuracy fix (raw GPS + last-known fallback + honest error banner)
 **Scope:** `LocationSource.getCurrentLocation` / `watch`, and `MapController.centerOnCurrentLocation`.
 **Summary:** Locate-me was showing a wrong location because `getCurrentLocation` used base `LocationSettings` which on Android dispatches via Play-Services' Fused Location Provider (Wi-Fi triangulation + cached fixes, often hundreds of metres off), and when that timed out the controller silently snapped to the hardcoded campus-centre fallback. Switched to `AndroidSettings(bestForNavigation, forceLocationManager: true, timeLimit: 15s)` to use raw GPS, added `getLastKnownPosition` as a real cached-fix fallback before giving up, and removed the synthetic campus-centre snap so when GPS truly fails the controller now surfaces the proper permission/unavailable banner instead of a fake dot. Same platform-tuned settings applied to the streaming `watch()` so live navigation no longer jitters off the route polyline.
