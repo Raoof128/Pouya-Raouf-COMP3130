@@ -55,6 +55,13 @@ lib/
 **Files Changed:** `.env` (new, gitignored)
 **Verification:** File exists and matches `.env.example` structure.
 
+### Raouf: 2026-04-30 (AEST) — Map UX fixes: locate-me, campus zoom restriction, Google live navigation
+**Scope:** Three user-reported map regressions across the campus, native Google, and desktop OSM-fallback renderers.
+**Summary:** Locate-me on the Google renderer used `animateCamera(newLatLng)` with no zoom, so pressing it while already on the locate-me fallback coordinate was a silent no-op — replaced with `newLatLngZoom(point, 17)` so a press always animates, applied identically to the desktop fallback. Campus map zoom bounds were too permissive (`minZoom: -5`, `maxZoom: 1.5`) — tightened to `minZoom: -4` and a hard `mapMaxZoom = min(meta.maxZoom, 1.0)` so the raster never pixelates and users cannot pinch out into empty space. Google Maps live navigation looked frozen because each tick called `animateCamera(newLatLng)` without zoom and inherited the route-fit zoom (~14) — now snaps to `_navigationFollowZoom = 18` on the first navigation tick and on every subsequent location update, with the same fix mirrored in the desktop fallback.
+**Files Changed:** `lib/features/map/presentation/widgets/google/google_map_view.dart`, `lib/features/map/presentation/widgets/google/desktop_map_fallback_view.dart`, `lib/features/map/presentation/widgets/campus/campus_map_view.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `dart format` → no diff; `flutter analyze lib/features/map test/features/map` → no issues; `flutter test test/features/map` → 70/70 passed.
+**Follow-ups:** Add tilt/bearing on navigation ticks once device-heading is wired; consider lowering `mapMaxZoom` further to `0.5` if real-device feedback shows softness.
+
 ### Raouf: 2026-04-30 (AEST) — Settings menu file-by-file audit + decorative wiring fixes
 **Scope:** End-to-end audit of `lib/features/settings` plus consumers of every persisted preference, with i18n hardening.
 **Summary:** Traced every `SettingsController` method and every `UserPreferences` field to a real consumer (no dead preferences). Fixed four real issues: dev-diagnostics easter-egg now shows actual app version + active renderer label + Supabase edge proxy host instead of static labels; entire Open Day section migrated from hardcoded English to new `openDay_*` ARB keys propagated to all 35 locales; `_selectTime` no longer crashes on corrupted persisted `HH:mm` strings (uses `tryParse` + bounds-checked midday fallback); `_CommutePreviewTile` now displays the human-readable `favoriteStopName` when available instead of always `#stopId`.

@@ -48,6 +48,17 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   GoogleMapController? _controller;
   bool _hasFitRouteBounds = false;
 
+  /// Camera zoom used when the user presses the "locate me" button.
+  /// Must be high enough that pressing the button while already centred
+  /// on the same lat/lng still produces a visible camera change — the
+  /// previous implementation called `newLatLng` (no zoom) which silently
+  /// no-ops when the target hasn't moved.
+  static const double _locateZoom = 17;
+
+  /// Camera zoom held during active navigation. Tighter than the
+  /// locate-me zoom so the user feels they are following the route.
+  static const double _navigationFollowZoom = 18;
+
   @override
   void dispose() {
     if (!kIsWeb) {
@@ -64,24 +75,44 @@ class _GoogleMapViewState extends State<GoogleMapView> {
         oldWidget.locationCenterRequestToken) {
       final location = widget.currentLocation;
       if (_controller != null && location != null) {
-        _focusLocation(location);
+        // Force a zoomed camera move so the locate-me button always feels
+        // responsive — pressing it while the camera is already on the
+        // user's coordinate must still produce a visible animation.
+        unawaited(
+          _controller!.animateCamera(
+            CameraUpdate.newLatLngZoom(
+              LatLng(location.latitude, location.longitude),
+              _locateZoom,
+            ),
+          ),
+        );
       }
       return;
     }
 
-    // Follow user during active navigation
+    // Follow user during active navigation. Snap to a tight navigation-grade
+    // zoom on the first tick so the camera reads as "navigating" instead of
+    // "still showing the route bounds preview" — without this the camera
+    // stays at whatever zoom the route-fit landed on (~14) and the user
+    // can't tell that navigation is live.
     if (widget.isNavigating) {
       final newLocation = widget.currentLocation;
       final oldLocation = oldWidget.currentLocation;
-      if (_controller != null &&
+      final justStartedNavigating =
+          widget.isNavigating && !oldWidget.isNavigating;
+      final movedSinceLastTick =
           newLocation != null &&
           (oldLocation == null ||
               newLocation.latitude != oldLocation.latitude ||
-              newLocation.longitude != oldLocation.longitude)) {
+              newLocation.longitude != oldLocation.longitude);
+      if (_controller != null &&
+          newLocation != null &&
+          (justStartedNavigating || movedSinceLastTick)) {
         unawaited(
           _controller!.animateCamera(
-            CameraUpdate.newLatLng(
+            CameraUpdate.newLatLngZoom(
               LatLng(newLocation.latitude, newLocation.longitude),
+              _navigationFollowZoom,
             ),
           ),
         );

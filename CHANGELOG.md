@@ -1,3 +1,20 @@
+### Raouf: 2026-04-30 (AEST) — Map UX fixes: locate-me, campus zoom restriction, Google live navigation
+**Scope:** Bug fixes for three user-reported map regressions across both renderers + the desktop OSM fallback.
+**Summary:** (1) **Google Maps locate-me appeared dead** because `_focusLocation` called `animateCamera(newLatLng(...))` with no zoom — when the locate-me fallback coordinate matched the map's initial camera position the call was a silent no-op. Replaced with `newLatLngZoom(point, 17)` so a press always produces a visible animation, even on repeat presses. Same fix applied to the desktop OSM fallback for parity. (2) **Campus map allowed zooming past raster clarity** — the previous bounds (`minZoom: -5`, `maxZoom: meta.maxZoom = 1.5`) let users pinch out into empty space and pinch in past the raster's pixel-density. Tightened to `minZoom: -4` and a hard `mapMaxZoom = min(meta.maxZoom, 1.0)` so future metadata updates cannot accidentally relax the cap. Documented the policy inline. (3) **Google Maps live navigation looked frozen** because the navigation tick used `animateCamera(newLatLng(...))` and inherited whatever zoom the route-bounds-fit produced (~14), so the camera followed the user but never read as "navigating". Now snaps to a navigation-grade `_navigationFollowZoom = 18` on the first navigation tick (`justStartedNavigating`) and on every subsequent location update, mirrored across the desktop fallback view.
+**Files Changed:**
+- `lib/features/map/presentation/widgets/google/google_map_view.dart`
+- `lib/features/map/presentation/widgets/google/desktop_map_fallback_view.dart`
+- `lib/features/map/presentation/widgets/campus/campus_map_view.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format` on all 3 edited Dart files → already formatted.
+- `flutter analyze lib/features/map test/features/map` → no issues.
+- `flutter test test/features/map` → 70/70 passed (controller + repository + remote-source + edge-case suites).
+**Follow-ups:**
+- Consider adding a tilt parameter (e.g. `CameraPosition(tilt: 45, bearing: heading)`) on navigation ticks once the device-heading sensor is wired in, for a closer match to Google Maps' first-person navigation framing.
+- If users continue to find zoom-in too soft, lower `mapMaxZoom` further to `0.5` after gathering visual feedback on real devices.
+
 ### Raouf: 2026-04-30 (AEST) — Settings menu file-by-file audit + decorative wiring fixes
 **Scope:** End-to-end audit of `lib/features/settings` plus consumers of every persisted preference, with i18n hardening.
 **Summary:** Traced every public method on `SettingsController` and every preference on `UserPreferences` to a real consumer (mq_animations, notification scheduler, tfnsw_provider, campus_map_route_layer, building_search_sheet, open_day_reminder_scheduler, mq_tactile_button) — confirmed no dead preferences. Fixed four real issues: (1) the dev-diagnostics easter-egg panel showed only static labels, now shows the actual app version, active default-renderer label, and Supabase edge proxy host; (2) the entire Open Day section had hardcoded English strings (section header, study-interest row, event-reminders toggle, lead-time picker), now driven by new `openDay_*` ARB keys propagated to all 35 locales; (3) `_selectTime` parsed persisted `HH:mm` strings with `int.parse` and would have thrown on corrupted storage — replaced with `tryParse` + bounds-checked midday fallback so the picker always opens; (4) `_CommutePreviewTile` only displayed `#stopId` even when a human-readable `favoriteStopName` was persisted — now prefers the name and falls back to the ID, matching the existing `_preferredStopLabel` row.

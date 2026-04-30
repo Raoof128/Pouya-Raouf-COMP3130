@@ -210,8 +210,16 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
             final double verticalPadding = constraints.hasInfiniteHeight
                 ? MqSpacing.space4
                 : constraints.maxHeight * 0.15;
-            const double mapMinZoom = -5.0;
+            // Clarity-safe zoom bounds for the illustrated campus raster.
+            // - `mapMinZoom` (-4) keeps the campus from collapsing into a
+            //   tiny island of empty space when the user pinches out.
+            // - `mapMaxZoom` caps zoom-in below the point at which the raster
+            //   visibly pixelates. Pinned to the lower of the metadata's
+            //   declared maxZoom and a 1.0 ceiling so future meta updates
+            //   cannot accidentally relax the cap past the safe range.
+            const double mapMinZoom = -4.0;
             const double initialFitMaxZoom = -3.0;
+            final double mapMaxZoom = meta.maxZoom < 1.0 ? meta.maxZoom : 1.0;
 
             return DecoratedBox(
               decoration: BoxDecoration(
@@ -249,10 +257,9 @@ class _CampusMapViewState extends ConsumerState<CampusMapView> {
                           minZoom: mapMinZoom,
                         )
                       : null,
-                  // Allow zooming out further than the default (-3) to ensure
-                  // users can see the whole map if needed.
+                  // Hard zoom bounds (see `mapMinZoom`/`mapMaxZoom` above).
                   minZoom: mapMinZoom,
-                  maxZoom: meta.maxZoom,
+                  maxZoom: mapMaxZoom,
                   // Constrain the camera to the campus bounds so users don't pan into the void.
                   cameraConstraint: CameraConstraint.contain(bounds: bounds),
                   onLongPress: (tapPosition, latLng) {

@@ -56,6 +56,9 @@ class _DesktopMapFallbackViewState
   // same point when no GPS fix is available.
   static const _campusCenter = latlong.LatLng(-33.77388, 151.11275);
   static const _initialZoom = 15.5;
+  // Mirrors GoogleMapView so all renderers behave identically.
+  static const double _locateZoom = 17;
+  static const double _navigationFollowZoom = 18;
 
   @override
   void initState() {
@@ -71,21 +74,33 @@ class _DesktopMapFallbackViewState
         oldWidget.locationCenterRequestToken) {
       final location = widget.currentLocation;
       if (location != null) {
-        _moveToLatLng(latlong.LatLng(location.latitude, location.longitude));
+        // Always move with an explicit zoom so a repeated locate-me press
+        // (camera already on the user's coordinate) still animates.
+        _controller.move(
+          latlong.LatLng(location.latitude, location.longitude),
+          _locateZoom,
+        );
       }
       return;
     }
 
-    // Follow user during active navigation
+    // Follow user during active navigation. Snap to a navigation-grade zoom
+    // on the first tick so the user can tell navigation is live.
     if (widget.isNavigating) {
       final newLocation = widget.currentLocation;
       final oldLocation = oldWidget.currentLocation;
-      if (newLocation != null &&
+      final justStartedNavigating =
+          widget.isNavigating && !oldWidget.isNavigating;
+      final movedSinceLastTick =
+          newLocation != null &&
           (oldLocation == null ||
               newLocation.latitude != oldLocation.latitude ||
-              newLocation.longitude != oldLocation.longitude)) {
-        _moveToLatLng(
+              newLocation.longitude != oldLocation.longitude);
+      if (newLocation != null &&
+          (justStartedNavigating || movedSinceLastTick)) {
+        _controller.move(
           latlong.LatLng(newLocation.latitude, newLocation.longitude),
+          _navigationFollowZoom,
         );
         return;
       }
