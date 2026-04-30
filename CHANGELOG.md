@@ -1,3 +1,17 @@
+### Raouf: 2026-04-30 (AEST) — Bottom tab label updated to Navigation + emulator cleanup
+**Scope:** Bottom taskbar copy adjustment and local emulator process cleanup.
+**Summary:** Updated only the map section label in the persistent bottom taskbar from `Campus Map` to `Navigation` by switching the tab destination label in `AppShell` from `l10n.map` to `l10n.navigation`. This preserves existing `Campus Map` wording in map renderer toggles and settings, as requested. Also terminated Android emulator background processes and verified none remained.
+**Files Changed:**
+- `lib/app/router/app_shell.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format lib/app/router/app_shell.dart` → pass (no changes needed).
+- `flutter analyze lib/app/router/app_shell.dart` → no issues.
+- Process check: `ps -ax -o pid=,command= | rg "Android Emulator|/emulator/emulator|qemu-system| -avd "` → no emulator processes found after kill.
+**Follow-ups:**
+- If you want the same wording in other locales beyond existing `navigation` key values, we can run a translation pass per language.
+
 ### Raouf: 2026-04-30 (AEST) — Live navigation smooth-follow hardening + runtime diagnostics
 **Scope:** Real-device navigation camera smoothness in both renderers and controller-level navigation diagnostics logging.
 **Summary:** Completed a second production pass focused on live navigation smoothness and observability. Added camera follow throttling in both `google_maps_flutter` and desktop `flutter_map` renderers so navigation follow no longer reacts to every micro-update: camera recenter now requires either a forced first-follow tick or both a minimum elapsed interval (900ms) and a minimum movement delta (3m). This removes jitter from noisy GPS ticks while keeping route-follow responsive. Added structured `AppLogger` instrumentation in `MapController` for navigation start/stop/arrival/recalculation and periodic (5s) diagnostics snapshots including accuracy, distance-to-destination, and off-route state for faster real-device triage.

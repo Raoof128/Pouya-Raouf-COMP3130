@@ -55,6 +55,13 @@ lib/
 **Files Changed:** `.env` (new, gitignored)
 **Verification:** File exists and matches `.env.example` structure.
 
+### Raouf: 2026-04-30 (AEST) — Bottom tab label updated to Navigation + emulator cleanup
+**Scope:** Taskbar section naming and local runtime process hygiene.
+**Summary:** Changed only the bottom navigation map tab label to `Navigation` by wiring `AppShell` to `l10n.navigation` instead of `l10n.map`. Kept `Campus Map` strings untouched in map renderer toggle/settings contexts. Executed emulator cleanup commands and verified no Android emulator/qemu processes remained.
+**Files Changed:** `lib/app/router/app_shell.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `dart format lib/app/router/app_shell.dart` (no diff); `flutter analyze lib/app/router/app_shell.dart` (no issues); `ps -ax -o pid=,command= | rg "Android Emulator|/emulator/emulator|qemu-system| -avd "` (none running after cleanup).
+**Follow-ups:** Optional locale copy pass if you want language-specific wording for `navigation` beyond current translations/fallbacks.
+
 ### Raouf: 2026-04-30 (AEST) — Live navigation smooth-follow hardening + runtime diagnostics
 **Scope:** Real-device navigation smoothness and live-location observability across map renderers and controller.
 **Summary:** Added a navigation follow throttle in both `GoogleMapView` and `DesktopMapFallbackView` to reduce camera jitter from noisy high-frequency location ticks: after initial forced follow, camera updates now require both a minimum 900ms interval and at least 3m movement. This keeps navigation readable without lagging behind real movement. Added controller-level structured diagnostics logs for `startNavigation`, `stopNavigation`, arrival detection, recalculation triggers, and a throttled (5s) navigation diagnostics payload (`accuracyMetres`, `distFromLastFetchMetres`, `distToDestinationMetres`, `isOffRoute`, `routeDistanceMeters`) to support real-device debugging.
