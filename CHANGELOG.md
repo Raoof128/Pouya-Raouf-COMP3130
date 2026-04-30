@@ -1,3 +1,19 @@
+### Raouf: 2026-04-30 (AEST) — Live navigation/location production audit + stale-state race fix (Context7 aligned)
+**Scope:** End-to-end audit of live location + live navigation flow across controller/state, Geolocator source, Google renderer, and desktop fallback renderer.
+**Summary:** Performed a production-readiness audit against current Context7 docs for `geolocator` (`/baseflow/flutter-geolocator`), `google_maps_flutter` (`/websites/pub_dev_google_maps_flutter`), and `flutter_map` (`/fleaflet/flutter_map`). Existing implementation already matched key guidance in most areas (explicit permission flow handling, platform-specific location settings, stream-based navigation tracking, and explicit camera zoom for locate-me/navigation follow). Found one concrete race condition: `MapController.centerOnCurrentLocation()` captured `current` before awaiting permission/location futures, then wrote `current.copyWith(...)` afterward, which could roll back newer state (for example, user selecting another building while locate-me was in flight). Fixed by writing from `latest = state.value` after awaits and guarding null state, preserving all intermediate user interactions while still updating location/error state.
+**Files Changed:**
+- `lib/features/map/presentation/controllers/map_controller.dart`
+- `test/features/map/map_controller_test.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+**Verification:**
+- `dart format lib/features/map/presentation/controllers/map_controller.dart test/features/map/map_controller_test.dart` → pass.
+- `flutter test test/features/map/map_controller_test.dart` → 13/13 passed (includes new async stale-state regression test).
+- `flutter analyze lib/features/map` → no issues.
+- `./scripts/check.sh --quick` → 5/5 passed; full suite now 155 tests.
+**Follow-ups:**
+- Optional hardening: apply the same “read latest state after await” pattern to any future map controller methods that perform async work and then mutate state.
+
 ### Raouf: 2026-04-30 (AEST) — Ignore Android emulator default mock location for locate-me
 **Scope:** `LocationSource.getCurrentLocation` fallback hygiene for Google-map locate-me.
 **Summary:** Investigated why pressing locate-me in Google Maps jumped to a building in the US. Root cause: on Android emulators with no simulated location set, `Geolocator` can return the default mocked coordinate near Googleplex (`37.4219983, -122.084`) as both fresh and last-known fixes. Added a defensive guard to treat this known mocked default as invalid and return `null` so the controller surfaces the existing location-unavailable/permission banner instead of animating to a misleading US coordinate.

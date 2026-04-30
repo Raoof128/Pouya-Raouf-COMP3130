@@ -232,6 +232,50 @@ void main() {
     });
 
     test(
+      'centerOnCurrentLocation preserves newer state created while awaiting location',
+      () async {
+        final repository = _FakeMapRepository(
+          buildings: [building, secondBuilding],
+        );
+        final permissionCompleter = Completer<LocationPermissionState>();
+        final locationCompleter = Completer<LocationSample?>();
+        repository.pendingPermissionCompleter = permissionCompleter;
+        repository.pendingLocationCompleter = locationCompleter;
+        final container = ProviderContainer(
+          overrides: [
+            mapRepositoryProvider.overrideWithValue(repository),
+            settingsControllerProvider.overrideWith(
+              () => _FakeSettingsController(),
+            ),
+          ],
+        );
+        addTearDown(container.dispose);
+
+        await container.read(mapControllerProvider.future);
+        final notifier = container.read(mapControllerProvider.notifier);
+        final centerFuture = notifier.centerOnCurrentLocation();
+
+        // While locate-me is waiting on async permission/location, user selects
+        // another building. The locate-me completion must not roll state back.
+        notifier.selectBuilding(secondBuilding);
+
+        permissionCompleter.complete(LocationPermissionState.granted);
+        locationCompleter.complete(
+          const LocationSample(
+            latitude: -33.774,
+            longitude: 151.113,
+            accuracy: 5,
+          ),
+        );
+        await centerFuture;
+
+        final state = container.read(mapControllerProvider).value!;
+        expect(state.selectedBuilding, secondBuilding);
+        expect(state.currentLocation, isNotNull);
+      },
+    );
+
+    test(
       'marks arrival and stops navigation when user reaches destination',
       () async {
         final locationStream = StreamController<LocationSample>.broadcast();
@@ -357,6 +401,8 @@ class _FakeMapRepository implements MapRepository {
   final Stream<LocationSample> _locationStream;
   MapRendererType? lastRenderer;
   Completer<MapRoute>? pendingRouteCompleter;
+  Completer<LocationPermissionState>? pendingPermissionCompleter;
+  Completer<LocationSample?>? pendingLocationCompleter;
   int routeCallCount = 0;
 
   @override
@@ -367,6 +413,11 @@ class _FakeMapRepository implements MapRepository {
 
   @override
   Future<LocationPermissionState> ensureLocationPermission() async {
+    final pending = pendingPermissionCompleter;
+    if (pending != null) {
+      pendingPermissionCompleter = null;
+      return pending.future;
+    }
     return permissionState;
   }
 
@@ -377,6 +428,11 @@ class _FakeMapRepository implements MapRepository {
 
   @override
   Future<LocationSample?> getCurrentLocation() async {
+    final pending = pendingLocationCompleter;
+    if (pending != null) {
+      pendingLocationCompleter = null;
+      return pending.future;
+    }
     return currentLocation;
   }
 

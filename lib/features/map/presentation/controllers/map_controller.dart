@@ -462,20 +462,23 @@ class MapController extends AsyncNotifier<MapState> {
   /// campus-centre fallback that would look like a wrong real location
   /// to the user.
   Future<void> centerOnCurrentLocation() async {
-    final current = state.value;
-    if (current == null) {
+    if (state.value == null) {
       return;
     }
     final permissionState = await ref
         .read(mapRepositoryProvider)
         .ensureLocationPermission();
     final location = await ref.read(mapRepositoryProvider).getCurrentLocation();
+    final latest = state.value;
+    if (latest == null) {
+      return;
+    }
     if (location == null) {
       // No real fix available — show a banner so the user understands why
       // the dot didn't move, and offer the existing settings/permission
       // recovery actions.
       state = AsyncData(
-        current.copyWith(
+        latest.copyWith(
           permissionState: permissionState,
           error: _errorForPermission(permissionState),
         ),
@@ -483,9 +486,9 @@ class MapController extends AsyncNotifier<MapState> {
       return;
     }
     state = AsyncData(
-      current.copyWith(
+      latest.copyWith(
         currentLocation: location,
-        locationCenterRequestToken: current.locationCenterRequestToken + 1,
+        locationCenterRequestToken: latest.locationCenterRequestToken + 1,
         permissionState: permissionState,
         clearError: true,
       ),

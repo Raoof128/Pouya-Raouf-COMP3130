@@ -55,6 +55,13 @@ lib/
 **Files Changed:** `.env` (new, gitignored)
 **Verification:** File exists and matches `.env.example` structure.
 
+### Raouf: 2026-04-30 (AEST) — Live navigation/location production audit + stale-state race fix (Context7 aligned)
+**Scope:** End-to-end audit of map live navigation and locate-me behavior across controller + renderers, with documentation verification.
+**Summary:** Audited the complete live-location/live-navigation pipeline against current Context7 docs for `geolocator`, `google_maps_flutter`, and `flutter_map`. Existing implementation already covered most production patterns (permission checks, platform-specific settings, stream-based updates, explicit camera zoom behavior). Identified one race condition in `MapController.centerOnCurrentLocation`: async permission/location awaits could complete after other user actions and overwrite newer map state because updates were based on a stale pre-await snapshot. Updated the method to re-read `state.value` after awaits and apply changes to the latest state only, preventing selection/route rollback during in-flight locate-me requests. Added regression coverage in `map_controller_test.dart`.
+**Files Changed:** `lib/features/map/presentation/controllers/map_controller.dart`, `test/features/map/map_controller_test.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `dart format` on edited files (pass); `flutter test test/features/map/map_controller_test.dart` (13/13 passed); `flutter analyze lib/features/map` (no issues); `./scripts/check.sh --quick` (5/5 passed, 155 tests).
+**Follow-ups:** Continue using post-await latest-state writes for any new async map state mutations.
+
 ### Raouf: 2026-04-30 (AEST) — Ignore Android emulator default mock location for locate-me
 **Scope:** `LocationSource.getCurrentLocation` fallback hygiene for Google-map locate-me.
 **Summary:** Investigated why pressing locate-me in Google Maps jumped to a building in the US. Root cause: Android emulators without a simulated location can return the default mocked Googleplex coordinate (`37.4219983, -122.084`) from both `getCurrentPosition` and `getLastKnownPosition`. Added a guard that rejects this mocked default fix so locate-me no longer animates to a misleading US coordinate; instead the existing location-unavailable/permission flow is used.
