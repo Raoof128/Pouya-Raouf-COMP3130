@@ -644,6 +644,22 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-05-02 (AEST) — Full Project Check Script Execution
+**Scope:** Execution of the project's comprehensive `scripts/check.sh` validation suite to ensure project stability.
+
+**Summary:**
+Executed the `scripts/check.sh` script which runs `flutter pub get`, `dart format`, `flutter analyze`, `flutter test`, `flutter gen-l10n`, and `flutter build apk --debug`. The script passed all 6 checks successfully with 0 failures and 155 tests passing. No code modifications were required as the codebase was already structurally sound and fully tested.
+
+**Files Changed:**
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh` (all checks passed)
+
+**Follow-ups:**
+- None.
+
 ### Raouf: 2026-05-02 (AEST) — Core Map Logic Audit & Navigation Hardening
 **Scope:** Full file-by-file audit of the core Map logic (`lib/features/map/`) to ensure live navigation, location tracking, and routing are 100% professional and production-ready.
 
