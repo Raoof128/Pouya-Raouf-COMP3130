@@ -644,6 +644,25 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-05-02 (AEST) — UI/UX Audit and Accessibility Fix for Settings Feature
+**Scope:** Full UI/UX audit of all presentation files in `lib/features/settings/presentation/` to ensure adherence to UI constraints (MqColors/MqSpacing, RTL layout, minimum tap targets, and semantic labels).
+
+**Summary:**
+Conducted a comprehensive audit of the settings feature. Confirmed the consistent use of semantic labels (`Semantics` wrappers) on interactive rows and correct use of `MqSpacing`/`MqColors`. Fixed a single violation:
+- Replaced a `Positioned` widget with `PositionedDirectional` (using `start` and `end`) for the top-level red glow background in `SettingsPage` to ensure robust Right-to-Left (RTL) language support.
+
+**Files Changed:**
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Verification:**
+- `dart format lib/features/settings/` (pass)
+- `flutter analyze lib/features/settings/` (no issues)
+
+**Follow-ups:**
+- None.
+
 ### Raouf: 2026-05-02 (AEST) — UI/UX Audit and Accessibility Fix for Map Feature
 **Scope:** Full UI/UX audit of all presentation files in `lib/features/map/presentation/` to ensure adherence to UI constraints (MqColors/MqSpacing, RTL layout, minimum tap targets).
 

@@ -101,10 +101,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             children: [
               // Red glow gradient — dark mode only.
               if (dark)
-                Positioned(
+                PositionedDirectional(
                   top: -80,
-                  left: 0,
-                  right: 0,
+                  start: 0,
+                  end: 0,
                   height: 360,
                   child: IgnorePointer(
                     child: DecoratedBox(

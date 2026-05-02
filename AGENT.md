@@ -187,6 +187,13 @@ lib/
 **Verification:** `dart format` (pass); `flutter analyze lib/features/map/presentation/` (no issues).
 **Follow-ups:** None.
 
+### Raouf: 2026-05-02 (AEST) — UI/UX Audit and Accessibility Fix for Settings Feature
+**Scope:** Full UI/UX audit of all presentation files in `lib/features/settings/presentation/` to ensure adherence to UI constraints (MqColors/MqSpacing, RTL layout, minimum tap targets, and semantic labels).
+**Summary:** Conducted a comprehensive audit of the settings feature. Confirmed the consistent use of semantic labels (`Semantics` wrappers) on interactive rows and correct use of `MqSpacing`/`MqColors`. Fixed a single violation by replacing a `Positioned` widget with `PositionedDirectional` (using `start`/`end`) for the red glow background effect in dark mode, ensuring robust RTL layout support. Validated with regex that no hardcoded hex colors or non-directional `EdgeInsets` remained.
+**Files Changed:** `settings_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/settings/` (pass); `flutter analyze lib/features/settings/` (no issues).
+**Follow-ups:** None.
+
 ## Coding Conventions
 - Use Riverpod providers (not setState or Bloc)
 - Use go_router named routes (RouteNames constants)
