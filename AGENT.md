@@ -229,6 +229,13 @@ lib/
 **Verification:** `./scripts/check.sh` (all checks passed).
 **Follow-ups:** None.
 
+### Raouf: 2026-05-02 (AEST) — Cross-Platform Localization Path Fix
+**Scope:** Fixed a CI/CD build failure where `flutter pub get` crashed on Windows machines.
+**Summary:** The user reported a `PathNotFoundException` for `D:\tmp\untranslated.json` during the implicit `flutter gen-l10n` step of `flutter pub get`. The `untranslated-messages-file` property in `l10n.yaml` was set to the absolute path `/tmp/untranslated.json`, which on Windows resolves to the root of the current drive (e.g., `D:\tmp`) and crashes if the directory doesn't exist. Replaced the absolute path with the project-relative `.dart_tool/untranslated.json` to ensure deterministic, cross-platform code generation.
+**Files Changed:** `l10n.yaml`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter gen-l10n` (pass); `flutter pub get` (pass).
+**Follow-ups:** None.
+
 ## Coding Conventions
 - Use Riverpod providers (not setState or Bloc)
 - Use go_router named routes (RouteNames constants)
