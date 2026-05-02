@@ -567,7 +567,7 @@ class _CategoryFilterChips extends StatelessWidget {
     ];
 
     return SizedBox(
-      height: 40,
+      height: MqSpacing.minTapTarget,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,

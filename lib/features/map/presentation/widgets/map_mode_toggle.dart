@@ -85,6 +85,8 @@ class _PillSegment extends StatelessWidget {
         child: AnimatedContainer(
           duration: MqAnimations.normal,
           curve: Curves.easeInOut,
+          constraints: const BoxConstraints(minHeight: MqSpacing.minTapTarget),
+          alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(
             horizontal: MqSpacing.space6,
             vertical: MqSpacing.space2,

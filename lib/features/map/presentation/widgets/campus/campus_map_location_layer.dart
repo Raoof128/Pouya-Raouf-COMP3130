@@ -105,11 +105,11 @@ class CampusMapLocationLayer extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(0xFF2E8B57),
+              color: MqColors.success,
               border: Border.all(color: Colors.white, width: 2.5),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF2E8B57).withValues(alpha: 0.35),
+                  color: MqColors.success.withValues(alpha: 0.35),
                   blurRadius: 8,
                 ),
               ],

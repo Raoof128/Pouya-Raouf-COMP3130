@@ -464,6 +464,10 @@ class _TravelModePills extends StatelessWidget {
                 onTap: () => onChanged(mode),
                 child: AnimatedContainer(
                   duration: MqAnimations.normal,
+                  constraints: const BoxConstraints(
+                    minHeight: MqSpacing.minTapTarget,
+                  ),
+                  alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(
                     horizontal: MqSpacing.space4,
                     vertical: MqSpacing.space2,

@@ -644,6 +644,34 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-05-02 (AEST) — UI/UX Audit and Accessibility Fix for Map Feature
+**Scope:** Full UI/UX audit of all presentation files in `lib/features/map/presentation/` to ensure adherence to UI constraints (MqColors/MqSpacing, RTL layout, minimum tap targets).
+
+**Summary:**
+Conducted a comprehensive file-by-file audit across 14 presentation files. Fixed the following violations:
+- Replaced a hardcoded height constraint (40 -> 48dp) in `_CategoryFilterChips` to meet minimum tap targets.
+- Replaced `Positioned` with `PositionedDirectional` in `MapShell` for robust RTL language support.
+- Added `BoxConstraints(minHeight: MqSpacing.minTapTarget)` to the interactive pill elements in `MapModeToggle` and `_TravelModePills`.
+- Replaced all hardcoded hex colors (e.g., `0xFF2E8B57`, `0xFF4285F4`) across both campus and Google Map layers with their equivalent `MqColors` semantic tokens (`MqColors.success`, `MqColors.slate400`, `MqColors.info`, etc.).
+
+**Files Changed:**
+- `lib/features/map/presentation/pages/map_page.dart`
+- `lib/features/map/presentation/widgets/map_shell.dart`
+- `lib/features/map/presentation/widgets/map_mode_toggle.dart`
+- `lib/features/map/presentation/widgets/route_panel.dart`
+- `lib/features/map/presentation/widgets/campus/campus_map_location_layer.dart`
+- `lib/features/map/presentation/widgets/google/google_map_view.dart`
+- `lib/features/map/presentation/widgets/google/desktop_map_fallback_view.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Verification:**
+- `dart format lib/features/map/presentation/` (pass)
+- `flutter analyze lib/features/map/presentation/` (no issues)
+
+**Follow-ups:**
+- None.
+
 ### Raouf: 2026-04-23 (AEST) — Commute Preferences in Settings + Home countdown filtering
 
 **Scope:** Settings personalization and Home live departure behavior.

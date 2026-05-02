@@ -391,7 +391,7 @@ class _DesktopMapFallbackViewState
           latlong.LatLng(minLat, minLng),
           latlong.LatLng(maxLat, maxLng),
         ),
-        padding: const EdgeInsets.all(80),
+        padding: const EdgeInsets.all(MqSpacing.space16),
       ),
     );
   }

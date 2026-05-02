@@ -180,6 +180,13 @@ lib/
 **Verification:** `dart format lib/features/home/presentation/pages/home_page.dart` (pass); `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
 **Follow-ups:** None.
 
+### Raouf: 2026-05-02 (AEST) — UI/UX Audit and Accessibility Fix for Map Feature
+**Scope:** Full UI/UX audit of all presentation files in `lib/features/map/presentation/` to ensure adherence to UI constraints (MqColors/MqSpacing, RTL layout, minimum tap targets).
+**Summary:** Conducted a comprehensive file-by-file audit across 14 presentation files. Fixed the following violations: replaced hardcoded height constraint (40 -> 48dp) in `_CategoryFilterChips`, replaced `Positioned` with `PositionedDirectional` in `MapShell` for RTL support, added 48dp minimum height constraints to `MapModeToggle` and `_TravelModePills`, and replaced all hardcoded hex colors across both campus and Google Map layers with equivalent `MqColors` semantic tokens (`MqColors.success`, `MqColors.slate400`, `MqColors.info`, `MqColors.warning`, `MqColors.slate600`).
+**Files Changed:** `map_page.dart`, `map_shell.dart`, `map_mode_toggle.dart`, `route_panel.dart`, `campus_map_location_layer.dart`, `google_map_view.dart`, `desktop_map_fallback_view.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` (pass); `flutter analyze lib/features/map/presentation/` (no issues).
+**Follow-ups:** None.
+
 ## Coding Conventions
 - Use Riverpod providers (not setState or Bloc)
 - Use go_router named routes (RouteNames constants)

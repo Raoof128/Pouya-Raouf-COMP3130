@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'web_maps_key_stub.dart'
     if (dart.library.js_interop) 'web_maps_key.dart';
+import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/core/config/env_config.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
@@ -281,7 +282,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
                 .map((p) => LatLng(p.latitude, p.longitude))
                 .toList(),
             width: 5,
-            color: const Color(0xFF94a3b8),
+            color: MqColors.slate400,
           ),
         );
       }

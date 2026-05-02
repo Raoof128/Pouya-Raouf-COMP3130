@@ -148,8 +148,8 @@ class MapShell extends StatelessWidget {
 
         // ── Layers button — bottom-left ────────────────────
         if (renderer == MapRendererType.campus && onOpenOverlayPicker != null)
-          Positioned(
-            left: MqSpacing.space4,
+          PositionedDirectional(
+            start: MqSpacing.space4,
             bottom:
                 safeBottom +
                 (footerWidget != null ? _footerClearance : MqSpacing.space4),
@@ -162,8 +162,8 @@ class MapShell extends StatelessWidget {
           ),
 
         // ── Location button — bottom-right ─────────────────
-        Positioned(
-          right: MqSpacing.space4,
+        PositionedDirectional(
+          end: MqSpacing.space4,
           bottom:
               safeBottom +
               (footerWidget != null ? _footerClearance : MqSpacing.space4),
