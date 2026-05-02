@@ -352,6 +352,79 @@ void main() {
 
       expect(repository.routeCallCount, greaterThan(initialRouteCalls));
     });
+
+    test(
+      'clearSelection from focused-with-query state preserves the query (back-to-list)',
+      () async {
+        // Repro of the focused → list back behavior: when a user is in
+        // category browse mode AND has drilled into a specific
+        // building, tapping close on the RoutePanel should return to
+        // the category list — not wipe everything.
+        final repository = _FakeMapRepository(
+          buildings: [building, secondBuilding],
+        );
+        final container = ProviderContainer(
+          overrides: [
+            mapRepositoryProvider.overrideWithValue(repository),
+            settingsControllerProvider.overrideWith(
+              () => _FakeSettingsController(),
+            ),
+          ],
+        );
+        addTearDown(container.dispose);
+
+        await container.read(mapControllerProvider.future);
+        final notifier = container.read(mapControllerProvider.notifier);
+
+        notifier.updateSearchQuery('library');
+        notifier.selectBuilding(building);
+        expect(
+          container.read(mapControllerProvider).value!.selectedBuilding,
+          building,
+        );
+
+        notifier.clearSelection();
+        final after = container.read(mapControllerProvider).value!;
+        expect(after.selectedBuilding, isNull);
+        expect(
+          after.searchQuery,
+          'library',
+          reason: 'Query preserved so the category list reappears',
+        );
+      },
+    );
+
+    test(
+      'clearCategoryBrowse fully resets even when a query is active',
+      () async {
+        // The X button on the category list panel uses this method to
+        // exit category browse entirely — distinct from clearSelection.
+        final repository = _FakeMapRepository(buildings: [building]);
+        final container = ProviderContainer(
+          overrides: [
+            mapRepositoryProvider.overrideWithValue(repository),
+            settingsControllerProvider.overrideWith(
+              () => _FakeSettingsController(),
+            ),
+          ],
+        );
+        addTearDown(container.dispose);
+
+        await container.read(mapControllerProvider.future);
+        final notifier = container.read(mapControllerProvider.notifier);
+
+        notifier.updateSearchQuery('food');
+        expect(
+          container.read(mapControllerProvider).value!.searchQuery,
+          'food',
+        );
+
+        notifier.clearCategoryBrowse();
+        final after = container.read(mapControllerProvider).value!;
+        expect(after.searchQuery, isEmpty);
+        expect(after.selectedBuilding, isNull);
+      },
+    );
   });
 
   group('MapState', () {

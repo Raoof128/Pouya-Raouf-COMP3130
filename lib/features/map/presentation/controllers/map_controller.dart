@@ -575,6 +575,39 @@ class MapController extends AsyncNotifier<MapState> {
     );
   }
 
+  /// Closes the category-browse panel entirely.
+  ///
+  /// Used by the **X button on the category list footer** — distinct
+  /// from `clearSelection` which is the focused-back-to-list affordance.
+  /// This method always performs a full reset: clears selection, route,
+  /// search query, and rehydrates the default visible-buildings set.
+  /// After this, the user lands on the empty/default map state.
+  void clearCategoryBrowse() {
+    final current = state.value;
+    if (current == null) {
+      return;
+    }
+    _invalidateRouteRequest();
+    _locationSubscription?.cancel();
+    _locationSubscription = null;
+    _lastRouteFetchLocation = null;
+    state = AsyncData(
+      current.copyWith(
+        clearSelectedBuilding: true,
+        clearRoute: true,
+        searchQuery: '',
+        searchResults: searchCampusBuildings(
+          current.buildings,
+          '',
+        ).take(_defaultVisibleBuildings).toList(),
+        isNavigating: false,
+        hasArrived: false,
+        isLoadingRoute: false,
+        clearError: true,
+      ),
+    );
+  }
+
   /// Closes the currently-focused destination.
   ///
   /// **Contextual semantics**:

@@ -1069,6 +1069,22 @@ class _StopSearchSheetState extends ConsumerState<_StopSearchSheet> {
               Expanded(
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 160),
+                  // Pin results to the top of the available area —
+                  // AnimatedSwitcher's default layoutBuilder uses
+                  // `Stack(alignment: Alignment.center)`, which was
+                  // pushing short result lists to the middle of the
+                  // sheet, leaving an awkward gap below the search
+                  // field. A topCenter Stack makes results appear
+                  // directly under the input regardless of count.
+                  layoutBuilder: (currentChild, previousChildren) {
+                    return Stack(
+                      alignment: Alignment.topCenter,
+                      children: <Widget>[
+                        ...previousChildren,
+                        ?currentChild,
+                      ],
+                    );
+                  },
                   child: trimmedQuery.length < 2
                       ? _StopSearchMessage(text: l10n.favoriteStopSearchPrompt)
                       : searchResults.when(

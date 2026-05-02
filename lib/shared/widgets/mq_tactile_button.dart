@@ -6,7 +6,14 @@ import 'package:mq_navigation/core/utils/haptics.dart';
 /// Reusable tactile wrapper that adds:
 /// - squishy press-in scale animation
 /// - optional haptic tap feedback
-/// - subtle resting drop shadow
+///
+/// **No drop shadow.** The shadow that previously sat under every
+/// instance read as elegant elevation in dark mode but as a dark
+/// blob in light mode against white surfaces (e.g. event-action
+/// arrows, Quick Access tiles). Cards in this app rely on borders
+/// + rounded radii for surface separation, so the shadow was
+/// double-emphasis. Removing it gives a cleaner, theme-consistent
+/// look in both light and dark modes.
 class MqTactileButton extends StatefulWidget {
   const MqTactileButton({
     super.key,
@@ -56,20 +63,7 @@ class _MqTactileButtonState extends State<MqTactileButton> {
         scale: _isPressed ? 0.96 : 1.0,
         duration: MqAnimations.fast,
         curve: Curves.easeInOut,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-            boxShadow: [
-              if (!_isPressed)
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.22),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-            ],
-          ),
-          child: widget.child,
-        ),
+        child: widget.child,
       ),
     );
   }

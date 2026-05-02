@@ -166,7 +166,10 @@ class _MapPageState extends ConsumerState<MapPage> {
                     buildings: mapState.searchResults,
                     searchQuery: mapState.searchQuery,
                     onSelectBuilding: controller.selectBuilding,
-                    onClear: controller.clearSelection,
+                    // X on the category list panel = exit category
+                    // browse entirely. `clearSelection` is reserved
+                    // for focused-back-to-list (RoutePanel close).
+                    onClear: controller.clearCategoryBrowse,
                   )
                 : mapState.selectedBuilding != null
                 ? RoutePanel(

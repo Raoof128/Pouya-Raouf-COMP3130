@@ -57,17 +57,21 @@ class _OnboardingCard extends StatelessWidget {
     return MqTactileButton(
       onTap: () => BachelorPickerSheet.show(context),
       borderRadius: MqSpacing.radiusXl,
+      // Same glassy white surface as the Metro Countdown card above —
+      // gives the Open Day onboarding affordance a proper card
+      // container so it reads as an intentional surface rather than a
+      // translucent red wash floating over the campus background.
+      // The red identity moves to the icon + uppercase eyebrow text,
+      // not to the surface itself.
       child: Container(
         padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
         decoration: BoxDecoration(
           color: dark
-              ? MqColors.vividRed.withAlpha(20)
-              : MqColors.red.withAlpha(14),
+              ? MqColors.charcoal850
+              : Colors.white.withValues(alpha: 0.92),
           borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
           border: Border.all(
-            color: dark
-                ? MqColors.vividRed.withAlpha(70)
-                : MqColors.red.withAlpha(40),
+            color: dark ? Colors.white.withAlpha(13) : MqColors.sand200,
           ),
         ),
         child: Row(

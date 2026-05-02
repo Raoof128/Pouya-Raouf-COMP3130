@@ -133,9 +133,33 @@ Future<List<TransitStop>> _searchStops({
         .map(TransitStop.fromJson)
         .where((stop) => stop.id.isNotEmpty && stop.name.isNotEmpty)
         .toList();
-    return list;
+    return dedupeTransitStops(list);
   } catch (error, stackTrace) {
     AppLogger.warning('TfNSW stop search failed', error, stackTrace);
     return const [];
   }
+}
+
+/// TfNSW returns the parent station and each platform stop as separate
+/// records (e.g. `2155384` Tallawong Station and `G276288` Tallawong
+/// Station, Implexa Pde). For a "preferred stop" UX, the user thinks
+/// of those as the same place. Collapse by the part before the first
+/// comma (case-insensitive, trimmed) and keep the entry with the
+/// shortest name — i.e. the parent-station / cleanest version.
+///
+/// Exposed (without the leading underscore) so unit tests can pin
+/// the dedup contract without going through the network layer.
+List<TransitStop> dedupeTransitStops(List<TransitStop> stops) {
+  final byKey = <String, TransitStop>{};
+  for (final stop in stops) {
+    final key = stop.name.split(',').first.trim().toLowerCase();
+    if (key.isEmpty) {
+      continue;
+    }
+    final existing = byKey[key];
+    if (existing == null || stop.name.length < existing.name.length) {
+      byKey[key] = stop;
+    }
+  }
+  return byKey.values.toList(growable: false);
 }
