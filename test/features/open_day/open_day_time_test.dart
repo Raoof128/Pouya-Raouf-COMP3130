@@ -35,10 +35,7 @@ void main() {
     test('long date renders as Saturday in Sydney for the 2026 cycle', () {
       // 2026-08-08 is a Saturday.
       final date = DateTime.parse('2026-08-08T10:00:00+10:00');
-      expect(
-        OpenDayTime.formatLongDate(date),
-        startsWith('Saturday'),
-      );
+      expect(OpenDayTime.formatLongDate(date), startsWith('Saturday'));
     });
 
     test('sydneyHour returns wall-clock Sydney hour', () {

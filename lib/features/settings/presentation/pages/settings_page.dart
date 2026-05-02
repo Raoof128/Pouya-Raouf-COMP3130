@@ -1079,10 +1079,7 @@ class _StopSearchSheetState extends ConsumerState<_StopSearchSheet> {
                   layoutBuilder: (currentChild, previousChildren) {
                     return Stack(
                       alignment: Alignment.topCenter,
-                      children: <Widget>[
-                        ...previousChildren,
-                        ?currentChild,
-                      ],
+                      children: <Widget>[...previousChildren, ?currentChild],
                     );
                   },
                   child: trimmedQuery.length < 2

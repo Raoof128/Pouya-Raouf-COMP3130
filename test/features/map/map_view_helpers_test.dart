@@ -2,10 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/map_view_helpers.dart';
 
-Building _b({
-  required String id,
-  bool geo = true,
-}) {
+Building _b({required String id, bool geo = true}) {
   return Building(
     id: id,
     code: id,

@@ -153,9 +153,7 @@ void main() {
       () async {
         await scheduler.reschedule(
           preferences: _prefs(master: false),
-          events: [
-            _event(id: 'a', startTime: DateTime(2099, 1, 1, 10, 0)),
-          ],
+          events: [_event(id: 'a', startTime: DateTime(2099, 1, 1, 10, 0))],
           selectedBachelor: _bachelor('computing'),
           now: DateTime(2026, 1, 1),
         );
@@ -174,9 +172,7 @@ void main() {
       () async {
         await scheduler.reschedule(
           preferences: _prefs(openDay: false),
-          events: [
-            _event(id: 'a', startTime: DateTime(2099, 1, 1, 10, 0)),
-          ],
+          events: [_event(id: 'a', startTime: DateTime(2099, 1, 1, 10, 0))],
           selectedBachelor: _bachelor('computing'),
           now: DateTime(2026, 1, 1),
         );
@@ -189,9 +185,7 @@ void main() {
     test('cancels everything when no bachelor is selected', () async {
       await scheduler.reschedule(
         preferences: _prefs(bachelorId: null),
-        events: [
-          _event(id: 'a', startTime: DateTime(2099, 1, 1, 10, 0)),
-        ],
+        events: [_event(id: 'a', startTime: DateTime(2099, 1, 1, 10, 0))],
         selectedBachelor: null,
         now: DateTime(2026, 1, 1),
       );
@@ -200,45 +194,37 @@ void main() {
       expect(fake.cancelExceptCalls.single, isEmpty);
     });
 
-    test(
-      'lead-time changes shift the scheduled fire time correctly',
-      () async {
-        final now = DateTime(2026, 8, 8, 9, 0);
-        final event = _event(id: 'a', startTime: DateTime(2026, 8, 8, 10, 0));
+    test('lead-time changes shift the scheduled fire time correctly', () async {
+      final now = DateTime(2026, 8, 8, 9, 0);
+      final event = _event(id: 'a', startTime: DateTime(2026, 8, 8, 10, 0));
 
-        // 30-minute lead — reminder fires at 9:30.
-        await scheduler.reschedule(
-          preferences: _prefs(minutes: 30),
-          events: [event],
-          selectedBachelor: _bachelor('computing'),
-          now: now,
-        );
-        expect(fake.scheduled.single.scheduledFor, DateTime(2026, 8, 8, 9, 30));
+      // 30-minute lead — reminder fires at 9:30.
+      await scheduler.reschedule(
+        preferences: _prefs(minutes: 30),
+        events: [event],
+        selectedBachelor: _bachelor('computing'),
+        now: now,
+      );
+      expect(fake.scheduled.single.scheduledFor, DateTime(2026, 8, 8, 9, 30));
 
-        // 60-minute lead — reminder fires at 9:00 (at `now`, but `isBefore`
-        // is strict so 9:00 == 9:00 still schedules, not skips).
-        fake.scheduled.clear();
-        await scheduler.reschedule(
-          preferences: _prefs(minutes: 60),
-          events: [event],
-          selectedBachelor: _bachelor('computing'),
-          now: now,
-        );
-        expect(fake.scheduled.single.scheduledFor, DateTime(2026, 8, 8, 9, 0));
-      },
-    );
+      // 60-minute lead — reminder fires at 9:00 (at `now`, but `isBefore`
+      // is strict so 9:00 == 9:00 still schedules, not skips).
+      fake.scheduled.clear();
+      await scheduler.reschedule(
+        preferences: _prefs(minutes: 60),
+        events: [event],
+        selectedBachelor: _bachelor('computing'),
+        now: now,
+      );
+      expect(fake.scheduled.single.scheduledFor, DateTime(2026, 8, 8, 9, 0));
+    });
 
     test(
       'reminder body includes event title and venue for personalisation',
       () async {
         await scheduler.reschedule(
           preferences: _prefs(),
-          events: [
-            _event(
-              id: 'a',
-              startTime: DateTime(2099, 1, 1, 12, 0),
-            ),
-          ],
+          events: [_event(id: 'a', startTime: DateTime(2099, 1, 1, 12, 0))],
           selectedBachelor: _bachelor('computing'),
           now: DateTime(2026, 1, 1),
         );
@@ -253,10 +239,7 @@ void main() {
     test(
       'lead-time is clamped to the 5-60 minute range even if state has out-of-range value',
       () async {
-        final event = _event(
-          id: 'a',
-          startTime: DateTime(2099, 1, 1, 12, 0),
-        );
+        final event = _event(id: 'a', startTime: DateTime(2099, 1, 1, 12, 0));
 
         // Way too high — should be clamped to 60.
         await scheduler.reschedule(

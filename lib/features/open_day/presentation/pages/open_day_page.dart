@@ -248,7 +248,10 @@ class _EventTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = context.isDarkMode;
-    final timeRange = OpenDayTime.formatTimeRange(event.startTime, event.endTime);
+    final timeRange = OpenDayTime.formatTimeRange(
+      event.startTime,
+      event.endTime,
+    );
 
     return DecoratedBox(
       decoration: BoxDecoration(

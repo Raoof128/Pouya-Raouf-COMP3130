@@ -49,8 +49,7 @@ class EventActionsSheet extends ConsumerWidget {
     final dark = context.isDarkMode;
     final buildingsAsync = ref.watch(buildingRegistryProvider);
     final building = _resolveBuilding(buildingsAsync.value, event.buildingCode);
-    final hasResolvedBuilding =
-        event.buildingCode != null && building != null;
+    final hasResolvedBuilding = event.buildingCode != null && building != null;
 
     return MqBottomSheet(
       child: Padding(
@@ -136,9 +135,7 @@ class EventActionsSheet extends ConsumerWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  subtitle: const Text(
-                    'Open Google Maps inside MQ Navigation',
-                  ),
+                  subtitle: const Text('Open Google Maps inside MQ Navigation'),
                   onTap: () => _routeToMap(
                     context,
                     ref,
@@ -149,9 +146,7 @@ class EventActionsSheet extends ConsumerWidget {
             ] else
               const Padding(
                 padding: EdgeInsetsDirectional.all(MqSpacing.space4),
-                child: Text(
-                  'No mappable venue for this event yet.',
-                ),
+                child: Text('No mappable venue for this event yet.'),
               ),
           ],
         ),

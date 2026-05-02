@@ -9,7 +9,10 @@ void main() {
       () {
         // Real-world example from the screenshot bug report.
         final stops = [
-          const TransitStop(id: 'G276288', name: 'Tallawong Station, Implexa Pde'),
+          const TransitStop(
+            id: 'G276288',
+            name: 'Tallawong Station, Implexa Pde',
+          ),
           const TransitStop(id: '2155384', name: 'Tallawong Station'),
         ];
 
