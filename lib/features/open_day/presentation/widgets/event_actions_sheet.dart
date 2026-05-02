@@ -6,10 +6,11 @@ import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/features/map/data/datasources/building_registry_source.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
+import 'package:mq_navigation/features/map/domain/entities/map_renderer_type.dart';
+import 'package:mq_navigation/features/map/presentation/controllers/map_controller.dart';
 import 'package:mq_navigation/features/open_day/domain/entities/open_day_data.dart';
 import 'package:mq_navigation/shared/extensions/context_extensions.dart';
 import 'package:mq_navigation/shared/widgets/mq_bottom_sheet.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// Bottom sheet shown when the user taps the direction icon on an event.
 ///
@@ -129,10 +130,24 @@ class EventActionsSheet extends ConsumerWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                subtitle: const Text('Open external turn-by-turn directions'),
+                subtitle: const Text(
+                  'Open inside MQ Navigation using Google Maps',
+                ),
                 onTap: () async {
                   Navigator.pop(context);
-                  await _openInGoogleMaps(building, event);
+                  ref
+                      .read(mapControllerProvider.notifier)
+                      .setRenderer(MapRendererType.google);
+                  await Future.delayed(const Duration(milliseconds: 300));
+                  if (!context.mounted) return;
+                  if (event.buildingCode != null && building != null) {
+                    context.goNamed(
+                      RouteNames.buildingDetail,
+                      pathParameters: {'buildingId': event.buildingCode!},
+                    );
+                  } else {
+                    context.goNamed(RouteNames.map);
+                  }
                 },
               ),
             ),
@@ -151,22 +166,5 @@ class EventActionsSheet extends ConsumerWidget {
       }
     }
     return null;
-  }
-
-  /// Opens Google Maps with the best available signal:
-  ///   1. Exact lat/lng from `buildings.json` if we have it.
-  ///   2. Otherwise, a search query built from venue name + "Macquarie
-  ///      University" so Google can resolve it heuristically.
-  Future<void> _openInGoogleMaps(Building? b, OpenDayEvent e) async {
-    final Uri uri;
-    if (b != null) {
-      uri = Uri.parse(
-        'https://www.google.com/maps/search/?api=1&query=${b.latitude},${b.longitude}',
-      );
-    } else {
-      final q = Uri.encodeQueryComponent('${e.venueName} Macquarie University');
-      uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$q');
-    }
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }

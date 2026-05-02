@@ -644,6 +644,24 @@ All notable changes to the MQ Navigation Flutter app.
 
 ## [Unreleased]
 
+### Raouf: 2026-05-02 (AEST) — Open Day Google Maps Routing Fix
+**Scope:** Updated the "Navigate with Google Maps" action in the Open Day event sheet to route to the internal Google Maps view rather than launching an external browser.
+
+**Summary:**
+The user requested that the Google Maps navigation button for Open Day events should redirect to the app's internal map instead of launching an external URL. Modified `event_actions_sheet.dart` to call `ref.read(mapControllerProvider.notifier).setRenderer(MapRendererType.google)` and then use `context.goNamed(RouteNames.buildingDetail)` to open the `MapPage` with the Google Map renderer active. Cleaned up the file by removing the unused `url_launcher` import and the old `_openInGoogleMaps` function.
+
+**Files Changed:**
+- `lib/features/open_day/presentation/widgets/event_actions_sheet.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Verification:**
+- `dart format lib/features/open_day/` (pass)
+- `flutter analyze lib/features/open_day/` (no issues)
+
+**Follow-ups:**
+- None.
+
 ### Raouf: 2026-05-02 (AEST) — UI/UX Audit and Accessibility Fix for Open Day Feature
 **Scope:** Full UI/UX audit of all presentation files in `lib/features/open_day/presentation/` to ensure adherence to UI constraints (MqColors/MqSpacing, RTL layout, minimum tap targets, and semantic labels).
 
