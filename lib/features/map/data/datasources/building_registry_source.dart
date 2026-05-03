@@ -18,7 +18,31 @@ import 'package:mq_navigation/features/map/domain/entities/building.dart';
 ///   v2 — Open Day 2026 release: `faculty`, `campus hub`, and
 ///        `student services` tags, plus 66 cross-departmental aliases
 ///        and the Gale History Museum entry.
-const _cacheKey = 'building_registry.v2';
+///   v3 — Campus tour script enrichment: aliases + searchTokens for
+///        Service Connect, IT Service Desk, Learning Connect, Career
+///        and Employment Service (18WW); Michael Kirby Building, Law
+///        Commons, Moot Courts (17WW); Arts Precinct, Faculty of Arts
+///        Offices, A/B/C aliases (25BWW); The Hub, student group
+///        stalls (1CC); Lincoln Building, Research Office (16WW);
+///        15-17 Gymnasium Road on Student Accommodation; Macquarie
+///        Theatre under Campus Hub. Three duplicate sub-building
+///        entries removed (17WWMICHAE, 18WWSERVIC, 16WWLINCOL).
+///   v4 — Campus tour script pages 4–8: dual-address 14SCO ↔ 12WW;
+///        Muslim Prayer Rooms, Macquarie International, MQ University
+///        College, Numeracy Centre, Emergency Blue Help Point, Mason
+///        Theatre on 14SCO; Walanga Muru Pavilion / Jannawi context
+///        on WALU; Australian Hearing Hub + Student Wellbeing +
+///        Accessibility + Counselling + Welfare on 16UA; Ainsworth /
+///        Clinical Education on AINS; Frank the Bear on 6WW; T1 +
+///        theatres on LOTUS and 29WW; MUSAC + sport-and-aquatic
+///        aliases on SPORT; Macquarie University History Museum on
+///        GALEHIST; Macquarie University Village on MQV; 2SER 107.3
+///        on CHAP (10 Hadenfeld); Campus Security Office on LIB;
+///        2 Technology Place on CLINIC; Biological Sciences Museum
+///        aliases on BIODISC and 6SR; parking-on-campus tokens on
+///        every parking entry. Four duplicate stubs removed (27WW,
+///        16UAAUSTRA, 25CWW, 1WW).
+const _cacheKey = 'building_registry.v4';
 const _assetPath = 'assets/data/buildings.json';
 
 /// Data source for the campus building registry.

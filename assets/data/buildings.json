@@ -22,7 +22,16 @@
       "Information Technology",
       "Campus Life",
       "Property",
-      "Group Marketing"
+      "Group Marketing",
+      "IT Service Desk",
+      "Learning Connect",
+      "Career and Employment Service",
+      "Careers Service",
+      "Student Advocacy",
+      "Enrolment Support",
+      "TechBar",
+      "Writing Centre",
+      "Computer Lab"
     ],
     "tags": [
       "services",
@@ -30,7 +39,38 @@
       "study",
       "student services"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "student admin",
+      "student admin help",
+      "admin help",
+      "enrolment",
+      "enrolment help",
+      "enrol",
+      "transcript",
+      "transcript help",
+      "usi",
+      "usi enquiries",
+      "student advocacy",
+      "advocacy",
+      "it help",
+      "it support",
+      "tech support",
+      "wifi help",
+      "careers",
+      "careers support",
+      "employability",
+      "employability support",
+      "learning connect",
+      "learning support",
+      "computer lab",
+      "computers",
+      "tech bar",
+      "service connect",
+      "student services",
+      "academic standing",
+      "course progression",
+      "course transfer"
+    ],
     "gridRef": "N16",
     "levels": 4,
     "wheelchair": false
@@ -51,7 +91,11 @@
     "campusY": 2388,
     "aliases": [
       "Lachlan Macquarie Room",
-      "Library Café"
+      "Library Café",
+      "Campus Security Office",
+      "Campus Security",
+      "Library Information Desk",
+      "16 Macquarie Walk"
     ],
     "tags": [
       "academic",
@@ -59,7 +103,16 @@
       "resources",
       "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "campus security",
+      "security office",
+      "library information desk",
+      "lost and found",
+      "campus shuttle",
+      "after-hours security",
+      "security escort",
+      "emergency 9999"
+    ],
     "gridRef": "Q17",
     "levels": 8,
     "wheelchair": false
@@ -110,7 +163,20 @@
       "Department of Critical Indigenous Studies",
       "Macquarie School of Education",
       "Macquarie School of Social Sciences",
-      "Department of Security Studies & Criminology"
+      "Department of Security Studies & Criminology",
+      "25 Wally's Walk",
+      "25 WW",
+      "25WW",
+      "25A Wally's Walk",
+      "25C Wally's Walk",
+      "25WWA",
+      "25WWB",
+      "25WWC",
+      "Arts Precinct",
+      "Arts Precinct Building",
+      "Faculty of Arts Offices",
+      "FOA",
+      "Cult Café"
     ],
     "tags": [
       "academic",
@@ -118,7 +184,22 @@
       "teaching",
       "faculty"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "arts precinct",
+      "arts",
+      "faculty of arts",
+      "foa",
+      "tutorial rooms",
+      "tutorials",
+      "faculty offices",
+      "staff offices",
+      "student study spaces",
+      "study spaces",
+      "25ww",
+      "25 ww",
+      "25 wally",
+      "museum of history"
+    ],
     "gridRef": "O13",
     "levels": null,
     "wheelchair": false
@@ -140,7 +221,17 @@
     "aliases": [
       "Macquarie Law School",
       "Department of Philosophy",
-      "Department of Media, Communication, Creative Arts"
+      "Department of Media, Communication, Creative Arts",
+      "17 Wally's Walk",
+      "17 WW",
+      "17WW",
+      "Michael Kirby Building",
+      "Michael Kirby",
+      "Law School",
+      "Law Building",
+      "Law Commons",
+      "Moot Courts",
+      "Moot Court"
     ],
     "tags": [
       "academic",
@@ -148,7 +239,23 @@
       "media",
       "faculty"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "law",
+      "law school",
+      "law commons",
+      "moot",
+      "moot courts",
+      "moot court",
+      "main law offices",
+      "law offices",
+      "teaching facilities",
+      "teaching",
+      "michael kirby",
+      "kirby",
+      "17ww",
+      "17 ww",
+      "17 wally"
+    ],
     "gridRef": "O19",
     "levels": 3,
     "wheelchair": false
@@ -235,15 +342,54 @@
       "Speech & Hearing Clinic",
       "Psychology Clinic",
       "Reading Clinic",
-      "Centre for Emotional Health"
+      "Centre for Emotional Health",
+      "16 University Avenue",
+      "16 UA",
+      "16UA",
+      "Australian Hearing Hub",
+      "Hearing Hub",
+      "Student Wellbeing",
+      "Accessibility Service",
+      "Counselling Services",
+      "Welfare Services",
+      "Student Care and Reporting Network",
+      "Care MQ Reports",
+      "CARE Reports",
+      "IUB Report"
     ],
     "tags": [
       "academic",
       "psychology",
       "health",
-      "faculty"
+      "faculty",
+      "student services"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "australian hearing hub",
+      "hearing hub",
+      "student wellbeing",
+      "wellbeing",
+      "accessibility service",
+      "accessibility",
+      "disability support",
+      "counselling",
+      "counsellor",
+      "counselling services",
+      "welfare",
+      "welfare services",
+      "financial difficulty",
+      "student care",
+      "care mq",
+      "care report",
+      "iub",
+      "inappropriate unwanted behaviour",
+      "complaints",
+      "misconduct",
+      "academic misconduct",
+      "16ua",
+      "16 ua",
+      "16 university"
+    ],
     "gridRef": "T14",
     "levels": null,
     "wheelchair": false
@@ -264,7 +410,10 @@
     "campusY": 1906,
     "aliases": [
       "School of Engineering",
-      "Australian Astronomical Optics"
+      "Australian Astronomical Optics",
+      "9 Wally's Walk",
+      "9 WW",
+      "9WW"
     ],
     "tags": [
       "academic",
@@ -272,7 +421,14 @@
       "labs",
       "faculty"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "tutorial rooms",
+      "level 1",
+      "classes",
+      "9ww",
+      "9 ww",
+      "9 wally"
+    ],
     "gridRef": "O22",
     "levels": null,
     "wheelchair": false
@@ -320,15 +476,30 @@
     "campusX": 2790,
     "campusY": 1882,
     "aliases": [
-      "School of Mathematical & Physical Sciences"
+      "School of Mathematical & Physical Sciences",
+      "12 Wally's Walk",
+      "12WW",
+      "14 Sir Christopher Ondaatje Avenue",
+      "14 SCO"
     ],
     "tags": [
       "academic",
       "science",
       "research",
-      "faculty"
+      "faculty",
+      "student services"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "dual address",
+      "same building as 14 sco",
+      "maths and physics",
+      "mathematics",
+      "physics",
+      "school of mathematical and physical sciences",
+      "12ww",
+      "12 ww",
+      "12 wally"
+    ],
     "gridRef": "N20",
     "levels": null,
     "wheelchair": false
@@ -349,7 +520,11 @@
     "campusY": 1830,
     "aliases": [
       "School of Natural Sciences",
-      "Herbarium"
+      "Herbarium",
+      "6 Wally's Walk",
+      "6 WW",
+      "6WW",
+      "Frank the Bear"
     ],
     "tags": [
       "academic",
@@ -358,7 +533,16 @@
       "faculty",
       "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "frank the bear",
+      "frank",
+      "biological sciences offices",
+      "natural sciences",
+      "biology",
+      "6ww",
+      "6 ww",
+      "6 wally"
+    ],
     "gridRef": "M23",
     "levels": 3,
     "wheelchair": false
@@ -403,13 +587,31 @@
     "googlePlaceId": null,
     "campusX": 1559,
     "campusY": 1961,
-    "aliases": [],
+    "aliases": [
+      "Lotus Theatre",
+      "27 Wally's Walk",
+      "27 WW",
+      "27WW",
+      "T1",
+      "T1 Theatre"
+    ],
     "tags": [
       "venue",
       "teaching",
-      "events"
+      "events",
+      "faculty"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "lotus theatre",
+      "lotus",
+      "t1",
+      "t1 theatre",
+      "theatres",
+      "tutorial rooms",
+      "27ww",
+      "27 ww",
+      "27 wally"
+    ],
     "gridRef": "O11",
     "levels": null,
     "wheelchair": false
@@ -428,13 +630,21 @@
     "googlePlaceId": null,
     "campusX": 2023,
     "campusY": 1961,
-    "aliases": [],
+    "aliases": [
+      "Macquarie Theatre",
+      "Theatre"
+    ],
     "tags": [
       "venue",
       "teaching",
-      "events"
+      "events",
+      "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "macquarie theatre",
+      "theatre",
+      "wally's walk landmark"
+    ],
     "gridRef": "O15",
     "levels": null,
     "wheelchair": false
@@ -502,12 +712,31 @@
     "googlePlaceId": null,
     "campusX": 3722,
     "campusY": 1871,
-    "aliases": [],
+    "aliases": [
+      "1 Wally's Walk",
+      "1 WW",
+      "1WW",
+      "Ainsworth Building",
+      "Clinical Education Building"
+    ],
     "tags": [
       "academic",
-      "teaching"
+      "teaching",
+      "faculty"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "ainsworth",
+      "ainsworth building",
+      "clinical education",
+      "clinical education building",
+      "fmhhs",
+      "medicine health human sciences",
+      "fmhhs teaching",
+      "teaching building",
+      "1ww",
+      "1 ww",
+      "1 wally"
+    ],
     "gridRef": "N27",
     "levels": null,
     "wheelchair": false
@@ -529,7 +758,10 @@
     "aliases": [
       "Macquarie Medical Imaging",
       "MMI",
-      "Pharmacy (Hospital)"
+      "Pharmacy (Hospital)",
+      "3 Technology Place",
+      "Macquarie University Hospital",
+      "MUH"
     ],
     "tags": [
       "health",
@@ -537,7 +769,18 @@
       "services",
       "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "macquarie university hospital",
+      "muh",
+      "private hospital",
+      "teaching hospital",
+      "specialist clinics",
+      "allied health",
+      "medical imaging",
+      "3 technology",
+      "technology place",
+      "no emergency services"
+    ],
     "gridRef": "L27",
     "levels": null,
     "wheelchair": true
@@ -559,15 +802,29 @@
     "aliases": [
       "Specialist Clinics",
       "GP Clinic",
-      "Physiotherapy Clinic"
+      "Physiotherapy Clinic",
+      "2 Technology Place",
+      "Macquarie University GP Clinic",
+      "University GP Clinic"
     ],
     "tags": [
       "health",
       "medical",
       "services",
-      "student services"
+      "student services",
+      "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "gp clinic",
+      "gp",
+      "general practice",
+      "macquarie gp",
+      "university gp",
+      "bulk billed",
+      "medicare",
+      "2 technology",
+      "technology place"
+    ],
     "gridRef": "K26",
     "levels": null,
     "wheelchair": true
@@ -611,7 +868,11 @@
     "campusX": 1568,
     "campusY": 1210,
     "aliases": [
-      "Sporting Hall of Fame Museum"
+      "Sporting Hall of Fame Museum",
+      "MUSAC",
+      "Macquarie University Sport and Aquatic Centre",
+      "Sport and Aquatic Centre",
+      "10 Gymnasium Road"
     ],
     "tags": [
       "sports",
@@ -619,7 +880,20 @@
       "fitness",
       "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "musac",
+      "sport and aquatic centre",
+      "gym",
+      "pool",
+      "swimming",
+      "fitness",
+      "basketball court",
+      "cycling studio",
+      "group fitness",
+      "health club",
+      "10 gymnasium",
+      "gymnasium road"
+    ],
     "gridRef": "J12",
     "levels": null,
     "wheelchair": true
@@ -663,13 +937,30 @@
     "googlePlaceId": null,
     "campusX": 2449,
     "campusY": 1542,
-    "aliases": [],
+    "aliases": [
+      "UBar",
+      "U Bar",
+      "Central Courtyard",
+      "1 Central Courtyard"
+    ],
     "tags": [
       "food",
       "social",
       "events"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "ubar",
+      "u bar",
+      "pizza",
+      "pizzas",
+      "food and beverage retailers",
+      "food retailers",
+      "food hub",
+      "drink venue",
+      "social events",
+      "macquarie lake",
+      "level g"
+    ],
     "gridRef": "K18",
     "levels": null,
     "wheelchair": false
@@ -688,12 +979,26 @@
     "googlePlaceId": null,
     "campusX": 2424,
     "campusY": 1799,
-    "aliases": [],
+    "aliases": [
+      "Cult Café",
+      "Cult Cafe",
+      "Cult Eatery",
+      "25B Wally's Walk",
+      "25 Wally's Walk B"
+    ],
     "tags": [
       "food",
       "cafe"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "cult",
+      "cult cafe",
+      "cult café",
+      "arts precinct cafe",
+      "cafe",
+      "café",
+      "coffee"
+    ],
     "gridRef": "O13",
     "levels": null,
     "wheelchair": false
@@ -773,14 +1078,27 @@
     "aliases": [
       "Graduate Research Academy",
       "Research Services",
-      "Office of Commercialisation and Innovation"
+      "Office of Commercialisation and Innovation",
+      "16 Wally's Walk",
+      "Lincoln Building",
+      "Research Office"
     ],
     "tags": [
       "research",
       "services",
-      "student services"
+      "student services",
+      "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "lincoln",
+      "lincoln building",
+      "research office",
+      "masters of research",
+      "phd",
+      "16ww",
+      "16 ww",
+      "16 wally"
+    ],
     "gridRef": "N18",
     "levels": null,
     "wheelchair": false
@@ -913,13 +1231,29 @@
     "googlePlaceId": null,
     "campusX": 831,
     "campusY": 2555,
-    "aliases": [],
+    "aliases": [
+      "10 Hadenfeld Avenue",
+      "2SER 107.3",
+      "2SER",
+      "2SER 107.3 Radio Station",
+      "Macquarie Radio Station"
+    ],
     "tags": [
       "services",
       "spiritual",
-      "student services"
+      "student services",
+      "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "2ser",
+      "2ser 107.3",
+      "107.3",
+      "radio station",
+      "student radio",
+      "student media",
+      "community radio",
+      "10 hadenfeld"
+    ],
     "gridRef": "R6",
     "levels": 3,
     "wheelchair": false
@@ -938,14 +1272,33 @@
     "googlePlaceId": null,
     "campusX": 1474,
     "campusY": 1925,
-    "aliases": [],
+    "aliases": [
+      "Walanga Muru",
+      "29 Wally's Walk",
+      "12 Second Way",
+      "Jannawi",
+      "Walanga Muru Pavilion",
+      "Walanga Muru Office"
+    ],
     "tags": [
       "services",
       "indigenous",
       "culture",
       "student services"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "walanga muru",
+      "walu",
+      "jannawi",
+      "pavilion",
+      "aboriginal",
+      "torres strait islander",
+      "first nations",
+      "indigenous students",
+      "first nations support",
+      "indigenous support",
+      "12 second way"
+    ],
     "gridRef": "N11",
     "levels": null,
     "wheelchair": false
@@ -1014,13 +1367,23 @@
     "googlePlaceId": null,
     "campusX": 1466,
     "campusY": 1852,
-    "aliases": [],
+    "aliases": [
+      "Mia Mia Child Care Centre",
+      "Mia Mia",
+      "29 Wally's Walk"
+    ],
     "tags": [
       "services",
       "childcare",
-      "student services"
+      "student services",
+      "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "mia mia",
+      "child care",
+      "childcare",
+      "family support"
+    ],
     "gridRef": "N11",
     "levels": null,
     "wheelchair": false
@@ -1239,12 +1602,24 @@
     "googlePlaceId": null,
     "campusX": 947,
     "campusY": 795,
-    "aliases": [],
+    "aliases": [
+      "Macquarie University Village",
+      "MQ Village",
+      "Village",
+      "Student Village"
+    ],
     "tags": [
       "residential",
-      "accommodation"
+      "accommodation",
+      "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "macquarie university village",
+      "mq village",
+      "student village",
+      "accommodation village",
+      "on campus housing"
+    ],
     "gridRef": "F7",
     "levels": null,
     "wheelchair": false
@@ -1289,14 +1664,24 @@
     "googlePlaceId": null,
     "campusX": 3085,
     "campusY": 1600,
-    "aliases": [],
+    "aliases": [
+      "Biological Sciences Museum",
+      "6 Science Road"
+    ],
     "tags": [
       "science",
       "museum",
       "education",
       "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "biological sciences museum",
+      "biology specimens",
+      "australian fauna",
+      "biology discovery centre",
+      "6 science",
+      "science road"
+    ],
     "gridRef": "L23",
     "levels": null,
     "wheelchair": false
@@ -1315,13 +1700,24 @@
     "googlePlaceId": null,
     "campusX": 2836,
     "campusY": 1927,
-    "aliases": [],
+    "aliases": [
+      "11 Wally's Walk",
+      "11 WW",
+      "11WW"
+    ],
     "tags": [
       "academic",
       "teaching",
       "faculty"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "tutorial rooms",
+      "level 1",
+      "classes",
+      "11ww",
+      "11 ww",
+      "11 wally"
+    ],
     "gridRef": "N22",
     "levels": 4,
     "wheelchair": false
@@ -1391,14 +1787,30 @@
     "campusY": 1618,
     "aliases": [
       "Graduation Venue",
-      "UBar"
+      "UBar",
+      "1 Central Courtyard",
+      "Central Courtyard",
+      "The Hub"
     ],
     "tags": [
       "services",
       "student",
       "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "central courtyard",
+      "the hub",
+      "hub",
+      "student life",
+      "social hub",
+      "student group stalls",
+      "stalls",
+      "clubs and societies",
+      "food and beverage retailers",
+      "food retailers",
+      "graduation hall",
+      "1cc"
+    ],
     "gridRef": "K19",
     "levels": null,
     "wheelchair": false
@@ -1515,13 +1927,21 @@
     "googlePlaceId": null,
     "campusX": 3108,
     "campusY": 1546,
-    "aliases": [],
+    "aliases": [
+      "Biological Sciences Museum",
+      "6 Science Road"
+    ],
     "tags": [
       "academic",
       "science",
-      "labs"
+      "labs",
+      "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "biological sciences museum",
+      "6 science",
+      "science road"
+    ],
     "gridRef": "M23",
     "levels": null,
     "wheelchair": false
@@ -1566,14 +1986,64 @@
     "googlePlaceId": "ChIJP8Z8but6kWsRcH59b0xPlls",
     "campusX": 2686,
     "campusY": 1761,
-    "aliases": [],
+    "aliases": [
+      "14 Sir Christopher Ondaatje Avenue",
+      "14 SCO",
+      "14SCO",
+      "12 Wally's Walk",
+      "12 WW",
+      "12WW (alt)",
+      "Muslim Prayer Rooms",
+      "Prayer Room",
+      "Macquarie International",
+      "Macquarie University College",
+      "MQ College",
+      "English Language Centre",
+      "Independent Learning Centre",
+      "Numeracy Centre",
+      "Emergency Blue Help Point",
+      "Blue Help Point",
+      "Mason Theatre"
+    ],
     "tags": [
       "academic",
       "teaching",
       "exams",
-      "faculty"
+      "faculty",
+      "student services"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "muslim prayer",
+      "prayer rooms",
+      "mumsa",
+      "macquarie international",
+      "international students support",
+      "macquarie university college",
+      "mq college",
+      "foundational courses",
+      "diploma",
+      "pathway",
+      "english language centre",
+      "independent learning",
+      "numeracy centre",
+      "numeracy",
+      "maths support",
+      "statistics support",
+      "mathematics support",
+      "fse numeracy",
+      "emergency blue help point",
+      "blue help point",
+      "emergency help",
+      "help point",
+      "mason theatre",
+      "lecture theatre",
+      "14 sco",
+      "14sco",
+      "dual address",
+      "12 wally",
+      "14 sir christopher",
+      "sir christopher ondaatje"
+    ],
     "gridRef": "N20",
     "levels": 7,
     "wheelchair": false
@@ -1617,12 +2087,25 @@
     "googlePlaceId": null,
     "campusX": 3364,
     "campusY": 2227,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "other",
       "parking"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": false
@@ -1641,12 +2124,25 @@
     "googlePlaceId": null,
     "campusX": 3407,
     "campusY": 2045,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "other",
       "parking"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": false
@@ -2453,7 +2949,7 @@
     "code": "29WW",
     "name": "29WW",
     "description": "29WW building.",
-    "address": null,
+    "address": "29 Wally's Walk",
     "category": "academic",
     "latitude": -33.7742704,
     "longitude": 151.1105191,
@@ -2462,36 +2958,27 @@
     "googlePlaceId": null,
     "campusX": 1496,
     "campusY": 1875,
-    "aliases": [],
-    "tags": [
-      "academic"
+    "aliases": [
+      "29 Wally's Walk",
+      "29 WW",
+      "29WW",
+      "T1",
+      "Mason Theatre"
     ],
-    "searchTokens": [],
-    "gridRef": null,
-    "levels": 1,
-    "wheelchair": false
-  },
-  {
-    "id": "27WW",
-    "code": "27WW",
-    "name": "27WW (Lotus Theatre)",
-    "description": "Major teaching and entertainment venue.",
-    "address": null,
-    "category": "venue",
-    "latitude": -33.7746627,
-    "longitude": 151.1106308,
-    "entranceLatitude": null,
-    "entranceLongitude": null,
-    "googlePlaceId": null,
-    "campusX": 1580,
-    "campusY": 1880,
-    "aliases": [],
     "tags": [
-      "venue",
-      "teaching",
-      "events"
+      "academic",
+      "faculty"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "t1",
+      "t1 theatre",
+      "theatres",
+      "tutorial rooms",
+      "classes",
+      "29ww",
+      "29 ww",
+      "29 wally"
+    ],
     "gridRef": null,
     "levels": 1,
     "wheelchair": false
@@ -2621,7 +3108,7 @@
     "code": "STUDENTACC",
     "name": "Student Accommodation",
     "description": "Student Accommodation.",
-    "address": null,
+    "address": "15-17 Gymnasium Road",
     "category": "residential",
     "latitude": -33.7732885,
     "longitude": 151.1127885,
@@ -2630,12 +3117,29 @@
     "googlePlaceId": null,
     "campusX": 2195,
     "campusY": 1586,
-    "aliases": [],
+    "aliases": [
+      "Student Accommodation",
+      "15-17 Gymnasium Road",
+      "15 Gymnasium Road",
+      "17 Gymnasium Road"
+    ],
     "tags": [
       "residential",
-      "accommodation"
+      "accommodation",
+      "campus hub"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "student accommodation",
+      "accommodation",
+      "on campus accommodation",
+      "on-campus housing",
+      "housing",
+      "dorm",
+      "dorms",
+      "residence",
+      "15-17 gymnasium",
+      "gymnasium road"
+    ],
     "gridRef": null,
     "levels": 1,
     "wheelchair": false
@@ -2737,100 +3241,6 @@
     "wheelchair": false
   },
   {
-    "id": "1WW",
-    "code": "1WW",
-    "name": "1WW (Ainsworth Building)",
-    "description": "1WW (Ainsworth Building).",
-    "address": null,
-    "category": "academic",
-    "latitude": -33.774195,
-    "longitude": 151.118145,
-    "entranceLatitude": null,
-    "entranceLongitude": null,
-    "googlePlaceId": null,
-    "campusX": 3664,
-    "campusY": 1882,
-    "aliases": [],
-    "tags": [
-      "academic"
-    ],
-    "searchTokens": [],
-    "gridRef": null,
-    "levels": 1,
-    "wheelchair": false
-  },
-  {
-    "id": "17WWMICHAE",
-    "code": "17WWMICHAE",
-    "name": "17WW (Michael Kirby Building)",
-    "description": "17WW (Michael Kirby Building).",
-    "address": null,
-    "category": "academic",
-    "latitude": -33.774771,
-    "longitude": 151.113278,
-    "entranceLatitude": null,
-    "entranceLongitude": null,
-    "googlePlaceId": null,
-    "campusX": 2431,
-    "campusY": 1881,
-    "aliases": [],
-    "tags": [
-      "academic"
-    ],
-    "searchTokens": [],
-    "gridRef": null,
-    "levels": 1,
-    "wheelchair": false
-  },
-  {
-    "id": "18WWSERVIC",
-    "code": "18WWSERVIC",
-    "name": "18WW (Service Connect)",
-    "description": "Service Connect - main student services hub with IT, HR, and Financial Services.",
-    "address": null,
-    "category": "services",
-    "latitude": -33.774029,
-    "longitude": 151.112563,
-    "entranceLatitude": null,
-    "entranceLongitude": null,
-    "googlePlaceId": null,
-    "campusX": 2201,
-    "campusY": 1833,
-    "aliases": [],
-    "tags": [
-      "services",
-      "administration",
-      "student"
-    ],
-    "searchTokens": [],
-    "gridRef": null,
-    "levels": 1,
-    "wheelchair": false
-  },
-  {
-    "id": "16WWLINCOL",
-    "code": "16WWLINCOL",
-    "name": "16WW (Lincoln Building)",
-    "description": "16WW (Lincoln Building).",
-    "address": null,
-    "category": "academic",
-    "latitude": -33.774239,
-    "longitude": 151.11357,
-    "entranceLatitude": null,
-    "entranceLongitude": null,
-    "googlePlaceId": null,
-    "campusX": 2403,
-    "campusY": 1879,
-    "aliases": [],
-    "tags": [
-      "academic"
-    ],
-    "searchTokens": [],
-    "gridRef": null,
-    "levels": 1,
-    "wheelchair": false
-  },
-  {
     "id": "19ERTHECHA",
     "code": "19ERTHECHA",
     "name": "19ER (The Chancellery)",
@@ -2848,31 +3258,6 @@
     "tags": [
       "services",
       "administration"
-    ],
-    "searchTokens": [],
-    "gridRef": null,
-    "levels": 1,
-    "wheelchair": false
-  },
-  {
-    "id": "16UAAUSTRA",
-    "code": "16UAAUSTRA",
-    "name": "16UA (Australian Hearing Hub)",
-    "description": "Australian Hearing Hub - hearing research and clinical services.",
-    "address": null,
-    "category": "health",
-    "latitude": -33.7764943,
-    "longitude": 151.1118029,
-    "entranceLatitude": null,
-    "entranceLongitude": null,
-    "googlePlaceId": null,
-    "campusX": 1706,
-    "campusY": 2699,
-    "aliases": [],
-    "tags": [
-      "health",
-      "research",
-      "clinic"
     ],
     "searchTokens": [],
     "gridRef": null,
@@ -2946,32 +3331,6 @@
     ],
     "searchTokens": [],
     "gridRef": null,
-    "levels": null,
-    "wheelchair": false
-  },
-  {
-    "id": "25CWW",
-    "code": "25CWW",
-    "name": "25C Wally's Walk (Gale History Museum)",
-    "description": "The Gale History Museum - historical exhibits and collections.",
-    "address": "25C Wally's Walk",
-    "category": "venue",
-    "latitude": -33.7751672,
-    "longitude": 151.1109258,
-    "entranceLatitude": null,
-    "entranceLongitude": null,
-    "googlePlaceId": null,
-    "campusX": 1686,
-    "campusY": 1889,
-    "aliases": [],
-    "tags": [
-      "venue",
-      "museum",
-      "arts",
-      "history"
-    ],
-    "searchTokens": [],
-    "gridRef": "O13",
     "levels": null,
     "wheelchair": false
   },
@@ -3516,12 +3875,25 @@
     "googlePlaceId": null,
     "campusX": 2508,
     "campusY": 2603,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "parking",
       "transport"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": false
@@ -3540,12 +3912,25 @@
     "googlePlaceId": null,
     "campusX": 3364,
     "campusY": 2243,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "parking",
       "transport"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": false
@@ -3564,12 +3949,25 @@
     "googlePlaceId": null,
     "campusX": 3386,
     "campusY": 1999,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "parking",
       "transport"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": false
@@ -3588,12 +3986,25 @@
     "googlePlaceId": null,
     "campusX": 1080,
     "campusY": 1595,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "parking",
       "transport"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": false
@@ -3612,12 +4023,25 @@
     "googlePlaceId": null,
     "campusX": 825,
     "campusY": 2798,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "parking",
       "transport"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": false
@@ -3636,12 +4060,25 @@
     "googlePlaceId": null,
     "campusX": 1250,
     "campusY": 2351,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "parking",
       "transport"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": false
@@ -3660,13 +4097,26 @@
     "googlePlaceId": null,
     "campusX": 3061,
     "campusY": 1340,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "parking",
       "accessibility",
       "hospital"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": true
@@ -3685,12 +4135,25 @@
     "googlePlaceId": null,
     "campusX": 3476,
     "campusY": 1758,
-    "aliases": [],
+    "aliases": [
+      "Parking on campus",
+      "Car park"
+    ],
     "tags": [
       "parking",
       "hospital"
     ],
-    "searchTokens": [],
+    "searchTokens": [
+      "parking on campus",
+      "car parks",
+      "student parking",
+      "staff parking",
+      "visitor parking",
+      "vpermit",
+      "pay as you go",
+      "payg",
+      "licence plate recognition"
+    ],
     "gridRef": null,
     "levels": null,
     "wheelchair": false
@@ -3861,7 +4324,10 @@
     "campusY": 1903,
     "aliases": [
       "Gale Museum",
-      "History Museum"
+      "History Museum",
+      "Macquarie University History Museum",
+      "MQ History Museum",
+      "25C Wally's Walk"
     ],
     "tags": [
       "venue",
@@ -3872,7 +4338,11 @@
     "searchTokens": [
       "gale",
       "history",
-      "museum"
+      "museum",
+      "macquarie university history museum",
+      "history museum",
+      "first nations history",
+      "25c wally"
     ],
     "gridRef": "O13",
     "levels": null,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,6 +43,10 @@ class OfflineMapsService {
   }
 
   Future<void> initializeBackend() async {
+    // FMTC's ObjectBox backend uses FFI and is not supported on web.
+    if (kIsWeb) {
+      return;
+    }
     try {
       await FMTCObjectBoxBackend().initialise();
     } catch (error, stackTrace) {
