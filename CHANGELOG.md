@@ -1,3 +1,19 @@
+### Raouf: 2026-05-05 (AEST) — `scripts/check.sh` full suite green (dart format)
+**Scope:** Repository validation via `./scripts/check.sh` (format, analyze, tests, gen-l10n, debug APK).
+
+**Summary:** Ran the full check script. The format step failed `dart format --set-exit-if-changed` because `lib/features/notifications/data/datasources/local_notifications_service.dart` had formatting drift (an extra blank line). Applied `dart format` to `lib/`, `test/`, and `tools/`, then reran `./scripts/check.sh`. All six steps passed: `flutter pub get`, `dart format`, `flutter analyze`, `flutter test` (182 tests), `flutter gen-l10n`, and `flutter build apk --debug`.
+
+**Files Changed:**
+- `lib/features/notifications/data/datasources/local_notifications_service.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh` → 6/6 passed, 182 tests, 0 failures.
+
+**Follow-ups:**
+- None.
+
 ### Raouf: 2026-05-02 (AEST) — UI/UX Audit and Accessibility Fix for Home Page
 **Scope:** Full UI/UX audit of the home page file (`lib/features/home/presentation/pages/home_page.dart`) and accessibility hardening.
 

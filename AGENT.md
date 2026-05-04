@@ -222,6 +222,13 @@ lib/
 **Verification:** `dart format lib/features/map/` (pass); `flutter analyze lib/features/map/` (no issues).
 **Follow-ups:** None.
 
+### Raouf: 2026-05-05 (AEST) — `scripts/check.sh` full suite green (dart format)
+**Scope:** Project-wide `./scripts/check.sh` validation.
+**Summary:** Full check initially failed `dart format --set-exit-if-changed` due to minor formatting drift in `local_notifications_service.dart` (extra blank line). Ran `dart format` on `lib/`, `test/`, and `tools/`; reran `./scripts/check.sh` — all six steps passed including `flutter test` (182 tests) and `flutter build apk --debug`.
+**Files Changed:** `lib/features/notifications/data/datasources/local_notifications_service.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `./scripts/check.sh` → 6/6 passed, 0 failures.
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-02 (AEST) — Full Project Check Script Execution
 **Scope:** Execution of the project's comprehensive `scripts/check.sh` validation suite to ensure project stability.
 **Summary:** Executed the `scripts/check.sh` script which runs `flutter pub get`, `dart format`, `flutter analyze`, `flutter test`, `flutter gen-l10n`, and `flutter build apk --debug`. The script passed all 6 checks successfully with 0 failures and 155 tests passing. No code modifications were required as the codebase was already structurally sound and fully tested.

@@ -33,7 +33,6 @@ class LocalNotificationsService {
       return;
     }
 
-
     const settings = InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       iOS: DarwinInitializationSettings(),
