@@ -3,6 +3,7 @@ abstract final class RouteNames {
   static const String meet = 'meet';
   static const String notifications = 'notifications';
   static const String openDay = 'open-day';
+  static const String onboarding = 'onboarding';
 
   // Shell tabs
   static const String home = 'home';

@@ -9,6 +9,7 @@ import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 @immutable
 class UserPreferences {
   const UserPreferences({
+    this.hasCompletedOnboarding = false,
     this.commuteMode = 'none',
     this.favoriteDirection = '',
     this.favoriteRoute = '',
@@ -32,6 +33,7 @@ class UserPreferences {
     this.openDayReminderMinutesBefore = 15,
   });
 
+  final bool hasCompletedOnboarding;
   final ThemeMode themeMode;
   final String commuteMode;
   final String favoriteDirection;
@@ -69,6 +71,7 @@ class UserPreferences {
   Locale? get locale => localeCode == null ? null : Locale(localeCode!);
 
   UserPreferences copyWith({
+    bool? hasCompletedOnboarding,
     ThemeMode? themeMode,
     String? commuteMode,
     String? favoriteDirection,
@@ -94,6 +97,8 @@ class UserPreferences {
     int? openDayReminderMinutesBefore,
   }) {
     return UserPreferences(
+      hasCompletedOnboarding:
+          hasCompletedOnboarding ?? this.hasCompletedOnboarding,
       themeMode: themeMode ?? this.themeMode,
       commuteMode: commuteMode ?? this.commuteMode,
       favoriteDirection: favoriteDirection ?? this.favoriteDirection,
@@ -128,6 +133,7 @@ class UserPreferences {
       identical(this, other) ||
       other is UserPreferences &&
           runtimeType == other.runtimeType &&
+          hasCompletedOnboarding == other.hasCompletedOnboarding &&
           themeMode == other.themeMode &&
           commuteMode == other.commuteMode &&
           favoriteDirection == other.favoriteDirection &&
@@ -152,6 +158,7 @@ class UserPreferences {
 
   @override
   int get hashCode => Object.hashAll([
+    hasCompletedOnboarding,
     themeMode,
     commuteMode,
     favoriteDirection,

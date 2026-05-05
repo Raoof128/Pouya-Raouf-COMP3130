@@ -6,9 +6,11 @@ import 'package:mq_navigation/app/router/route_names.dart';
 import 'package:mq_navigation/core/config/env_config.dart';
 import 'package:mq_navigation/features/deep_link/deep_link_contract.dart';
 import 'package:mq_navigation/features/home/presentation/pages/home_page.dart';
+import 'package:mq_navigation/features/home/presentation/pages/onboarding_page.dart';
 import 'package:mq_navigation/features/map/presentation/pages/map_page.dart';
 import 'package:mq_navigation/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:mq_navigation/features/open_day/presentation/pages/open_day_page.dart';
+import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:mq_navigation/features/settings/presentation/pages/settings_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -17,10 +19,32 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 /// Uses a stateful shell so each bottom-tab branch keeps its own
 /// navigation stack instead of resetting when the user switches tabs.
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final settingsAsync = ref.watch(settingsControllerProvider);
+
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/home',
     debugLogDiagnostics: EnvConfig.isDevelopment,
+    redirect: (context, state) {
+      final isOnboardingRoute = state.uri.path == '/onboarding';
+
+      // If already on onboarding or settings are loading, don't redirect
+      if (isOnboardingRoute) {
+        return null;
+      }
+
+      // If settings haven't loaded yet, don't redirect - let them load first
+      if (settingsAsync.isLoading) {
+        return null;
+      }
+
+      final hasCompleted = settingsAsync.value?.hasCompletedOnboarding ?? false;
+
+      if (!hasCompleted) {
+        return '/onboarding';
+      }
+      return null;
+    },
     routes: [
       // Syllabus Sync integration entry point.
       //
@@ -65,6 +89,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/open-day',
         name: RouteNames.openDay,
         builder: (context, state) => const OpenDayPage(),
+      ),
+      GoRoute(
+        path: '/onboarding',
+        name: RouteNames.onboarding,
+        builder: (context, state) => const OnboardingPage(),
       ),
       // The shell route handles the bottom navigation bar and nested routing.
       StatefulShellRoute.indexedStack(

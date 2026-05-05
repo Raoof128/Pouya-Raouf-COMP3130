@@ -168,6 +168,11 @@ class SettingsController extends AsyncNotifier<UserPreferences> {
     );
   }
 
+  Future<String?> completeOnboarding() async {
+    final currentPreferences = state.value ?? const UserPreferences();
+    return _save(currentPreferences.copyWith(hasCompletedOnboarding: true));
+  }
+
   /// Wipes all local data and resets the controller to its initial state.
   ///
   /// This will reset theme, locale, and all other preferences to defaults.

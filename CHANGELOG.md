@@ -1,3 +1,49 @@
+### Raouf: 2026-05-06 (AEST) — Onboarding Feature Implementation
+**Scope:** First-launch onboarding feature for new users.
+
+**Summary:**
+Implemented a complete onboarding feature to welcome new users and highlight key app features. The implementation includes:
+
+1. **Localization (i18n):** Added 8 new localization keys in `app_en.arb`: `onboardingMapTitle`, `onboardingMapBody`, `onboardingTransitTitle`, `onboardingTransitBody`, `onboardingPrivacyTitle`, `onboardingPrivacyBody`, `onboardingNext`, `onboardingStart`.
+
+2. **Data Layer:** Added `hasCompletedOnboarding` boolean field to `UserPreferences` with default `false`, updated `copyWith`, equality, and `hashCode` methods.
+
+3. **Repository:** Updated `SettingsRepository` to persist onboarding state using a new storage key `settings.has_completed_onboarding`, with reading in `loadPreferences` and writing in `savePreferences`.
+
+4. **Controller:** Added `completeOnboarding()` method in `SettingsController` that sets `hasCompletedOnboarding` to `true` and persists.
+
+5. **Routing:** Added `/onboarding` route with `OnboardingPage` builder. Added redirect logic that forces new users to onboarding when `hasCompletedOnboarding` is `false`, while allowing existing users to bypass. Existing users who manually navigate to `/onboarding` are redirected to home to prevent replay.
+
+6. **Route Names:** Added `static const String onboarding = 'onboarding'`.
+
+7. **UI Implementation:** Created `lib/features/home/presentation/pages/onboarding_page.dart` with:
+   - 3-page swipeable onboarding (Map, Transit, Privacy slides)
+   - `MqTactileButton` for tactile feedback
+   - Dark-mode radial glow matching existing Home/Settings aesthetic
+   - Animated text transitions using `TweenAnimationBuilder`
+   - Page indicators and progress tracking
+   - Uses existing `MqColors` semantic tokens throughout
+
+**Files Changed:**
+- `lib/app/l10n/app_en.arb`
+- `lib/shared/models/user_preferences.dart`
+- `lib/features/settings/data/repositories/settings_repository.dart`
+- `lib/features/settings/presentation/controllers/settings_controller.dart`
+- `lib/app/router/route_names.dart`
+- `lib/app/router/app_router.dart`
+- `lib/features/home/presentation/pages/onboarding_page.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Verification:**
+- `./scripts/check.sh --quick` → 5/5 passed, 182 tests
+- `flutter analyze` → 0 issues
+- `flutter gen-l10n` → pass
+- `dart format` → pass
+
+**Follow-ups:**
+- Add onboarding localization keys to non-English ARB files for full i18n parity
+
 ### Raouf: 2026-05-05 (AEST) — `scripts/check.sh` full suite green (dart format)
 **Scope:** Repository validation via `./scripts/check.sh` (format, analyze, tests, gen-l10n, debug APK).
 

@@ -222,6 +222,13 @@ lib/
 **Verification:** `dart format lib/features/map/` (pass); `flutter analyze lib/features/map/` (no issues).
 **Follow-ups:** None.
 
+### Raouf: 2026-05-06 (AEST) — Onboarding Feature Implementation
+**Scope:** First-launch onboarding feature for new users.
+**Summary:** Implemented a complete onboarding feature guiding users through three slides (Map, Transit, Privacy) with `MqTactileButton` feedback, dark-mode radial glow, and kinetic text animations. Added `hasCompletedOnboarding` to `UserPreferences`, persistence via `SettingsRepository`, redirect logic in `app_router.dart` to force new users to onboarding, and routing gatekeeper to prevent existing users from revisiting.
+**Files Changed:** `lib/app/l10n/app_en.arb`, `lib/shared/models/user_preferences.dart`, `lib/features/settings/data/repositories/settings_repository.dart`, `lib/features/settings/presentation/controllers/settings_controller.dart`, `lib/app/router/route_names.dart`, `lib/app/router/app_router.dart`, `lib/features/home/presentation/pages/onboarding_page.dart`, `AGENT.md`, `CHANGELOG.md`.
+**Verification:** `./scripts/check.sh --quick` (5/5 passed, 182 tests); `flutter analyze` (0 issues); `flutter gen-l10n` (pass).
+**Follow-ups:** Add onboarding localization keys to non-English ARB files for full i18n parity.
+
 ### Raouf: 2026-05-05 (AEST) — `scripts/check.sh` full suite green (dart format)
 **Scope:** Project-wide `./scripts/check.sh` validation.
 **Summary:** Full check initially failed `dart format --set-exit-if-changed` due to minor formatting drift in `local_notifications_service.dart` (extra blank line). Ran `dart format` on `lib/`, `test/`, and `tools/`; reran `./scripts/check.sh` — all six steps passed including `flutter test` (182 tests) and `flutter build apk --debug`.

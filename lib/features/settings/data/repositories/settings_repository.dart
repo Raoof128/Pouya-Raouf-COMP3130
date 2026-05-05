@@ -27,6 +27,7 @@ const _favoriteStopNameKey = 'settings.favorite_stop_name';
 const _selectedBachelorIdKey = 'settings.open_day.bachelor_id';
 const _openDayRemindersEnabledKey = 'settings.open_day.reminders_enabled';
 const _openDayReminderMinutesKey = 'settings.open_day.reminder_minutes';
+const _hasCompletedOnboardingKey = 'settings.has_completed_onboarding';
 
 /// Data source for persisting and retrieving user settings.
 ///
@@ -91,6 +92,9 @@ class LocalSettingsRepository implements SettingsRepository {
       final openDayReminderMinutes = await _storage.read(
         _openDayReminderMinutesKey,
       );
+      final hasCompletedOnboarding = await _storage.read(
+        _hasCompletedOnboardingKey,
+      );
 
       final localThemeMode = ThemeMode.values.firstWhere(
         (mode) => mode.name == themeModeString,
@@ -108,6 +112,7 @@ class LocalSettingsRepository implements SettingsRepository {
       );
 
       return UserPreferences(
+        hasCompletedOnboarding: hasCompletedOnboarding == 'true',
         themeMode: localThemeMode,
         localeCode: localeCode,
         notificationsEnabled: notificationsEnabled != 'false',
@@ -208,6 +213,10 @@ class LocalSettingsRepository implements SettingsRepository {
       await _storage.write(
         _openDayReminderMinutesKey,
         preferences.openDayReminderMinutesBefore.toString(),
+      );
+      await _storage.write(
+        _hasCompletedOnboardingKey,
+        preferences.hasCompletedOnboarding.toString(),
       );
       return preferences;
     } catch (error, stackTrace) {

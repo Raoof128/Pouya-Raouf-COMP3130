@@ -2170,5 +2170,16 @@
     }
   },
   "diagnosticsRendererCampus": "Campus (illustrated)",
-  "diagnosticsRendererGoogle": "Google Maps"
+  "diagnosticsRendererGoogle": "Google Maps",
+  "onboardingMapTitle": "Dual Campus Map",
+  "@onboardingMapTitle": {
+    "description": "Title for the map onboarding slide"
+  },
+  "onboardingMapBody": "Navigate MQ with real-world Google Maps or our detailed illustrated campus view.",
+  "onboardingTransitTitle": "Live Commute",
+  "onboardingTransitBody": "Track real-time TfNSW Metro and Bus departures directly from the home screen.",
+  "onboardingPrivacyTitle": "Privacy First",
+  "onboardingPrivacyBody": "No accounts, no tracking. Your location and timetable stay entirely on your device.",
+  "onboardingNext": "Next",
+  "onboardingStart": "Start Exploring"
 }
