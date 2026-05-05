@@ -26,6 +26,13 @@ abstract final class MqColors {
   static const Color charcoal600 = Color(0xFF71736B);
 
   // ── Sand ───────────────────────────────────────────────
+  static const Color black = Color(0xFF383A36);
+  static const Color black87 = Color(0xDD383A36);
+  static const Color black54 = Color(0x8A383A36);
+  static const Color black38 = Color(0x61383A36);
+  static const Color black26 = Color(0x42383A36);
+  static const Color black12 = Color(0x1F383A36);
+
   static const Color sand100 = Color(0xFFF7F6F3);
   static const Color sand200 = Color(0xFFEAE8E1);
   static const Color sand300 = Color(0xFFD6D2C4);

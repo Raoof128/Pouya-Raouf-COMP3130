@@ -3059,3 +3059,36 @@ Addressed the failing iOS CI build by synchronizing deployment targets and updat
 **Files Audited:** All `.md` files in root and `docs/`.
 **Verification:** Manual verification of each inventory field against source code and Context7 tech standards.
 **Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Replace hardcoded black with MqColors.black (#383a36)
+**Scope:** Brand color consistency across the entire app.
+
+**Summary:**
+1. Defined a new exact brand black color `#383a36` as `MqColors.black` along with its constant alpha variations (`black87`, `black54`, `black38`, `black26`, `black12`) in `lib/app/theme/mq_colors.dart`.
+2. Automatically searched and replaced all scattered usages of `Colors.black` (and its alpha variants) across the `lib/` directory with the new `MqColors.black` semantic token to enforce strict adherence to brand guidelines and remove magic numbers.
+3. Removed `const` declarations in widget files that were implicitly relying on `Colors.black` as a compile-time constant to support the `MqColors` constants instead.
+
+**Files Changed:**
+- `lib/app/theme/mq_colors.dart`
+- `lib/features/home/presentation/pages/home_page.dart`
+- `lib/features/home/presentation/pages/onboarding_page.dart`
+- `lib/features/map/presentation/pages/map_page.dart`
+- `lib/features/map/presentation/widgets/google/desktop_map_fallback_view.dart`
+- `lib/features/map/presentation/widgets/campus/campus_map_route_layer.dart`
+- `lib/features/map/presentation/widgets/route_panel.dart`
+- `lib/features/map/presentation/widgets/map_mode_toggle.dart`
+- `lib/features/map/presentation/widgets/map_shell.dart`
+- `lib/features/settings/presentation/pages/settings_page.dart`
+- `lib/shared/widgets/mq_bottom_sheet.dart`
+- `lib/shared/widgets/glass_pane.dart`
+- `AGENT.md`
+- `CHANGELOG.md`
+
+**Verification:**
+- `grep -rnw "Colors.black" lib/` → No output (fully replaced)
+- `dart format .` → Passed
+- `flutter analyze` → 0 issues
+- `./scripts/check.sh` → 6/6 passed
+
+**Follow-ups:**
+- None

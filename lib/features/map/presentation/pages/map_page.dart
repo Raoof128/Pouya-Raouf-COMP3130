@@ -456,7 +456,7 @@ class _MapErrorBanner extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: MqColors.black.withValues(alpha: 0.1),
             blurRadius: 16,
             offset: const Offset(0, 10),
           ),
@@ -578,11 +578,11 @@ class _CategoryBuildingList extends StatelessWidget {
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.black.withValues(alpha: 0.08),
+                  : MqColors.black.withValues(alpha: 0.08),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
+                color: MqColors.black.withValues(alpha: 0.15),
                 blurRadius: 24,
                 offset: const Offset(0, -4),
               ),
@@ -603,7 +603,7 @@ class _CategoryBuildingList extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.2)
-                          : Colors.black.withValues(alpha: 0.12),
+                          : MqColors.black12,
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
@@ -795,11 +795,11 @@ class _BrowseGroupPanel<TGroup> extends StatelessWidget {
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.black.withValues(alpha: 0.08),
+                  : MqColors.black.withValues(alpha: 0.08),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
+                color: MqColors.black.withValues(alpha: 0.15),
                 blurRadius: 24,
                 offset: const Offset(0, -4),
               ),
@@ -820,7 +820,7 @@ class _BrowseGroupPanel<TGroup> extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.2)
-                          : Colors.black.withValues(alpha: 0.12),
+                          : MqColors.black12,
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
@@ -1030,7 +1030,7 @@ class _CategoryChip extends StatelessWidget {
                   ? activeBg
                   : (isDark
                         ? Colors.white.withValues(alpha: 0.05)
-                        : Colors.black.withValues(alpha: 0.08)),
+                        : MqColors.black.withValues(alpha: 0.08)),
             ),
           ),
           child: InkWell(

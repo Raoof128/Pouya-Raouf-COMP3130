@@ -72,7 +72,7 @@ class CampusMapRouteLayer extends ConsumerWidget {
     }
 
     final borderColor = highContrast
-        ? Colors.black.withValues(alpha: 0.8)
+        ? MqColors.black.withValues(alpha: 0.8)
         : Colors.white.withValues(alpha: 0.45);
 
     // If not navigating or no location, return single full polyline
@@ -101,7 +101,7 @@ class CampusMapRouteLayer extends ConsumerWidget {
           color: highContrast ? MqColors.slate600 : _traversedColor,
           borderStrokeWidth: _borderWidth,
           borderColor: highContrast
-              ? Colors.black.withValues(alpha: 0.5)
+              ? MqColors.black.withValues(alpha: 0.5)
               : Colors.white.withValues(alpha: 0.25),
           pattern: pattern,
         ),

@@ -91,7 +91,7 @@ class MapShell extends StatelessWidget {
                             Icons.search,
                             color: isDark
                                 ? Colors.white.withValues(alpha: 0.5)
-                                : Colors.black.withValues(alpha: 0.4),
+                                : MqColors.black.withValues(alpha: 0.4),
                             size: 20,
                           ),
                           const SizedBox(width: MqSpacing.space3),
@@ -101,7 +101,7 @@ class MapShell extends StatelessWidget {
                               style: TextStyle(
                                 color: isDark
                                     ? Colors.white.withValues(alpha: 0.5)
-                                    : Colors.black.withValues(alpha: 0.4),
+                                    : MqColors.black.withValues(alpha: 0.4),
                                 fontSize: 14,
                               ),
                             ),
@@ -222,11 +222,11 @@ class _GlassIconButton extends StatelessWidget {
             side: BorderSide(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.black.withValues(alpha: 0.08),
+                  : MqColors.black.withValues(alpha: 0.08),
             ),
           ),
           child: IconButton(
-            icon: Icon(icon, color: isDark ? Colors.white : Colors.black87),
+            icon: Icon(icon, color: isDark ? Colors.white : MqColors.black87),
             tooltip: tooltip,
             onPressed: onPressed,
           ),

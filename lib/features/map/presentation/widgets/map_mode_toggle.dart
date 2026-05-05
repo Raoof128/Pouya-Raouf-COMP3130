@@ -36,7 +36,7 @@ class MapModeToggle extends StatelessWidget {
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.black.withValues(alpha: 0.08),
+                  : MqColors.black.withValues(alpha: 0.08),
             ),
           ),
           child: Row(
@@ -102,7 +102,7 @@ class _PillSegment extends StatelessWidget {
                   ? Colors.white
                   : isDark
                   ? Colors.white.withValues(alpha: 0.5)
-                  : Colors.black.withValues(alpha: 0.5),
+                  : MqColors.black.withValues(alpha: 0.5),
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),

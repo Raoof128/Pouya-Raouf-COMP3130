@@ -181,7 +181,7 @@ class _DesktopMapFallbackViewState
           urlTemplate: isDark
               ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
               : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          subdomains: isDark ? const ['a', 'b', 'c', 'd'] : const [],
+          subdomains: isDark ? ['a', 'b', 'c', 'd'] : [],
           userAgentPackageName: 'io.mqnavigation.mq_navigation',
           retinaMode: true,
           tileProvider: _tileProvider,
@@ -210,7 +210,7 @@ class _DesktopMapFallbackViewState
                         shadows: const [
                           Shadow(
                             blurRadius: 4,
-                            color: Colors.black38,
+                            color: MqColors.black38,
                             offset: Offset(0, 2),
                           ),
                         ],
@@ -233,7 +233,7 @@ class _DesktopMapFallbackViewState
                     shadows: [
                       Shadow(
                         blurRadius: 4,
-                        color: Colors.black38,
+                        color: MqColors.black38,
                         offset: Offset(0, 1),
                       ),
                     ],
@@ -253,7 +253,7 @@ class _DesktopMapFallbackViewState
                     boxShadow: const [
                       BoxShadow(
                         blurRadius: 6,
-                        color: Colors.black26,
+                        color: MqColors.black26,
                         offset: Offset(0, 2),
                       ),
                     ],
@@ -279,7 +279,7 @@ class _DesktopMapFallbackViewState
     final polylines = <Polyline>[];
 
     final StrokePattern walkingPattern = isWalking
-        ? StrokePattern.dashed(segments: const [12, 8])
+        ? StrokePattern.dashed(segments: [12, 8])
         : const StrokePattern.solid();
 
     if (widget.isNavigating && widget.currentLocation != null) {

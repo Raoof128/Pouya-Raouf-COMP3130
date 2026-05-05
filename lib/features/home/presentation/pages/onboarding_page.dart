@@ -280,7 +280,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 border: Border.all(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.05)
-                      : Colors.black.withValues(alpha: 0.05),
+                      : MqColors.black.withValues(alpha: 0.05),
                 ),
               ),
               child: Icon(
@@ -324,7 +324,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   child: Text(
                     slide.body,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: isDark ? Colors.white70 : Colors.black87,
+                      color: isDark ? Colors.white70 : MqColors.black87,
                       height: 1.5,
                     ),
                   ),
@@ -344,7 +344,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         border: Border.all(
                           color: selectedBachelorId != null
                               ? (isDark ? MqColors.vividRed : MqColors.red)
-                              : (isDark ? Colors.white24 : Colors.black12),
+                              : (isDark ? Colors.white24 : MqColors.black12),
                           width: selectedBachelorId != null ? 2 : 1,
                         ),
                       ),
@@ -357,7 +357,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                 : Icons.school_rounded,
                             color: selectedBachelorId != null
                                 ? (isDark ? MqColors.vividRed : MqColors.red)
-                                : (isDark ? Colors.white70 : Colors.black54),
+                                : (isDark
+                                      ? Colors.white70
+                                      : MqColors.black.withValues(alpha: 0.54)),
                             size: 20,
                           ),
                           const SizedBox(width: MqSpacing.space2),
@@ -366,7 +368,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                 ? 'Study interest saved'
                                 : 'Select study interest',
                             style: TextStyle(
-                              color: isDark ? Colors.white : Colors.black87,
+                              color: isDark ? Colors.white : MqColors.black87,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

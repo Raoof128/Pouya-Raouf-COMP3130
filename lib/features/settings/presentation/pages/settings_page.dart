@@ -1483,7 +1483,7 @@ class _SettingsCard extends StatelessWidget {
         border: Border.all(
           color: dark
               ? Colors.white.withValues(alpha: 0.06)
-              : Colors.black.withValues(alpha: 0.05),
+              : MqColors.black.withValues(alpha: 0.05),
           width: 0.6,
         ),
         boxShadow: [
@@ -1491,7 +1491,7 @@ class _SettingsCard extends StatelessWidget {
           // background, giving Settings the same "premium surface"
           // language as the Home Bento cards.
           BoxShadow(
-            color: Colors.black.withValues(alpha: dark ? 0.30 : 0.05),
+            color: MqColors.black.withValues(alpha: dark ? 0.30 : 0.05),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),

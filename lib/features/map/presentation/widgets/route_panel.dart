@@ -98,12 +98,12 @@ class _RoutePanelState extends State<RoutePanel> {
               top: BorderSide(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.15)
-                    : Colors.black.withValues(alpha: 0.05),
+                    : MqColors.black.withValues(alpha: 0.05),
               ),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
+                color: MqColors.black.withValues(alpha: 0.2),
                 blurRadius: 24,
                 offset: const Offset(0, -4),
               ),
@@ -123,7 +123,7 @@ class _RoutePanelState extends State<RoutePanel> {
                     decoration: BoxDecoration(
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.2)
-                          : Colors.black.withValues(alpha: 0.12),
+                          : MqColors.black12,
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
@@ -477,14 +477,14 @@ class _TravelModePills extends StatelessWidget {
                         ? MqColors.vividRed.withValues(alpha: 0.15)
                         : isDark
                         ? Colors.white.withValues(alpha: 0.06)
-                        : Colors.black.withValues(alpha: 0.04),
+                        : MqColors.black.withValues(alpha: 0.04),
                     borderRadius: BorderRadius.circular(MqSpacing.radiusFull),
                     border: Border.all(
                       color: isSelected
                           ? MqColors.vividRed.withValues(alpha: 0.4)
                           : isDark
                           ? Colors.white.withValues(alpha: 0.08)
-                          : Colors.black.withValues(alpha: 0.08),
+                          : MqColors.black.withValues(alpha: 0.08),
                     ),
                   ),
                   child: Row(
@@ -858,7 +858,7 @@ class _GlassOutlinedButton extends StatelessWidget {
               border: Border.all(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.15)
-                    : Colors.black.withValues(alpha: 0.12),
+                    : MqColors.black12,
               ),
               borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
             ),
@@ -913,7 +913,7 @@ class _GlassCircleAction extends StatelessWidget {
               border: Border.all(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.15)
-                    : Colors.black.withValues(alpha: 0.12),
+                    : MqColors.black12,
               ),
               borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
             ),
@@ -971,7 +971,7 @@ class _ArrivalCard extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
+                color: MqColors.black.withValues(alpha: 0.15),
                 blurRadius: 24,
                 offset: const Offset(0, -4),
               ),

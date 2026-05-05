@@ -39,7 +39,7 @@ class MqBottomSheet extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: dark
                         ? Colors.white.withAlpha(26)
-                        : Colors.black.withAlpha(26),
+                        : MqColors.black.withAlpha(26),
                     borderRadius: BorderRadius.circular(MqSpacing.radiusFull),
                   ),
                 ),

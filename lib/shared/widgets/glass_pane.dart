@@ -36,7 +36,7 @@ class GlassPane extends StatelessWidget {
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.black.withValues(alpha: 0.08),
+                  : MqColors.black.withValues(alpha: 0.08),
             ),
           ),
           child: child,
