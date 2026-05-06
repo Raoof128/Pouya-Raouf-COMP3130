@@ -89,7 +89,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         body: l10n.onboardingTransitBody,
       ),
       _OnboardingSlideData(
-        icon: Icons.event_available_rounded,
+        icon: Icons.explore_rounded,
         title: l10n.onboardingOpenDayTitle,
         body: l10n.onboardingOpenDayBody,
         isOpenDay: true,
@@ -144,7 +144,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                             l10n.onboardingSkip,
                             style: TextStyle(
                               color: isDark
-                                  ? MqColors.alabaster.withValues(alpha: 0.7)
+                                  ? Colors.white
                                   : MqColors.charcoal700,
                             ),
                           ),
@@ -324,7 +324,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   child: Text(
                     slide.body,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: isDark ? Colors.white70 : MqColors.black87,
+                      color: isDark ? Colors.white : MqColors.black87,
                       height: 1.5,
                     ),
                   ),

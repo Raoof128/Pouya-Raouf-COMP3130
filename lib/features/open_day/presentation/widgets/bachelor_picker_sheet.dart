@@ -56,9 +56,7 @@ class BachelorPickerSheet extends ConsumerWidget {
                 'What are you interested in studying?',
                 style: context.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: dark
-                      ? MqColors.contentPrimaryDark
-                      : MqColors.contentPrimary,
+                  color: dark ? Colors.white : MqColors.contentPrimary,
                 ),
               ),
             ),
@@ -212,9 +210,7 @@ class _AreaSection extends StatelessWidget {
                       : FontWeight.w500,
                   color: b.id == selectedId
                       ? (dark ? MqColors.charcoal800 : MqColors.red)
-                      : (dark
-                            ? MqColors.contentPrimaryDark
-                            : MqColors.contentPrimary),
+                      : (dark ? Colors.white : MqColors.contentPrimary),
                 ),
               ),
               trailing: b.id == selectedId

@@ -1,3 +1,24 @@
+### Raouf: 2026-05-07 (AEST) — check.sh analyzer warning cleanup
+**Scope:** Project validation and lint hygiene.
+**Summary:** Ran `./scripts/check.sh`, confirmed functional pass, then fixed the remaining analyzer info (`prefer_const_constructors`) in `settings_page.dart` so static analysis is now fully clean with zero issues.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter analyze` (no issues); `./scripts/check.sh` (6/6 passed, 0 failures).
+**Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Open Day compass icon + alabaster text to #fff
+**Scope:** Open Day visual identity and dark-mode text contrast consistency.
+**Summary:** Replaced Open Day logo/icon affordances with compass icons and changed Open Day/onboarding dark-mode text that used alabaster (`contentPrimaryDark`) to exact white (`#fff`) for stronger readability consistency.
+**Files Changed:** `lib/features/home/presentation/pages/onboarding_page.dart`, `lib/features/open_day/presentation/widgets/open_day_home_card.dart`, `lib/features/open_day/presentation/pages/open_day_page.dart`, `lib/features/open_day/presentation/widgets/bachelor_picker_sheet.dart`, `lib/features/open_day/presentation/widgets/event_actions_sheet.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` on touched files; `flutter analyze` on touched onboarding/open-day files (no issues).
+**Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Onboarding alabaster-like text forced to #fff
+**Scope:** Onboarding page text contrast consistency.
+**Summary:** Updated onboarding dark-mode text styling so alabaster/translucent white text now renders as exact `#fff`, including the skip action text and slide body copy.
+**Files Changed:** `lib/features/home/presentation/pages/onboarding_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/onboarding_page.dart`; `flutter analyze lib/features/home/presentation/pages/onboarding_page.dart`.
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — Home page alabaster-like text forced to #fff
 **Scope:** Home page text contrast consistency.
 **Summary:** Updated home page subtitle text color tokens from translucent white to pure white so all intended white/alabaster-like text now renders as exact `#fff` on Home.

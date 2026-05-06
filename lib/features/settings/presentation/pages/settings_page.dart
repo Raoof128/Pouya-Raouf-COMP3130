@@ -1749,7 +1749,7 @@ class _InfoRow extends StatelessWidget {
               width: 32,
               height: 32,
               alignment: Alignment.center,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: MqColors.red,
                 shape: BoxShape.circle,
               ),

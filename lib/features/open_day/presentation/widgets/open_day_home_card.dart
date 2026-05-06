@@ -79,12 +79,12 @@ class _OnboardingCard extends StatelessWidget {
             Container(
               width: 44,
               height: 44,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: MqColors.red,
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Icons.school_rounded,
+                Icons.explore_rounded,
                 color: Colors.white,
                 size: 22,
               ),
@@ -108,9 +108,7 @@ class _OnboardingCard extends StatelessWidget {
                     'What are you interested in studying?',
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: dark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary,
+                      color: dark ? Colors.white : MqColors.contentPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -127,7 +125,7 @@ class _OnboardingCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.chevron_right_rounded, color: MqColors.brightRed),
+            const Icon(Icons.chevron_right_rounded, color: MqColors.brightRed),
           ],
         ),
       ),
@@ -179,7 +177,7 @@ class _PreviewCard extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Icon(
+                const Icon(
                   Icons.chevron_right_rounded,
                   size: 18,
                   color: MqColors.brightRed,
@@ -193,9 +191,7 @@ class _PreviewCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: context.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: dark
-                    ? MqColors.contentPrimaryDark
-                    : MqColors.contentPrimary,
+                color: dark ? Colors.white : MqColors.contentPrimary,
               ),
             ),
             if (upcoming.isEmpty)

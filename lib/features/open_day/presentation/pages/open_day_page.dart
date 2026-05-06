@@ -176,9 +176,7 @@ class _StudyInterestHeader extends ConsumerWidget {
                 : selected!.name,
             style: context.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w800,
-              color: dark
-                  ? MqColors.contentPrimaryDark
-                  : MqColors.contentPrimary,
+              color: dark ? Colors.white : MqColors.contentPrimary,
             ),
           ),
           const SizedBox(height: MqSpacing.space1),
@@ -280,9 +278,7 @@ class _EventTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: dark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary,
+                      color: dark ? Colors.white : MqColors.contentPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),

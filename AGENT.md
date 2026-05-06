@@ -49,6 +49,27 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-07 (AEST) — check.sh analyzer warning cleanup
+**Scope:** Project validation and lint hygiene.
+**Summary:** Executed `./scripts/check.sh` and then removed the remaining analyzer warning by applying a const-constructor fix in `settings_page.dart`, resulting in a fully clean `flutter analyze` and check script pass.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter analyze` (no issues); `./scripts/check.sh` (6/6 passed, 0 failures).
+**Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Open Day compass icon + alabaster text to #fff
+**Scope:** Open Day visual identity and dark-mode text contrast consistency.
+**Summary:** Updated Open Day iconography to use compass icons and changed Open Day/onboarding dark-mode text that relied on alabaster (`contentPrimaryDark`) to pure white (`#fff`) for better contrast and consistency.
+**Files Changed:** `lib/features/home/presentation/pages/onboarding_page.dart`, `lib/features/open_day/presentation/widgets/open_day_home_card.dart`, `lib/features/open_day/presentation/pages/open_day_page.dart`, `lib/features/open_day/presentation/widgets/bachelor_picker_sheet.dart`, `lib/features/open_day/presentation/widgets/event_actions_sheet.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` on touched files; `flutter analyze` on touched onboarding/open-day files (no issues).
+**Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Onboarding alabaster-like text forced to #fff
+**Scope:** Onboarding page text contrast consistency.
+**Summary:** Updated onboarding dark-mode text styling from alabaster/translucent white to pure white so intended white/alabaster-like text now renders as exact `#fff` for stronger readability.
+**Files Changed:** `lib/features/home/presentation/pages/onboarding_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/onboarding_page.dart`; `flutter analyze lib/features/home/presentation/pages/onboarding_page.dart`.
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — Home page alabaster-like text forced to #fff
 **Scope:** Home page text contrast consistency.
 **Summary:** Updated Home page subtitle text styling from translucent white to pure white so all intended white/alabaster-like text now renders as exact `#fff` for stronger readability consistency.

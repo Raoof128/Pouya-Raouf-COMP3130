@@ -70,9 +70,7 @@ class EventActionsSheet extends ConsumerWidget {
                 event.venueName,
                 style: context.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: dark
-                      ? MqColors.contentPrimaryDark
-                      : MqColors.contentPrimary,
+                  color: dark ? Colors.white : MqColors.contentPrimary,
                 ),
               ),
             ),
