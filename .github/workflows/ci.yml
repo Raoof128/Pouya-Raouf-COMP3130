@@ -184,6 +184,17 @@ jobs:
     needs: analyze-and-test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
+      # The repo name is long and the runner double-nests it, pushing MSBuild
+      # tlog paths and plugin symlink headers over Windows' 260-char MAX_PATH.
+      # Enable long-path support at both the OS and Git layers before checkout.
+      - name: Enable Windows long paths
+        shell: powershell
+        run: |
+          Set-ItemProperty `
+            -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+            -Name 'LongPathsEnabled' -Value 1 -Force
+          git config --system core.longpaths true
+
       - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
