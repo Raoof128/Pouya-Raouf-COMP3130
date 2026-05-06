@@ -1,3 +1,10 @@
+### Raouf: 2026-05-06 (AEST) — Onboarding page dark mode color consistency fix
+**Scope:** Onboarding page visual contrast and consistency in dark mode.
+**Summary:** Audited and resolved invisible components on the Onboarding page caused by having `MqColors.charcoal800` elements placed directly onto the `MqColors.charcoal800` scaffold background. The brand radial gradient was fixed to use `MqColors.red` for visibility. The active page indicator was adjusted to `Colors.white`, the "Next/Start" button was corrected to the dark-mode standard `MqColors.brightRed`, and the feature icon container was elevated to `MqColors.charcoal700` with a `brightRed` icon. The Open Day action button was also elevated to `MqColors.charcoal700` and `brightRed` borders for legibility.
+**Files Changed:** `lib/features/home/presentation/pages/onboarding_page.dart`
+**Verification:** `dart format lib`, `flutter test` (182 tests passed).
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-06 (AEST) — Unify dark mode black colours to #383a36
 **Scope:** Dark mode black colour standardisation.
 **Summary:** Replaced all occurrences of dark mode black surface colours (`MqColors.black`, `MqColors.charcoal850`, `MqColors.charcoal900`, `MqColors.charcoal950`) with the unified brand colour `#383a36` (`MqColors.charcoal800`). This ensures complete colour standardisation across dark mode features like Map panels, Onboarding sheets, Open Day cards, and Home overlays. Restored specific transparency suffixes (like `black87` and `black12`) that were initially impacted.

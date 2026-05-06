@@ -116,9 +116,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      (isDark ? MqColors.charcoal800 : MqColors.red).withValues(
-                        alpha: 0.15,
-                      ),
+                      MqColors.red.withValues(alpha: 0.15),
                       Colors.transparent,
                     ],
                   ),
@@ -205,7 +203,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       decoration: BoxDecoration(
                                         color: _currentIndex == index
                                             ? (isDark
-                                                  ? MqColors.charcoal800
+                                                  ? Colors.white
                                                   : MqColors.red)
                                             : Colors.grey.withValues(
                                                 alpha: 0.3,
@@ -232,7 +230,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: isDark
-                                      ? MqColors.charcoal800
+                                      ? MqColors.brightRed
                                       : MqColors.red,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
@@ -277,7 +275,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             child: Container(
               padding: const EdgeInsetsDirectional.all(MqSpacing.space8),
               decoration: BoxDecoration(
-                color: isDark ? MqColors.charcoal800 : Colors.white,
+                color: isDark ? MqColors.charcoal700 : Colors.white,
                 borderRadius: BorderRadius.circular(32),
                 border: Border.all(
                   color: isDark
@@ -288,7 +286,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               child: Icon(
                 slide.icon,
                 size: 80,
-                color: isDark ? MqColors.charcoal800 : MqColors.red,
+                color: isDark ? MqColors.brightRed : MqColors.red,
               ),
             ),
           ),
@@ -341,14 +339,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         vertical: MqSpacing.space3,
                       ),
                       decoration: BoxDecoration(
-                        color: isDark ? MqColors.charcoal800 : Colors.white,
+                        color: isDark ? MqColors.charcoal700 : Colors.white,
                         borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
                         border: Border.all(
                           color: selectedBachelorId != null
-                              ? (isDark ? MqColors.charcoal800 : MqColors.red)
-                              : (isDark
-                                    ? Colors.white24
-                                    : MqColors.black12),
+                              ? (isDark ? MqColors.brightRed : MqColors.red)
+                              : (isDark ? Colors.white24 : MqColors.black12),
                           width: selectedBachelorId != null ? 2 : 1,
                         ),
                       ),
@@ -360,7 +356,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                 ? Icons.check_circle_rounded
                                 : Icons.school_rounded,
                             color: selectedBachelorId != null
-                                ? (isDark ? MqColors.charcoal800 : MqColors.red)
+                                ? (isDark ? MqColors.brightRed : MqColors.red)
                                 : (isDark
                                       ? Colors.white70
                                       : MqColors.charcoal800.withValues(
@@ -374,9 +370,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                 ? 'Study interest saved'
                                 : 'Select study interest',
                             style: TextStyle(
-                              color: isDark
-                                  ? Colors.white
-                                  : MqColors.black87,
+                              color: isDark ? Colors.white : MqColors.black87,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
