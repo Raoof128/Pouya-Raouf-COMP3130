@@ -2184,5 +2184,19 @@
   "onboardingOpenDayBody": "Discover campus events, track schedule, and get notified for the Open Day.",
   "onboardingSkip": "Skip",
   "onboardingNext": "Next",
-  "onboardingStart": "Start Exploring"
+  "onboardingStart": "Start Exploring",
+  "googleMapTrafficLayer": "Traffic",
+  "googleMapChooseMapType": "Map type",
+  "googleMapTypeNormal": "Default",
+  "googleMapTypeSatellite": "Satellite",
+  "googleMapTypeHybrid": "Hybrid",
+  "googleMapTypeTerrain": "Terrain",
+  "googleMapClusterSemanticLabel": "{count} locations",
+  "@googleMapClusterSemanticLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

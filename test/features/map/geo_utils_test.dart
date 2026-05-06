@@ -65,6 +65,28 @@ void main() {
     });
   });
 
+  group('bearingDegreesBetween', () {
+    test('returns ~0° when travelling north along a meridian', () {
+      final bearing = bearingDegreesBetween(
+        lat1: -33.77,
+        lng1: 151.11,
+        lat2: -33.76,
+        lng2: 151.11,
+      );
+      expect(bearing, closeTo(0.0, 1.0));
+    });
+
+    test('returns ~90° when travelling east along a parallel', () {
+      final bearing = bearingDegreesBetween(
+        lat1: -33.77,
+        lng1: 151.11,
+        lat2: -33.77,
+        lng2: 151.12,
+      );
+      expect(bearing, closeTo(90.0, 1.0));
+    });
+  });
+
   group('findClosestPointIndex', () {
     test('finds the correct index when multiple points exist', () {
       // Arrange

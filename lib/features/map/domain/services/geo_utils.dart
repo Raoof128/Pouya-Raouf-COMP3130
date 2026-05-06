@@ -28,6 +28,23 @@ double haversineMetres({
 
 double _toRadians(double degrees) => degrees * pi / 180;
 
+/// Bearing from point 1 toward point 2 in degrees clockwise from north `[0, 360)`.
+double bearingDegreesBetween({
+  required double lat1,
+  required double lng1,
+  required double lat2,
+  required double lng2,
+}) {
+  final phi1 = _toRadians(lat1);
+  final phi2 = _toRadians(lat2);
+  final dLng = _toRadians(lng2 - lng1);
+  final y = sin(dLng) * cos(phi2);
+  final x = cos(phi1) * sin(phi2) - sin(phi1) * cos(phi2) * cos(dLng);
+  final radians = atan2(y, x);
+  final degreesOut = radians * 180 / pi;
+  return (degreesOut + 360) % 360;
+}
+
 /// Returns the index of the point in [points] closest to [location].
 ///
 /// **Complexity**: O(N).

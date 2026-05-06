@@ -1,17 +1,22 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'web_maps_key_stub.dart'
-    if (dart.library.js_interop) 'web_maps_key.dart';
+import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
+import 'package:mq_navigation/app/theme/mq_spacing.dart';
 import 'package:mq_navigation/core/config/env_config.dart';
 import 'package:mq_navigation/features/map/domain/entities/building.dart';
 import 'package:mq_navigation/features/map/domain/entities/route_leg.dart';
 import 'package:mq_navigation/features/map/domain/services/geo_utils.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/google/desktop_map_fallback_view.dart';
 import 'package:mq_navigation/features/map/presentation/widgets/map_view_helpers.dart';
+import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
+import 'web_maps_key_stub.dart'
+    if (dart.library.js_interop) 'web_maps_key.dart';
 
 /// The native `google_maps_flutter` renderer.
 ///
@@ -19,7 +24,7 @@ import 'package:mq_navigation/features/map/presentation/widgets/map_view_helpers
 /// Manages its own internal `GoogleMapController` for programmatic camera
 /// animations (like fitting route bounds or following the user's location)
 /// while maintaining parity with the visual state of [CampusMapView].
-class GoogleMapView extends StatefulWidget {
+class GoogleMapView extends ConsumerStatefulWidget {
   const GoogleMapView({
     super.key,
     required this.searchResults,
@@ -42,14 +47,17 @@ class GoogleMapView extends StatefulWidget {
   final ValueChanged<Building> onSelectBuilding;
 
   @override
-  State<GoogleMapView> createState() => _GoogleMapViewState();
+  ConsumerState<GoogleMapView> createState() => _GoogleMapViewState();
 }
 
-class _GoogleMapViewState extends State<GoogleMapView> {
+class _GoogleMapViewState extends ConsumerState<GoogleMapView> {
   GoogleMapController? _controller;
   bool _hasFitRouteBounds = false;
   DateTime? _lastNavigationCameraUpdateAt;
   LocationSample? _lastNavigationCameraLocation;
+
+  bool _trafficEnabled = false;
+  MapType _mapType = MapType.normal;
 
   /// Camera zoom used when the user presses the "locate me" button.
   /// Must be high enough that pressing the button while already centred
@@ -66,12 +74,147 @@ class _GoogleMapViewState extends State<GoogleMapView> {
   );
   static const double _navigationCameraMinMoveMetres = 3;
 
+  /// Mirrors [MapShell] reserved band above safe inset + route panel estimate.
+  static const double _bottomControlsReservedHeight = 80;
+  static const double _routePanelEstimateHeight = 210;
+
+  static const int _strokeWidthPx = 5;
+  static const int _highContrastStrokeWidthPx = 8;
+  static const double _navigationTiltDegrees = 32;
+
   @override
   void dispose() {
     if (!kIsWeb) {
       _controller?.dispose();
     }
     super.dispose();
+  }
+
+  double _routeFitPadding(MediaQueryData mq) {
+    final pad = mq.padding;
+    const overlayTop = 110.0;
+    final verticalTop = pad.top + overlayTop;
+    final verticalBottom =
+        pad.bottom + _bottomControlsReservedHeight + _routePanelEstimateHeight;
+    final horizontal = max(pad.left, pad.right) + 20;
+    return max(80.0, max(horizontal, max(verticalTop, verticalBottom)));
+  }
+
+  Set<Marker> _buildingMarkers() {
+    final visible = resolveVisibleBuildings(
+      searchResults: widget.searchResults,
+      searchQuery: widget.searchQuery,
+      selectedBuilding: widget.selectedBuilding,
+    );
+    return {
+      for (final building in visible)
+        if (resolveBuildingGeographicTarget(building) case final target?)
+          Marker(
+            markerId: MarkerId(building.id),
+            position: LatLng(target.latitude, target.longitude),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueRed,
+            ),
+            alpha: widget.selectedBuilding?.id == building.id ? 1.0 : 0.85,
+            zIndexInt: widget.selectedBuilding?.id == building.id ? 1 : 0,
+            infoWindow: InfoWindow(
+              title: building.name,
+              snippet: building.code,
+            ),
+            onTap: () => widget.onSelectBuilding(building),
+          ),
+    };
+  }
+
+  Set<Marker> _routeMarkers() {
+    final route = widget.route;
+    if (route == null) {
+      return const {};
+    }
+    final points = resolveRoutePoints(route);
+    if (points.isEmpty) {
+      return const {};
+    }
+    final origin = points.first;
+    final destination = points.last;
+    final markers = <Marker>{
+      Marker(
+        markerId: const MarkerId('route_origin'),
+        position: LatLng(origin.latitude, origin.longitude),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        alpha: 0.85,
+        zIndexInt: 0,
+      ),
+    };
+    if (points.length > 1 &&
+        (origin.latitude != destination.latitude ||
+            origin.longitude != destination.longitude)) {
+      markers.add(
+        Marker(
+          markerId: const MarkerId('route_destination'),
+          position: LatLng(destination.latitude, destination.longitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueAzure,
+          ),
+          alpha: 0.95,
+          zIndexInt: 1,
+          infoWindow: InfoWindow(title: widget.selectedBuilding?.name ?? ''),
+        ),
+      );
+    }
+    return markers;
+  }
+
+  int _bearingLookaheadIndex(
+    List<LocationSample> points,
+    LocationSample current,
+    int closestIdx,
+  ) {
+    const minMetres = 12.0;
+    for (var i = closestIdx + 1; i < points.length; i++) {
+      final d = haversineMetres(
+        lat1: current.latitude,
+        lng1: current.longitude,
+        lat2: points[i].latitude,
+        lng2: points[i].longitude,
+      );
+      if (d >= minMetres) {
+        return i;
+      }
+    }
+    return closestIdx < points.length - 1 ? closestIdx + 1 : closestIdx;
+  }
+
+  void _animateNavigationCamera(
+    LocationSample location,
+    List<LocationSample> points,
+  ) {
+    final ctrl = _controller;
+    if (ctrl == null || points.length < 2) {
+      return;
+    }
+    final closestIdx = findClosestPointIndex(points, location);
+    final targetIdx = _bearingLookaheadIndex(points, location, closestIdx);
+    final targetPoint = points[targetIdx];
+    final bearing = bearingDegreesBetween(
+      lat1: location.latitude,
+      lng1: location.longitude,
+      lat2: targetPoint.latitude,
+      lng2: targetPoint.longitude,
+    );
+
+    unawaited(
+      ctrl.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(location.latitude, location.longitude),
+            zoom: _navigationFollowZoom,
+            bearing: bearing,
+            tilt: _navigationTiltDegrees,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -82,14 +225,15 @@ class _GoogleMapViewState extends State<GoogleMapView> {
         oldWidget.locationCenterRequestToken) {
       final location = widget.currentLocation;
       if (_controller != null && location != null) {
-        // Force a zoomed camera move so the locate-me button always feels
-        // responsive — pressing it while the camera is already on the
-        // user's coordinate must still produce a visible animation.
         unawaited(
           _controller!.animateCamera(
-            CameraUpdate.newLatLngZoom(
-              LatLng(location.latitude, location.longitude),
-              _locateZoom,
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: LatLng(location.latitude, location.longitude),
+                zoom: _locateZoom,
+                bearing: 0,
+                tilt: 0,
+              ),
             ),
           ),
         );
@@ -97,11 +241,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       return;
     }
 
-    // Follow user during active navigation. Snap to a tight navigation-grade
-    // zoom on the first tick so the camera reads as "navigating" instead of
-    // "still showing the route bounds preview" — without this the camera
-    // stays at whatever zoom the route-fit landed on (~14) and the user
-    // can't tell that navigation is live.
     if (widget.isNavigating) {
       final newLocation = widget.currentLocation;
       final oldLocation = oldWidget.currentLocation;
@@ -112,21 +251,19 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           (oldLocation == null ||
               newLocation.latitude != oldLocation.latitude ||
               newLocation.longitude != oldLocation.longitude);
+      final routePoints = widget.route != null
+          ? resolveRoutePoints(widget.route!)
+          : const <LocationSample>[];
+
       if (_controller != null &&
           newLocation != null &&
+          routePoints.length >= 2 &&
           (justStartedNavigating || movedSinceLastTick) &&
           _shouldFollowNavigationCamera(
             location: newLocation,
             force: justStartedNavigating,
           )) {
-        unawaited(
-          _controller!.animateCamera(
-            CameraUpdate.newLatLngZoom(
-              LatLng(newLocation.latitude, newLocation.longitude),
-              _navigationFollowZoom,
-            ),
-          ),
-        );
+        _animateNavigationCamera(newLocation, routePoints);
         _lastNavigationCameraUpdateAt = DateTime.now();
         _lastNavigationCameraLocation = newLocation;
         return;
@@ -136,7 +273,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       _lastNavigationCameraLocation = null;
     }
 
-    // Focus on newly selected building
     if (widget.selectedBuilding != null &&
         widget.selectedBuilding?.id != oldWidget.selectedBuilding?.id) {
       _hasFitRouteBounds = false;
@@ -144,7 +280,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       return;
     }
 
-    // Fit route bounds when route first appears
     if (widget.route != null &&
         oldWidget.route == null &&
         !_hasFitRouteBounds) {
@@ -155,16 +290,12 @@ class _GoogleMapViewState extends State<GoogleMapView> {
 
   @override
   Widget build(BuildContext context) {
-    // google_maps_flutter only supports Android, iOS, and Web.
-    // On desktop platforms (macOS, Linux, Windows) show a fallback.
     final isGoogleMapsSupported =
         kIsWeb ||
         defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS;
 
     if (!isGoogleMapsSupported) {
-      // On desktop platforms use flutter_map with OSM tiles as a fallback
-      // so the "Google Maps" toggle still shows a real interactive map.
       return DesktopMapFallbackView(
         searchResults: widget.searchResults,
         searchQuery: widget.searchQuery,
@@ -177,9 +308,6 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       );
     }
 
-    // On web, the Maps JS API key comes from google_maps_config.js (HTML-side).
-    // On native, it comes from --dart-define via EnvConfig.
-    // In both cases, fall back to the OSM renderer instead of crashing.
     final hasKey = kIsWeb
         ? hasWebGoogleMapsApiKey()
         : EnvConfig.hasGoogleMapsApiKey;
@@ -196,77 +324,91 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       );
     }
 
-    final visibleBuildings = resolveVisibleBuildings(
-      searchResults: widget.searchResults,
-      searchQuery: widget.searchQuery,
-      selectedBuilding: widget.selectedBuilding,
-    );
+    final highContrast =
+        ref.watch(settingsControllerProvider).value?.highContrastMap ?? false;
+    final mq = MediaQuery.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
-    return GoogleMap(
-      initialCameraPosition: const CameraPosition(
-        target: LatLng(-33.77388, 151.11275),
-        zoom: 15.5,
-      ),
-      onMapCreated: (controller) {
-        _controller = controller;
-        _syncCameraToState();
-      },
-      // Keep Google web's native camera control on the right edge but away
-      // from MapShell's bottom-right locate button. Google's bottom positions
-      // only account for Google-owned chrome, not Flutter overlay widgets.
-      webCameraControlPosition: WebCameraControlPosition.rightCenter,
-      // **Most native Google Maps chrome disabled** so the only bottom-corner
-      // action visible beside web camera control is our custom red location
-      // button (rendered by `MapShell`). Without this, Google's toolbar /
-      // compass / indoor floor picker can appear under our buttons.
-      mapToolbarEnabled: false,
-      zoomControlsEnabled: false,
-      compassEnabled: false,
-      myLocationEnabled: widget.currentLocation != null,
-      myLocationButtonEnabled: false,
-      indoorViewEnabled: false,
-      buildingsEnabled: false,
-      trafficEnabled: false,
-      markers: {
-        for (final building in visibleBuildings)
-          if (resolveBuildingGeographicTarget(building) case final target?)
-            Marker(
-              markerId: MarkerId(building.id),
-              position: LatLng(target.latitude, target.longitude),
-              // All destination markers use the same red hue so the
-              // user reads them all as "campus destinations". Selection
-              // is communicated via full alpha + raised z-index, not
-              // a hue swap. Browsing a category should look like a
-              // family of red destinations, not a mixed blue/red set.
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueRed,
+    final routeMarkers = _routeMarkers();
+    final allMarkers = <Marker>{..._buildingMarkers(), ...routeMarkers};
+
+    return Stack(
+      children: [
+        GoogleMap(
+          initialCameraPosition: const CameraPosition(
+            target: LatLng(-33.77388, 151.11275),
+            zoom: 15.5,
+          ),
+          mapType: _mapType,
+          trafficEnabled: _trafficEnabled,
+          onMapCreated: (controller) {
+            _controller = controller;
+            _syncCameraToState();
+          },
+          webCameraControlPosition: WebCameraControlPosition.rightCenter,
+          mapToolbarEnabled: false,
+          zoomControlsEnabled: false,
+          compassEnabled: false,
+          myLocationEnabled: widget.currentLocation != null,
+          myLocationButtonEnabled: false,
+          indoorViewEnabled: false,
+          buildingsEnabled: false,
+          markers: allMarkers,
+          polylines: _buildPolylines(highContrast),
+        ),
+        PositionedDirectional(
+          top: mq.padding.top + 168,
+          end: MqSpacing.space4,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Semantics(
+                toggled: _trafficEnabled,
+                label: l10n.googleMapTrafficLayer,
+                button: true,
+                child: FilterChip(
+                  label: Text(l10n.googleMapTrafficLayer),
+                  selected: _trafficEnabled,
+                  onSelected: (v) => setState(() => _trafficEnabled = v),
+                  avatar: Icon(
+                    Icons.traffic,
+                    size: 18,
+                    color: _trafficEnabled ? Colors.white : MqColors.red,
+                  ),
+                ),
               ),
-              alpha: widget.selectedBuilding?.id == building.id ? 1.0 : 0.85,
-              zIndexInt: widget.selectedBuilding?.id == building.id ? 1 : 0,
-              infoWindow: InfoWindow(
-                title: building.name,
-                snippet: building.code,
+              const SizedBox(height: 8),
+              PopupMenuButton<MapType>(
+                tooltip: l10n.googleMapChooseMapType,
+                icon: const Icon(Icons.layers_outlined),
+                onSelected: (mode) => setState(() => _mapType = mode),
+                itemBuilder: (ctx) => [
+                  PopupMenuItem(
+                    value: MapType.normal,
+                    child: Text(l10n.googleMapTypeNormal),
+                  ),
+                  PopupMenuItem(
+                    value: MapType.satellite,
+                    child: Text(l10n.googleMapTypeSatellite),
+                  ),
+                  PopupMenuItem(
+                    value: MapType.hybrid,
+                    child: Text(l10n.googleMapTypeHybrid),
+                  ),
+                  PopupMenuItem(
+                    value: MapType.terrain,
+                    child: Text(l10n.googleMapTypeTerrain),
+                  ),
+                ],
               ),
-              onTap: () => widget.onSelectBuilding(building),
-            ),
-        // Origin dot: green marker at route start
-        if (widget.route != null)
-          if (resolveRoutePoints(widget.route!).firstOrNull case final origin?)
-            Marker(
-              markerId: const MarkerId('route_origin'),
-              position: LatLng(origin.latitude, origin.longitude),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueGreen,
-              ),
-              alpha: 0.85,
-              zIndexInt: 0,
-            ),
-      },
-      polylines: _buildPolylines(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  Set<Polyline> _buildPolylines() {
+  Set<Polyline> _buildPolylines(bool highContrast) {
     if (widget.route == null) {
       return const <Polyline>{};
     }
@@ -277,10 +419,26 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     }
 
     final isWalking = widget.route!.travelMode == TravelMode.walk;
-    final routeColor = _colorFor(widget.route!.travelMode);
+    final routeColor = _polylineColorFor(
+      widget.route!.travelMode,
+      highContrast,
+    );
+    final walkedColor = highContrast ? MqColors.slate600 : MqColors.slate400;
+    final strokeWidthPx = highContrast
+        ? _highContrastStrokeWidthPx
+        : _strokeWidthPx;
     final polylines = <Polyline>{};
 
-    // During navigation: split into walked (dimmed) + remaining (colored)
+    List<PatternItem> dashPattern() {
+      if (!isWalking) {
+        return const [];
+      }
+      if (highContrast) {
+        return [PatternItem.dash(16), PatternItem.gap(10)];
+      }
+      return [PatternItem.dash(20), PatternItem.gap(10)];
+    }
+
     if (widget.isNavigating && widget.currentLocation != null) {
       final splitIdx = findClosestPointIndex(
         allPoints,
@@ -295,8 +453,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             points: walkedPoints
                 .map((p) => LatLng(p.latitude, p.longitude))
                 .toList(),
-            width: 5,
-            color: MqColors.slate400,
+            width: strokeWidthPx,
+            color: walkedColor,
           ),
         );
       }
@@ -310,31 +468,43 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           points: remainingPoints
               .map((p) => LatLng(p.latitude, p.longitude))
               .toList(),
-          width: 5,
+          width: strokeWidthPx,
           color: routeColor,
-          patterns: isWalking
-              ? [PatternItem.dash(20), PatternItem.gap(10)]
-              : const [],
+          patterns: dashPattern(),
         ),
       );
     } else {
-      // Not navigating: single route polyline
       polylines.add(
         Polyline(
           polylineId: const PolylineId('shared_route'),
           points: allPoints
               .map((p) => LatLng(p.latitude, p.longitude))
               .toList(),
-          width: 5,
+          width: strokeWidthPx,
           color: routeColor,
-          patterns: isWalking
-              ? [PatternItem.dash(20), PatternItem.gap(10)]
-              : const [],
+          patterns: dashPattern(),
         ),
       );
     }
 
     return polylines;
+  }
+
+  Color _polylineColorFor(TravelMode travelMode, bool highContrast) {
+    if (highContrast) {
+      return switch (travelMode) {
+        TravelMode.walk => Colors.yellowAccent,
+        TravelMode.drive => Colors.white,
+        TravelMode.bike => Colors.cyanAccent,
+        TravelMode.transit => Colors.orangeAccent,
+      };
+    }
+    return switch (travelMode) {
+      TravelMode.walk => MqColors.mapRouteActive,
+      TravelMode.drive => MqColors.charcoal600,
+      TravelMode.bike => MqColors.success,
+      TravelMode.transit => MqColors.warning,
+    };
   }
 
   void _syncCameraToState() {
@@ -373,9 +543,13 @@ class _GoogleMapViewState extends State<GoogleMapView> {
       return;
     }
 
-    final update = CameraUpdate.newLatLngZoom(
-      LatLng(location.latitude, location.longitude),
-      _locateZoom,
+    final update = CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(location.latitude, location.longitude),
+        zoom: _locateZoom,
+        bearing: 0,
+        tilt: 0,
+      ),
     );
     if (animate) {
       unawaited(_controller!.animateCamera(update));
@@ -420,18 +594,10 @@ class _GoogleMapViewState extends State<GoogleMapView> {
     );
 
     _hasFitRouteBounds = true;
+    final pad = _routeFitPadding(MediaQuery.of(context));
     unawaited(
-      _controller!.animateCamera(CameraUpdate.newLatLngBounds(bounds, 80)),
+      _controller!.animateCamera(CameraUpdate.newLatLngBounds(bounds, pad)),
     );
-  }
-
-  Color _colorFor(TravelMode travelMode) {
-    return switch (travelMode) {
-      TravelMode.walk => MqColors.mapRouteActive,
-      TravelMode.drive => MqColors.charcoal600,
-      TravelMode.bike => MqColors.success,
-      TravelMode.transit => MqColors.warning,
-    };
   }
 
   bool _shouldFollowNavigationCamera({

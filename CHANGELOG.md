@@ -1,3 +1,24 @@
+### Raouf: 2026-05-07 (AEST) — Dropped google_maps_cluster_manager (symbol clash breaks flutter test)
+**Scope:** Google renderer dependencies / `scripts/check.sh`.
+**Summary:** Removed `google_maps_cluster_manager` — its imports collide with `google_maps_flutter_platform_interface` types (`Cluster`, `ClusterManager`), causing compilation failure when tests compile transitive map code. Building pins are back to a plain `Set<Marker>` from `_buildingMarkers()` while retaining contrast polylines, route-fit padding, traffic/map-type toggles, destination marker, and navigation bearing.
+**Files Changed:** `pubspec.yaml`, `pubspec.lock`, `lib/features/map/presentation/widgets/google/google_map_view.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter pub get`; `dart format` on `google_map_view.dart`; `flutter analyze lib/features/map/presentation/widgets/google/google_map_view.dart`; `flutter test` (all passed).
+**Follow-ups:** Revisit clustering only with a package/SDK combo that hides or namespaces Google’s `Cluster` types, or a custom viewport bucketing implementation.
+
+### Raouf: 2026-05-07 (AEST) — Google Maps parity backlog (contrast, bounds padding, traffic/type, clustering, bearing)
+**Scope:** Google renderer UX + navigation polish.
+**Summary:** Added high-contrast polyline styling aligned with campus routes; asymmetric-safe route-fit padding from MediaQuery + footer estimates; traffic toggle and map-type menu (Default/Satellite/Hybrid/Terrain); destination marker at route end; building marker clustering via `google_maps_cluster_manager` with zoom-on-cluster tap; navigation camera bearing + tilt toward lookahead route segment using new `bearingDegreesBetween` in `geo_utils`. Introduced ARB strings for new controls and regression tests for bearing math.
+**Files Changed:** `pubspec.yaml`, `lib/features/map/domain/services/geo_utils.dart`, `lib/features/map/presentation/widgets/google/google_map_view.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/generated/*`, `test/features/map/geo_utils_test.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` on touched Dart files; `flutter analyze lib/features/map`; `flutter test test/features/map/geo_utils_test.dart`.
+**Follow-ups:** Translate new ARB keys in non-English ARBs (tracked in `.dart_tool/untranslated.json`); tune overlay top offset (`168`) per device if chips wrap.
+
+### Raouf: 2026-05-07 (AEST) — FMTC fallback when ObjectBox init fails (fixes macOS RootUnavailable spam)
+**Scope:** `flutter_map_tile_caching` / desktop OSM map tiles.
+**Summary:** Tracked successful FMTC ObjectBox initialisation and, when it never completes (common on sandboxed macOS if no app group is configured), switched the desktop OSM `TileLayer` to `NetworkTileProvider` instead of `FMTCTileProvider` so tiles load and `RootUnavailable` is not thrown on every frame. Guarded offline store/create and campus download when the backend is unavailable; clarified the startup warning log.
+**Files Changed:** `lib/features/map/data/services/offline_maps_service.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/map/data/services/offline_maps_service.dart`; `flutter analyze lib/features/map/data/services/offline_maps_service.dart` (no issues).
+**Follow-ups:** For offline tiles on macOS, add an App Group and pass `macosApplicationGroup` into `FMTCObjectBoxBackend().initialise()` per FMTC/ObjectBox docs.
+
 ### Raouf: 2026-05-07 (AEST) — Removed Google renderer zoom restrictions; kept campus-only cap
 **Scope:** Map zoom policy alignment by renderer.
 **Summary:** Rolled back zoom-in limits from Google map paths so Google/native mode stays free, while preserving zoom restrictions only in campus map mode as requested.

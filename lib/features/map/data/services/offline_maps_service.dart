@@ -7,6 +7,12 @@ import 'package:mq_navigation/core/logging/app_logger.dart';
 
 const campusOfflineStoreName = 'campus_offline_tiles';
 
+/// Set to true only after [FMTCObjectBoxBackend.initialise] completes
+/// successfully. When false, [OfflineMapsService.tileProvider] uses
+/// [NetworkTileProvider] so maps still load (sandboxed macOS often fails
+/// ObjectBox init unless an application group is configured).
+bool _fmtcObjectBoxBackendReady = false;
+
 final offlineMapsServiceProvider = Provider<OfflineMapsService>((ref) {
   return const OfflineMapsService();
 });
@@ -14,15 +20,31 @@ final offlineMapsServiceProvider = Provider<OfflineMapsService>((ref) {
 class OfflineMapsService {
   const OfflineMapsService();
 
+  /// Whether tile caching via FMTC is available (native ObjectBox initialised).
+  bool get isFmtcBackendReady => _fmtcObjectBoxBackendReady;
+
   Future<void> ensureStore() async {
+    if (!_fmtcObjectBoxBackendReady) {
+      return;
+    }
     await const FMTCStore(campusOfflineStoreName).manage.create();
   }
 
   TileProvider tileProvider() {
+    if (!_fmtcObjectBoxBackendReady) {
+      return NetworkTileProvider();
+    }
     return FMTCTileProvider(stores: const {campusOfflineStoreName: null});
   }
 
   Future<void> downloadCampusTiles() async {
+    if (!_fmtcObjectBoxBackendReady) {
+      AppLogger.warning(
+        'Offline campus tile download skipped: FMTC ObjectBox backend is not '
+        'initialised (e.g. macOS App Sandbox may need an application group).',
+      );
+      return;
+    }
     await ensureStore();
 
     final tileLayer = TileLayer(
@@ -43,14 +65,21 @@ class OfflineMapsService {
   }
 
   Future<void> initializeBackend() async {
+    _fmtcObjectBoxBackendReady = false;
     // FMTC's ObjectBox backend uses FFI and is not supported on web.
     if (kIsWeb) {
       return;
     }
     try {
       await FMTCObjectBoxBackend().initialise();
+      _fmtcObjectBoxBackendReady = true;
     } catch (error, stackTrace) {
-      AppLogger.warning('Offline map backend init skipped', error, stackTrace);
+      AppLogger.warning(
+        'Offline map backend init skipped — desktop OSM will use online tiles '
+        'only until ObjectBox can start (check macOS sandbox / app group).',
+        error,
+        stackTrace,
+      );
     }
   }
 }
