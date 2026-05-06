@@ -94,7 +94,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final dark = context.isDarkMode;
 
     return Scaffold(
-      backgroundColor: dark ? MqColors.charcoal800 : MqColors.alabaster,
+      backgroundColor: MqColors.charcoal800,
       body: settingsState.when(
         data: (preferences) {
           return Stack(
@@ -631,7 +631,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 Icon(
                   Icons.error_outline_rounded,
                   size: 48,
-                  color: dark ? MqColors.slate500 : MqColors.charcoal600,
+                  color: MqColors.slate500,
                 ),
                 const SizedBox(height: MqSpacing.space4),
                 Text(l10n.settingsError, textAlign: TextAlign.center),
@@ -854,9 +854,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     title,
                     style: context.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: dark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary,
+                      color: MqColors.contentPrimaryDark,
                     ),
                   ),
                 ),
@@ -1478,7 +1476,7 @@ class _SettingsCard extends StatelessWidget {
     final dark = context.isDarkMode;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: dark ? MqColors.charcoal800 : Colors.white,
+        color: MqColors.charcoal800,
         borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
         border: Border.all(
           color: dark
@@ -1553,7 +1551,7 @@ class _TapRow extends StatelessWidget {
         hapticsEnabled: hapticsEnabled,
         onTap: onTap,
         child: ColoredBox(
-          color: dark ? MqColors.charcoal800 : Colors.white,
+          color: MqColors.charcoal800,
           child: Padding(
             // Slightly taller rows give each option room to breathe
             // without wasting vertical space — feels more like a
@@ -1597,9 +1595,7 @@ class _TapRow extends StatelessWidget {
                     label,
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: dark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary,
+                      color: MqColors.contentPrimaryDark,
                     ),
                   ),
                 ),
@@ -1668,7 +1664,7 @@ class _ToggleRow extends StatelessWidget {
         hapticsEnabled: hapticsEnabled,
         onTap: () => onChanged(!value),
         child: ColoredBox(
-          color: dark ? MqColors.charcoal800 : Colors.white,
+          color: MqColors.charcoal800,
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(
               MqSpacing.space5,
@@ -1702,9 +1698,7 @@ class _ToggleRow extends StatelessWidget {
                     label,
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: dark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary,
+                      color: MqColors.contentPrimaryDark,
                     ),
                   ),
                 ),
@@ -1767,16 +1761,14 @@ class _InfoRow extends StatelessWidget {
                     label,
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: dark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary,
+                      color: MqColors.contentPrimaryDark,
                     ),
                   ),
                   const SizedBox(height: MqSpacing.space1),
                   Text(
                     subtitle,
                     style: context.textTheme.bodySmall?.copyWith(
-                      color: dark ? MqColors.slate500 : MqColors.contentPrimary,
+                      color: MqColors.slate500,
                     ),
                   ),
                 ],
@@ -1936,7 +1928,6 @@ class _AboutAppRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = context.isDarkMode;
     return Semantics(
       label: '$appName, $desc',
       child: Padding(
@@ -1972,16 +1963,14 @@ class _AboutAppRow extends StatelessWidget {
                     appName,
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: dark
-                          ? MqColors.contentPrimaryDark
-                          : MqColors.contentPrimary,
+                      color: MqColors.contentPrimaryDark,
                     ),
                   ),
                   const SizedBox(height: MqSpacing.space1),
                   Text(
                     desc,
                     style: context.textTheme.bodySmall?.copyWith(
-                      color: dark ? MqColors.slate500 : MqColors.charcoal600,
+                      color: MqColors.slate500,
                     ),
                   ),
                 ],

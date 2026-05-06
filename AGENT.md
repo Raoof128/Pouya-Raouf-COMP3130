@@ -222,9 +222,9 @@ lib/
 **Verification:** `dart format lib/features/map/` (pass); `flutter analyze lib/features/map/` (no issues).
 **Follow-ups:** None.
 
-### Raouf: 2026-05-06 (AEST) — Updated dark mode background to #383a36
-**Scope:** Brand color consistency across all dark mode surfaces.
-**Summary:** Completely updated the dark mode theme to use the brand black hex code `#383a36` (MqColors.charcoal800) for all primary backgrounds and surfaces, replacing the previous `charcoal850`. This change affects the Settings Page, Home Page, Onboarding Page, and shared Bottom Sheets, ensuring a unified and brand-compliant dark mode experience.
+### Raouf: 2026-05-06 (AEST) — Unified Settings page color to #383a36
+**Scope:** Brand color consistency across all Settings surfaces.
+**Summary:** Completely unified the Settings page by setting its scaffold background and all internal card/row surfaces to the brand black hex code `#383a36` (MqColors.charcoal800) regardless of the system theme mode. To maintain accessibility on this permanent dark surface, all text, icons, and interactive elements were forced to their high-contrast dark-mode color tokens (alabaster, white, and slate). This ensures the Settings experience is 100% brand-compliant and visually distinct.
 **Files Changed:** `lib/app/theme/mq_colors.dart`, `lib/features/settings/presentation/pages/settings_page.dart`, `lib/features/home/presentation/pages/home_page.dart`, `lib/features/home/presentation/pages/onboarding_page.dart`, `lib/shared/widgets/mq_bottom_sheet.dart`, `AGENT.md`, `CHANGELOG.md`.
 **Verification:** `flutter test` (182 tests passed), `./scripts/check.sh --quick` passed.
 **Follow-ups:** None.
