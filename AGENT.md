@@ -222,6 +222,13 @@ lib/
 **Verification:** `dart format lib/features/map/` (pass); `flutter analyze lib/features/map/` (no issues).
 **Follow-ups:** None.
 
+### Raouf: 2026-05-06 (AEST) — Settings page dark mode color consistency fix
+**Scope:** Settings page visual contrast and consistency in dark mode.
+**Summary:** Audited and resolved invisible components on the Settings page caused by the recent color unification, where components with a `charcoal800` background were rendered invisible against the `charcoal800` scaffold. Elevated the `_SettingsCard`, `_TapRow`, and `_ToggleRow` backgrounds to `MqColors.charcoal700` for proper contrast. Replaced the card's `charcoal800` dark-mode shadow with a `Colors.black` shadow to restore actual depth. Fixed the checkmark icon in `_OpenDaySection` from `charcoal800` to `MqColors.brightRed`.
+**Files Changed:** `lib/features/settings/presentation/pages/settings_page.dart`
+**Verification:** `dart format`, `flutter analyze` (0 issues), `flutter test` (all tests passed).
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-06 (AEST) — Onboarding page dark mode color consistency fix
 **Scope:** Onboarding page visual contrast and consistency in dark mode.
 **Summary:** Audited and resolved invisible components on the Onboarding page caused by having `MqColors.charcoal800` elements placed directly onto the `MqColors.charcoal800` scaffold background. The brand radial gradient was fixed to use `MqColors.red` for visibility. The active page indicator was adjusted to `Colors.white`, the "Next/Start" button was corrected to the dark-mode standard `MqColors.brightRed`, and the feature icon container was elevated to `MqColors.charcoal700` with a `brightRed` icon. The Open Day action button was also elevated to `MqColors.charcoal700` and `brightRed` borders for legibility.

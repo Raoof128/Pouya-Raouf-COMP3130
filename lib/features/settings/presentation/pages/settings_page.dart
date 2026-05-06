@@ -1448,7 +1448,7 @@ class _OpenDaySection extends ConsumerWidget {
                 trailing: m == current
                     ? Icon(
                         Icons.check_rounded,
-                        color: dark ? MqColors.charcoal800 : MqColors.red,
+                        color: dark ? MqColors.brightRed : MqColors.red,
                         size: 20,
                       )
                     : null,
@@ -1479,7 +1479,7 @@ class _SettingsCard extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: dark
-            ? MqColors.charcoal800
+            ? MqColors.charcoal700
             : Colors.white.withValues(alpha: 0.88),
         borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
         border: Border.all(
@@ -1493,7 +1493,9 @@ class _SettingsCard extends StatelessWidget {
           // background, giving Settings the same "premium surface"
           // language as the Home Bento cards.
           BoxShadow(
-            color: MqColors.charcoal800.withValues(alpha: dark ? 0.30 : 0.05),
+            color: dark
+                ? Colors.black.withValues(alpha: 0.30)
+                : MqColors.charcoal800.withValues(alpha: 0.05),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -1555,7 +1557,7 @@ class _TapRow extends StatelessWidget {
         hapticsEnabled: hapticsEnabled,
         onTap: onTap,
         child: ColoredBox(
-          color: dark ? MqColors.charcoal800 : Colors.white,
+          color: dark ? MqColors.charcoal700 : Colors.white,
           child: Padding(
             // Slightly taller rows give each option room to breathe
             // without wasting vertical space — feels more like a
@@ -1670,7 +1672,7 @@ class _ToggleRow extends StatelessWidget {
         hapticsEnabled: hapticsEnabled,
         onTap: () => onChanged(!value),
         child: ColoredBox(
-          color: dark ? MqColors.charcoal800 : Colors.white,
+          color: dark ? MqColors.charcoal700 : Colors.white,
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(
               MqSpacing.space5,
