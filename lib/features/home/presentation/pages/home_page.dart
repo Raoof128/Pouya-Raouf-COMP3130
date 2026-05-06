@@ -478,9 +478,14 @@ class _HeroSection extends StatelessWidget {
           ]
         : [
             Shadow(
-              blurRadius: 16,
-              color: MqColors.charcoal800.withValues(alpha: 0.24),
+              blurRadius: 18,
+              color: MqColors.black.withValues(alpha: 0.42),
               offset: const Offset(0, 2),
+            ),
+            Shadow(
+              blurRadius: 6,
+              color: MqColors.black.withValues(alpha: 0.22),
+              offset: Offset.zero,
             ),
           ];
     final subtitleTextShadow = dark
@@ -496,7 +501,18 @@ class _HeroSection extends StatelessWidget {
               offset: Offset.zero,
             ),
           ]
-        : heroTextShadow;
+        : [
+            Shadow(
+              blurRadius: 18,
+              color: MqColors.black.withValues(alpha: 0.46),
+              offset: const Offset(0, 2),
+            ),
+            Shadow(
+              blurRadius: 6,
+              color: MqColors.black.withValues(alpha: 0.24),
+              offset: Offset.zero,
+            ),
+          ];
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
@@ -550,7 +566,7 @@ class _HeroSection extends StatelessWidget {
                           color: subtitleColor,
                           fontSize: 14,
                           height: 1.4,
-                          fontWeight: dark ? FontWeight.w700 : FontWeight.w500,
+                          fontWeight: dark ? FontWeight.w700 : FontWeight.w600,
                           shadows: subtitleTextShadow,
                         ),
                       ),
@@ -805,12 +821,12 @@ class _SectionHeader extends StatelessWidget {
               : [
                   Shadow(
                     blurRadius: 14,
-                    color: Colors.white.withValues(alpha: 0.55),
+                    color: MqColors.black.withValues(alpha: 0.42),
                     offset: const Offset(0, 1),
                   ),
                   Shadow(
                     blurRadius: 4,
-                    color: Colors.white.withValues(alpha: 0.45),
+                    color: MqColors.black.withValues(alpha: 0.24),
                     offset: Offset.zero,
                   ),
                 ],

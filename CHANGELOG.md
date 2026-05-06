@@ -1,3 +1,10 @@
+### Raouf: 2026-05-07 (AEST) — Light-mode hero and quick-access text contrast darkened
+**Scope:** Home light-mode readability over background image.
+**Summary:** Increased black contrast treatment for Home light-mode hero text and `QUICK ACCESS` by replacing washout-prone light halos with darker shadow layers and slightly increasing subtitle weight, making text more visibly black against bright image regions.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — Hero subtitle (“Find your way…”) whitened further in dark mode
 **Scope:** Home dark-mode subtitle readability refinement.
 **Summary:** Increased the white prominence of the hero subtitle by adding a stronger dark-separation shadow plus brighter white glow and raising subtitle weight in dark mode, making “Find your way around campus…” read clearer on bright clouds.

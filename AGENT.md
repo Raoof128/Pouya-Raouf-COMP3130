@@ -49,6 +49,13 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-07 (AEST) — Light-mode hero and quick-access text contrast darkened
+**Scope:** Home light-mode readability over background image.
+**Summary:** Hardened Home light-mode text visibility by increasing dark shadow contrast for hero copy and `QUICK ACCESS`, replacing light halo behavior with black-shadow emphasis and slightly increasing subtitle weight so text appears more solid black over bright sky.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — Hero subtitle (“Find your way…”) whitened further in dark mode
 **Scope:** Home dark-mode subtitle readability refinement.
 **Summary:** Boosted the dark-mode hero subtitle visual prominence by increasing shadow separation, adding stronger white glow, and elevating subtitle font weight so “Find your way around campus…” appears whiter and remains readable against bright sky regions.
