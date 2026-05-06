@@ -154,7 +154,7 @@ class _MetroCountdownCard extends StatelessWidget {
         ? MqColors.charcoal800
         : Colors.white.withValues(alpha: 0.88);
     final border = dark ? Colors.white.withAlpha(13) : MqColors.sand200;
-    const accent = MqColors.red;
+    const accent = MqColors.brightRed;
     final titleColor = dark
         ? MqColors.contentPrimaryDark
         : MqColors.contentPrimary;
@@ -213,10 +213,10 @@ class _MetroCountdownCard extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: accent.withValues(alpha: dark ? 0.22 : 0.12),
+              color: MqColors.red,
               shape: BoxShape.circle,
             ),
-            child: Icon(modeIcon, color: accent, size: 22),
+            child: Icon(modeIcon, color: Colors.white, size: 22),
           ),
           const SizedBox(width: MqSpacing.space3),
           Expanded(child: content),

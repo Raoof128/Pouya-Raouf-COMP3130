@@ -1,3 +1,17 @@
+### Raouf: 2026-05-07 (AEST) — Metro + Settings icons with red circle + white icon
+**Scope:** Metro card and Settings icons styling.
+**Summary:** Changed Metro card icon to solid red circle with white icon. Changed Settings icons to use solid red circle with white icon in all row types (_TapRow, _ToggleRow, _InfoRow).
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `lib/features/settings/presentation/pages/settings_page.dart`
+**Verification:** `./scripts/check.sh` → 6/6 passed.
+**Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Metro + Settings titles to bright red
+**Scope:** Metro card and Settings title color consistency.
+**Summary:** Changed Metro card accent and Settings page title to use `MqColors.brightRed` for consistent bright red across the app.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `lib/features/settings/presentation/pages/settings_page.dart`
+**Verification:** `./scripts/check.sh` → 6/6 passed.
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — Settings + Open Day icons to bright red
 **Scope:** Settings and Open Day page icon color consistency.
 **Summary:** Changed all icons in the Settings page to use `MqColors.brightRed` for full bright red consistency. Also made the Open Day home card (study interest selection) use red icons in both light and dark mode, matching the Metro accent.

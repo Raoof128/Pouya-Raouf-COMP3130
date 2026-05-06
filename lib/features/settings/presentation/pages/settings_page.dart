@@ -184,7 +184,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           style: context.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.w800,
                             letterSpacing: 1.2,
-                            color: MqColors.red,
+                            color: MqColors.brightRed,
                           ),
                         ),
                       ),
@@ -1578,12 +1578,10 @@ class _TapRow extends StatelessWidget {
                   height: 32,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: dark
-                        ? Colors.white.withValues(alpha: 0.06)
-                        : MqColors.red.withValues(alpha: 0.08),
+                    color: MqColors.red,
                     borderRadius: BorderRadius.circular(MqSpacing.radiusSm),
                   ),
-                  child: Icon(icon, size: 18, color: MqColors.brightRed),
+                  child: Icon(icon, size: 18, color: Colors.white),
                 ),
                 const SizedBox(width: MqSpacing.space3),
                 Expanded(
@@ -1685,12 +1683,10 @@ class _ToggleRow extends StatelessWidget {
                   height: 32,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: dark
-                        ? Colors.white.withValues(alpha: 0.06)
-                        : MqColors.red.withValues(alpha: 0.08),
+                    color: MqColors.red,
                     borderRadius: BorderRadius.circular(MqSpacing.radiusSm),
                   ),
-                  child: Icon(icon, size: 18, color: MqColors.brightRed),
+                  child: Icon(icon, size: 18, color: Colors.white),
                 ),
                 const SizedBox(width: MqSpacing.space3),
                 Expanded(
@@ -1749,7 +1745,16 @@ class _InfoRow extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 22, color: MqColors.brightRed),
+            Container(
+              width: 32,
+              height: 32,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: MqColors.red,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, size: 18, color: Colors.white),
+            ),
             const SizedBox(width: MqSpacing.space4),
             Expanded(
               child: Column(
