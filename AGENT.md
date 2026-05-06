@@ -49,6 +49,20 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-07 (AEST) — Hero subtitle (“Find your way…”) whitened further in dark mode
+**Scope:** Home dark-mode subtitle readability refinement.
+**Summary:** Boosted the dark-mode hero subtitle visual prominence by increasing shadow separation, adding stronger white glow, and elevating subtitle font weight so “Find your way around campus…” appears whiter and remains readable against bright sky regions.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Dark-mode hero and quick-access text glow boost
+**Scope:** Home dark-mode text readability over bright background areas.
+**Summary:** Tuned Home dark-mode text effects by increasing shadow depth and adding a white glow pass for the hero heading/subheading and `QUICK ACCESS` label so they remain legible across high-brightness portions of the background photo.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — Dark-mode bottom-nav icons + Home action icons to white
 **Scope:** Dark-mode icon contrast consistency.
 **Summary:** Set bottom navigation icons to white in dark mode to match label text and updated Home Metro card action icons (`Refresh departures`, `Configure commute`) to pure white in dark mode for stronger visibility.

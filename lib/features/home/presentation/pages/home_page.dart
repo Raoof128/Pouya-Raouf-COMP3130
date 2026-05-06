@@ -463,13 +463,40 @@ class _HeroSection extends StatelessWidget {
     final titleColor = dark ? Colors.white : MqColors.black;
     final subtitleColor = dark ? Colors.white : MqColors.black;
     const ctaColor = MqColors.red;
-    final heroTextShadow = [
-      Shadow(
-        blurRadius: 16,
-        color: MqColors.charcoal800.withValues(alpha: dark ? 0.36 : 0.24),
-        offset: const Offset(0, 2),
-      ),
-    ];
+    final heroTextShadow = dark
+        ? [
+            Shadow(
+              blurRadius: 20,
+              color: MqColors.charcoal800.withValues(alpha: 0.62),
+              offset: const Offset(0, 2),
+            ),
+            Shadow(
+              blurRadius: 14,
+              color: Colors.white.withValues(alpha: 0.28),
+              offset: Offset.zero,
+            ),
+          ]
+        : [
+            Shadow(
+              blurRadius: 16,
+              color: MqColors.charcoal800.withValues(alpha: 0.24),
+              offset: const Offset(0, 2),
+            ),
+          ];
+    final subtitleTextShadow = dark
+        ? [
+            Shadow(
+              blurRadius: 22,
+              color: MqColors.charcoal800.withValues(alpha: 0.68),
+              offset: const Offset(0, 2),
+            ),
+            Shadow(
+              blurRadius: 12,
+              color: Colors.white.withValues(alpha: 0.34),
+              offset: Offset.zero,
+            ),
+          ]
+        : heroTextShadow;
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
@@ -523,8 +550,8 @@ class _HeroSection extends StatelessWidget {
                           color: subtitleColor,
                           fontSize: 14,
                           height: 1.4,
-                          fontWeight: FontWeight.w500,
-                          shadows: heroTextShadow,
+                          fontWeight: dark ? FontWeight.w700 : FontWeight.w500,
+                          shadows: subtitleTextShadow,
                         ),
                       ),
                     ],
@@ -761,23 +788,32 @@ class _SectionHeader extends StatelessWidget {
           fontSize: 20,
           height: 1.1,
           color: dark ? Colors.white : MqColors.charcoal800,
-          shadows: [
-            // Soft halo for legibility over the campus photo.
-            Shadow(
-              blurRadius: 14,
-              color: dark
-                  ? MqColors.charcoal800.withValues(alpha: 0.55)
-                  : Colors.white.withValues(alpha: 0.55),
-              offset: const Offset(0, 1),
-            ),
-            Shadow(
-              blurRadius: 4,
-              color: dark
-                  ? MqColors.charcoal800.withValues(alpha: 0.4)
-                  : Colors.white.withValues(alpha: 0.45),
-              offset: Offset.zero,
-            ),
-          ],
+          shadows: dark
+              ? [
+                  // Strong dark lift + soft white glow for high-contrast clouds.
+                  Shadow(
+                    blurRadius: 18,
+                    color: MqColors.charcoal800.withValues(alpha: 0.65),
+                    offset: const Offset(0, 2),
+                  ),
+                  Shadow(
+                    blurRadius: 10,
+                    color: Colors.white.withValues(alpha: 0.24),
+                    offset: Offset.zero,
+                  ),
+                ]
+              : [
+                  Shadow(
+                    blurRadius: 14,
+                    color: Colors.white.withValues(alpha: 0.55),
+                    offset: const Offset(0, 1),
+                  ),
+                  Shadow(
+                    blurRadius: 4,
+                    color: Colors.white.withValues(alpha: 0.45),
+                    offset: Offset.zero,
+                  ),
+                ],
         ),
       ),
     );
