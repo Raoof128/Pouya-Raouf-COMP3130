@@ -1,3 +1,17 @@
+### Raouf: 2026-05-07 (AEST) — Start Exploring CTA kept white in light mode
+**Scope:** Home CTA contrast consistency.
+**Summary:** Adjusted the `Start Exploring` button foreground color to stay white in both light and dark mode, since the button uses a pure red background in both themes.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Home text colors split by theme (light black / dark white)
+**Scope:** Home page text color behavior by theme mode.
+**Summary:** Updated Home page text styling so text renders black in light mode and white in dark mode, including hero copy, metro card text, quick-access tile labels, and CTA foreground to match the requested mode-based contrast rule.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — check.sh analyzer warning cleanup
 **Scope:** Project validation and lint hygiene.
 **Summary:** Ran `./scripts/check.sh`, confirmed functional pass, then fixed the remaining analyzer info (`prefer_const_constructors`) in `settings_page.dart` so static analysis is now fully clean with zero issues.

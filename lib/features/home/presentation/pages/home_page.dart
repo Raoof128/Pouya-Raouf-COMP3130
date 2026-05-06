@@ -155,8 +155,8 @@ class _MetroCountdownCard extends StatelessWidget {
         : Colors.white.withValues(alpha: 0.88);
     final border = dark ? Colors.white.withAlpha(13) : MqColors.sand200;
     const accent = MqColors.brightRed;
-    const titleColor = Colors.white;
-    const subtitleColor = Colors.white;
+    final titleColor = dark ? Colors.white : MqColors.black;
+    final subtitleColor = dark ? Colors.white : MqColors.black;
 
     final modeIcon = switch (commuteMode) {
       'metro' => Icons.directions_subway,
@@ -173,7 +173,7 @@ class _MetroCountdownCard extends StatelessWidget {
 
     Widget content;
     if (!_isConfigured) {
-      content = const _EmptyState(
+      content = _EmptyState(
         accent: accent,
         subtitleColor: subtitleColor,
         titleColor: titleColor,
@@ -189,8 +189,8 @@ class _MetroCountdownCard extends StatelessWidget {
           subtitleColor: subtitleColor,
           titleColor: titleColor,
         ),
-        loading: () => const _LoadingBody(subtitleColor: subtitleColor),
-        error: (_, _) => const _ErrorBody(subtitleColor: subtitleColor),
+        loading: () => _LoadingBody(subtitleColor: subtitleColor),
+        error: (_, _) => _ErrorBody(subtitleColor: subtitleColor),
       );
     }
 
@@ -464,8 +464,8 @@ class _HeroSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final dark = context.isDarkMode;
 
-    const titleColor = Colors.white;
-    const subtitleColor = Colors.white;
+    final titleColor = dark ? Colors.white : MqColors.black;
+    final subtitleColor = dark ? Colors.white : MqColors.black;
     const ctaColor = MqColors.red;
     final heroTextShadow = [
       Shadow(
@@ -861,7 +861,7 @@ class _BentoHeroCard extends StatelessWidget {
                 style: context.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                   height: 1.1,
-                  color: Colors.white,
+                  color: isDark ? Colors.white : MqColors.black,
                 ),
               ),
             ],
@@ -943,7 +943,7 @@ class _TertiaryQuickRow extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: context.textTheme.labelMedium?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: isDark ? Colors.white : MqColors.black,
                           ),
                         ),
                       ],

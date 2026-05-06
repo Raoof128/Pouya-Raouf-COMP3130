@@ -49,6 +49,20 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-07 (AEST) — Start Exploring CTA kept white in light mode
+**Scope:** Home CTA contrast consistency.
+**Summary:** Updated Home `Start Exploring` button foreground color to remain white in both themes so it stays readable and visually consistent on the pure red CTA background.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Home text colors split by theme (light black / dark white)
+**Scope:** Home page text color behavior by theme mode.
+**Summary:** Updated Home page text color logic so light mode uses black text and dark mode uses white text across hero copy, metro card text, quick-access labels, and CTA foreground for consistent readability.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — check.sh analyzer warning cleanup
 **Scope:** Project validation and lint hygiene.
 **Summary:** Executed `./scripts/check.sh` and then removed the remaining analyzer warning by applying a const-constructor fix in `settings_page.dart`, resulting in a fully clean `flutter analyze` and check script pass.
