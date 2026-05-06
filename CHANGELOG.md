@@ -1,3 +1,10 @@
+### Raouf: 2026-05-06 (AEST) — Improved check.sh robustness
+**Scope:** Developer tooling and CI/CD reliability.
+**Summary:** Resolved a failure in `scripts/check.sh` where tests and localization generation would fail if the script was executed from within the `scripts/` directory. Added logic to the script to automatically resolve the project root directory relative to its own location and `cd` there before executing any Flutter commands.
+**Files Changed:** `scripts/check.sh`
+**Verification:** Verified by running `cd scripts && ./check.sh`, which now passes all 6 steps correctly.
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-06 (AEST) — Project health check and cleanup
 **Scope:** Repository maintenance and CI/CD validation.
 **Summary:** Executed `scripts/check.sh` to validate project health. Resolved formatting issues across the codebase by running `dart format .`. Cleaned up the `scratch/` directory by removing temporary migration scripts that were causing static analysis warnings (e.g., unused imports, avoid_print). All checks, including static analysis, 182 tests, and debug build, are now passing.
