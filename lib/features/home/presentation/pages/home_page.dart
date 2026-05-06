@@ -548,8 +548,8 @@ class _HeroSection extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        l10n.home_welcomeTitle,
+                      _BlinkingText(
+                        text: l10n.home_welcomeTitle,
                         style: context.textTheme.headlineLarge?.copyWith(
                           fontSize: 26,
                           fontWeight: FontWeight.w800,
@@ -560,8 +560,8 @@ class _HeroSection extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: MqSpacing.space1),
-                      Text(
-                        l10n.home_welcomeSubtitle,
+                      _BlinkingText(
+                        text: l10n.home_welcomeSubtitle,
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: subtitleColor,
                           fontSize: 14,
@@ -796,8 +796,8 @@ class _SectionHeader extends StatelessWidget {
         start: MqSpacing.space1,
         bottom: MqSpacing.space4,
       ),
-      child: Text(
-        title.toUpperCase(),
+      child: _BlinkingText(
+        text: title.toUpperCase(),
         style: context.textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w800,
           letterSpacing: 1.4,
@@ -832,6 +832,49 @@ class _SectionHeader extends StatelessWidget {
                 ],
         ),
       ),
+    );
+  }
+}
+
+class _BlinkingText extends StatefulWidget {
+  const _BlinkingText({required this.text, this.style});
+
+  final String text;
+  final TextStyle? style;
+
+  @override
+  State<_BlinkingText> createState() => _BlinkingTextState();
+}
+
+class _BlinkingTextState extends State<_BlinkingText>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _opacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 900),
+      vsync: this,
+    )..repeat(reverse: true);
+    _opacity = Tween<double>(
+      begin: 0.65,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _opacity,
+      child: Text(widget.text, style: widget.style),
     );
   }
 }

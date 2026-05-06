@@ -49,6 +49,13 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-07 (AEST) — Blinking effect added to Home hero + quick-access texts
+**Scope:** Home heading text animation behavior.
+**Summary:** Implemented a reusable `_BlinkingText` widget and applied it to the Home hero title/subtitle plus `QUICK ACCESS`, with a continuous fade pulse for stronger visual emphasis over the background image.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** Adjust blink timing/intensity if UX feedback prefers a softer or slower pulse.
+
 ### Raouf: 2026-05-07 (AEST) — Light-mode hero and quick-access text contrast darkened
 **Scope:** Home light-mode readability over background image.
 **Summary:** Hardened Home light-mode text visibility by increasing dark shadow contrast for hero copy and `QUICK ACCESS`, replacing light halo behavior with black-shadow emphasis and slightly increasing subtitle weight so text appears more solid black over bright sky.

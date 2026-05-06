@@ -1,3 +1,10 @@
+### Raouf: 2026-05-07 (AEST) — Blinking effect added to Home hero + quick-access texts
+**Scope:** Home heading text animation behavior.
+**Summary:** Added a reusable blinking text animation and applied it to `Welcome to MQ Navigation`, `Find your way around campus quickly and easily.`, and `QUICK ACCESS` so those key headings now pulse between lower and full opacity.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** If needed, tune blink intensity/speed for comfort (currently 900ms, opacity 0.65↔1.0).
+
 ### Raouf: 2026-05-07 (AEST) — Light-mode hero and quick-access text contrast darkened
 **Scope:** Home light-mode readability over background image.
 **Summary:** Increased black contrast treatment for Home light-mode hero text and `QUICK ACCESS` by replacing washout-prone light halos with darker shadow layers and slightly increasing subtitle weight, making text more visibly black against bright image regions.
