@@ -21,7 +21,7 @@ abstract final class MqColors {
   static const Color charcoal950 = Color(0xFF12080A);
   static const Color charcoal900 = Color(0xFF262826);
   static const Color charcoal850 = Color(0xFF1C0D0F);
-  static const Color charcoal800 = Color(0xFF373A36);
+  static const Color charcoal800 = Color(0xFF383A36);
   static const Color charcoal700 = Color(0xFF535650);
   static const Color charcoal600 = Color(0xFF71736B);
 

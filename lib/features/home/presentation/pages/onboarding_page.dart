@@ -102,7 +102,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     ];
 
     return Scaffold(
-      backgroundColor: isDark ? MqColors.charcoal850 : MqColors.alabaster,
+      backgroundColor: isDark ? MqColors.charcoal800 : MqColors.alabaster,
       body: Stack(
         children: [
           if (isDark)

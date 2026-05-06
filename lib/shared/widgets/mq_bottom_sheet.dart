@@ -18,7 +18,7 @@ class MqBottomSheet extends StatelessWidget {
     final dark = context.isDarkMode;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: dark ? MqColors.charcoal850 : Colors.white,
+        color: dark ? MqColors.charcoal800 : Colors.white,
         borderRadius: const BorderRadius.vertical(
           top: Radius.circular(MqSpacing.radiusXl),
         ),

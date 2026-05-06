@@ -94,7 +94,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final dark = context.isDarkMode;
 
     return Scaffold(
-      backgroundColor: dark ? MqColors.charcoal850 : MqColors.alabaster,
+      backgroundColor: dark ? MqColors.charcoal800 : MqColors.alabaster,
       body: settingsState.when(
         data: (preferences) {
           return Stack(
@@ -1478,7 +1478,7 @@ class _SettingsCard extends StatelessWidget {
     final dark = context.isDarkMode;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: dark ? MqColors.charcoal850 : Colors.white,
+        color: dark ? MqColors.charcoal800 : Colors.white,
         borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
         border: Border.all(
           color: dark
@@ -1553,7 +1553,7 @@ class _TapRow extends StatelessWidget {
         hapticsEnabled: hapticsEnabled,
         onTap: onTap,
         child: ColoredBox(
-          color: dark ? MqColors.charcoal850 : Colors.white,
+          color: dark ? MqColors.charcoal800 : Colors.white,
           child: Padding(
             // Slightly taller rows give each option room to breathe
             // without wasting vertical space — feels more like a
@@ -1668,7 +1668,7 @@ class _ToggleRow extends StatelessWidget {
         hapticsEnabled: hapticsEnabled,
         onTap: () => onChanged(!value),
         child: ColoredBox(
-          color: dark ? MqColors.charcoal850 : Colors.white,
+          color: dark ? MqColors.charcoal800 : Colors.white,
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(
               MqSpacing.space5,

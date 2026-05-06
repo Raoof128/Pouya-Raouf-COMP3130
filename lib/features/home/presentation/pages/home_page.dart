@@ -43,7 +43,7 @@ class HomePage extends ConsumerWidget {
     final metroDepartures = ref.watch(tfnswMetroProvider);
 
     return Scaffold(
-      backgroundColor: dark ? MqColors.charcoal850 : MqColors.alabaster,
+      backgroundColor: dark ? MqColors.charcoal800 : MqColors.alabaster,
       body: Stack(
         children: [
           _CampusBackground(asset: _backgroundAsset, isDark: dark),
@@ -151,7 +151,7 @@ class _MetroCountdownCard extends StatelessWidget {
     final dark = context.isDarkMode;
 
     final surface = dark
-        ? MqColors.charcoal850
+        ? MqColors.charcoal800
         : Colors.white.withValues(alpha: 0.88);
     final border = dark ? Colors.white.withAlpha(13) : MqColors.sand200;
     const accent = MqColors.red;
@@ -832,7 +832,7 @@ class _BentoHeroCard extends StatelessWidget {
             // reads cleanly over high-contrast photo crops, paired
             // with a soft drop shadow for a more premium elevation.
             color: isDark
-                ? MqColors.charcoal850.withValues(alpha: 0.94)
+                ? MqColors.charcoal800.withValues(alpha: 0.94)
                 : Colors.white.withValues(alpha: 0.94),
             borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
             border: Border.all(
@@ -913,7 +913,7 @@ class _TertiaryQuickRow extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: isDark
-                          ? MqColors.charcoal850.withValues(alpha: 0.94)
+                          ? MqColors.charcoal800.withValues(alpha: 0.94)
                           : Colors.white.withValues(alpha: 0.94),
                       borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
                       border: Border.all(
