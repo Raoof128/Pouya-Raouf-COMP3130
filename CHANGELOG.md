@@ -1,3 +1,10 @@
+### Raouf: 2026-05-07 (AEST) — Dark-mode bottom-nav icons + Home action icons to white
+**Scope:** Dark-mode icon contrast consistency.
+**Summary:** Updated dark-mode bottom navigation icons to white (matching label color) and changed Home Metro card action icons (`Refresh departures`, `Configure commute`) from dim white to pure white for consistent visibility on dark surfaces.
+**Files Changed:** `lib/app/router/app_shell.dart`, `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` on touched files; `flutter analyze lib/features/home/presentation/pages/home_page.dart lib/app/router/app_shell.dart` (no issues).
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — Home light-mode background clarity + bottom-nav text theme parity
 **Scope:** Home visual clarity and bottom navigation typography by theme.
 **Summary:** Reduced the Home light-mode background overlay to match dark-mode clarity (removed the heavier wash causing a blurry look) and set bottom navigation label text colors to black in light mode and white in dark mode for strict theme parity.

@@ -31,18 +31,18 @@ class AppShell extends StatelessWidget {
         },
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
+            icon: Icon(Icons.home_outlined, color: navLabelColor),
+            selectedIcon: Icon(Icons.home, color: navLabelColor),
             label: l10n.home,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.map_outlined),
-            selectedIcon: const Icon(Icons.map),
+            icon: Icon(Icons.map_outlined, color: navLabelColor),
+            selectedIcon: Icon(Icons.map, color: navLabelColor),
             label: l10n.navigation,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.settings_outlined),
-            selectedIcon: const Icon(Icons.settings),
+            icon: Icon(Icons.settings_outlined, color: navLabelColor),
+            selectedIcon: Icon(Icons.settings, color: navLabelColor),
             label: l10n.settings,
           ),
         ],

@@ -248,7 +248,7 @@ class _MetroCardIconButton extends StatelessWidget {
     final dark = context.isDarkMode;
     return IconButton(
       icon: Icon(icon),
-      color: dark ? Colors.white54 : MqColors.contentTertiary,
+      color: dark ? Colors.white : MqColors.contentTertiary,
       iconSize: 20,
       onPressed: onTap,
       tooltip: semanticLabel,

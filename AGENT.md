@@ -49,6 +49,13 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-07 (AEST) — Dark-mode bottom-nav icons + Home action icons to white
+**Scope:** Dark-mode icon contrast consistency.
+**Summary:** Set bottom navigation icons to white in dark mode to match label text and updated Home Metro card action icons (`Refresh departures`, `Configure commute`) to pure white in dark mode for stronger visibility.
+**Files Changed:** `lib/app/router/app_shell.dart`, `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` on touched files; `flutter analyze lib/features/home/presentation/pages/home_page.dart lib/app/router/app_shell.dart` (no issues).
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — Home light-mode background clarity + bottom-nav text theme parity
 **Scope:** Home visual clarity and bottom navigation typography by theme.
 **Summary:** Updated Home light-mode background overlay strength to match dark-mode image clarity and enforced bottom navigation label text colors to black (light mode) and white (dark mode) for consistent theme behavior.
