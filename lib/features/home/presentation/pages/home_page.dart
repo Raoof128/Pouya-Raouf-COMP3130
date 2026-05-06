@@ -49,6 +49,27 @@ class HomePage extends ConsumerWidget {
       body: Stack(
         children: [
           _CampusBackground(asset: _backgroundAsset, isDark: dark),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 320,
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      MqColors.black.withValues(alpha: dark ? 0.34 : 0.20),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+                child: const SizedBox.expand(),
+              ),
+            ),
+          ),
           if (dark)
             Positioned(
               top: -80,
@@ -433,11 +454,36 @@ class _CampusBackground extends StatelessWidget {
         children: [
           ImageFiltered(
             imageFilter: ui.ImageFilter.blur(sigmaX: 4.8, sigmaY: 4.8),
-            child: Image.asset(
-              asset,
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.high,
-              errorBuilder: (_, _, _) => const ColoredBox(color: Colors.white),
+            child: ColorFiltered(
+              colorFilter: const ColorFilter.matrix(<double>[
+                0.803,
+                0.179,
+                0.018,
+                0,
+                0,
+                0.053,
+                0.929,
+                0.018,
+                0,
+                0,
+                0.053,
+                0.179,
+                0.768,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+              ]),
+              child: Image.asset(
+                asset,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.high,
+                errorBuilder: (_, _, _) =>
+                    const ColoredBox(color: Colors.white),
+              ),
             ),
           ),
           Container(color: Colors.white.withValues(alpha: 0.08)),
@@ -553,8 +599,8 @@ class _HeroSection extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _BlinkingText(
-                        text: l10n.home_welcomeTitle,
+                      Text(
+                        l10n.home_welcomeTitle,
                         style: context.textTheme.headlineLarge?.copyWith(
                           fontSize: 26,
                           fontWeight: FontWeight.w800,
@@ -565,8 +611,8 @@ class _HeroSection extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: MqSpacing.space1),
-                      _BlinkingText(
-                        text: l10n.home_welcomeSubtitle,
+                      Text(
+                        l10n.home_welcomeSubtitle,
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: subtitleColor,
                           fontSize: 14,
@@ -801,85 +847,64 @@ class _SectionHeader extends StatelessWidget {
         start: MqSpacing.space1,
         bottom: MqSpacing.space4,
       ),
-      child: _BlinkingText(
-        text: title.toUpperCase(),
-        style: context.textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.w800,
-          letterSpacing: 1.4,
-          fontSize: 20,
-          height: 1.1,
-          color: dark ? Colors.white : MqColors.charcoal800,
-          shadows: dark
-              ? [
-                  // Strong dark lift + soft white glow for high-contrast clouds.
-                  Shadow(
-                    blurRadius: 18,
-                    color: MqColors.charcoal800.withValues(alpha: 0.65),
-                    offset: const Offset(0, 2),
-                  ),
-                  Shadow(
-                    blurRadius: 10,
-                    color: Colors.white.withValues(alpha: 0.24),
-                    offset: Offset.zero,
-                  ),
-                ]
-              : [
-                  Shadow(
-                    blurRadius: 14,
-                    color: MqColors.black.withValues(alpha: 0.42),
-                    offset: const Offset(0, 1),
-                  ),
-                  Shadow(
-                    blurRadius: 4,
-                    color: MqColors.black.withValues(alpha: 0.24),
-                    offset: Offset.zero,
-                  ),
-                ],
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: dark
+              ? MqColors.black.withValues(alpha: 0.30)
+              : Colors.white.withValues(alpha: 0.72),
+          borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
+          border: Border.all(
+            color: dark
+                ? Colors.white.withValues(alpha: 0.10)
+                : MqColors.black.withValues(alpha: 0.14),
+            width: 0.8,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(
+            MqSpacing.space2,
+            MqSpacing.space1,
+            MqSpacing.space2,
+            MqSpacing.space1,
+          ),
+          child: Text(
+            title.toUpperCase(),
+            style: context.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.4,
+              fontSize: 20,
+              height: 1.1,
+              color: dark ? Colors.white : MqColors.charcoal800,
+              shadows: dark
+                  ? [
+                      // Strong dark lift + soft white glow for high-contrast clouds.
+                      Shadow(
+                        blurRadius: 18,
+                        color: MqColors.charcoal800.withValues(alpha: 0.65),
+                        offset: const Offset(0, 2),
+                      ),
+                      Shadow(
+                        blurRadius: 10,
+                        color: Colors.white.withValues(alpha: 0.24),
+                        offset: Offset.zero,
+                      ),
+                    ]
+                  : [
+                      Shadow(
+                        blurRadius: 14,
+                        color: MqColors.black.withValues(alpha: 0.42),
+                        offset: const Offset(0, 1),
+                      ),
+                      Shadow(
+                        blurRadius: 4,
+                        color: MqColors.black.withValues(alpha: 0.24),
+                        offset: Offset.zero,
+                      ),
+                    ],
+            ),
+          ),
         ),
       ),
-    );
-  }
-}
-
-class _BlinkingText extends StatefulWidget {
-  const _BlinkingText({required this.text, this.style});
-
-  final String text;
-  final TextStyle? style;
-
-  @override
-  State<_BlinkingText> createState() => _BlinkingTextState();
-}
-
-class _BlinkingTextState extends State<_BlinkingText>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _opacity;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 3500),
-      vsync: this,
-    )..repeat(reverse: true);
-    _opacity = Tween<double>(
-      begin: 0.65,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _opacity,
-      child: Text(widget.text, style: widget.style),
     );
   }
 }

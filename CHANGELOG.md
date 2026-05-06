@@ -1,3 +1,38 @@
+### Raouf: 2026-05-07 (AEST) — Removed all Home blinking text effects
+**Scope:** Home text animation behavior reset.
+**Summary:** Removed blinking animation from all Home texts in both light and dark mode (`Welcome` title, subtitle, and `QUICK ACCESS`) and restored static text rendering while preserving current contrast styling.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** None.
+
+### Raouf: 2026-05-07 (AEST) — Guaranteed QUICK ACCESS readability chip
+**Scope:** Home section-header visibility over mixed background tones.
+**Summary:** Added a theme-aware contrast chip behind the blinking `QUICK ACCESS` label (with subtle border and padding) to ensure consistent readability regardless of local background luminance.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** Adjust chip opacity/border if you want stronger or subtler header emphasis.
+
+### Raouf: 2026-05-07 (AEST) — Home background desaturation reduced (more color restored)
+**Scope:** Home background image color balance.
+**Summary:** Relaxed the desaturation matrix so the Home background retains more natural color while preserving enough contrast support for overlaid text.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** Further tune saturation if you want even more original color.
+
+### Raouf: 2026-05-07 (AEST) — Removed hero container, added background desaturation
+**Scope:** Home hero readability styling approach change.
+**Summary:** Removed the translucent hero text container and switched to image-level saturation reduction on the Home background while keeping blur/scrim, improving text contrast without boxed text styling.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** Tune desaturation matrix strength if you want more/less color.
+
+### Raouf: 2026-05-07 (AEST) — Added hero scrim + translucent text container for readability
+**Scope:** Home hero text contrast over background image.
+**Summary:** Implemented both requested readability strategies: added a top gradient scrim behind the hero zone and wrapped hero text in a translucent container so black/white blinking text remains readable over bright and mixed image regions.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format lib/features/home/presentation/pages/home_page.dart`; `flutter analyze lib/features/home/presentation/pages/home_page.dart` (no issues).
+**Follow-ups:** Tune scrim/container opacity if you want stronger or subtler separation.
+
 ### Raouf: 2026-05-07 (AEST) — Blink slowed further + stronger Home background blur
 **Scope:** Home text emphasis and background contrast.
 **Summary:** Further slowed blinking speed and increased Home background blur intensity in both modes so blinking headline text stands out more clearly against the image.
