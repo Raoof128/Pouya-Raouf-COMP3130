@@ -70,9 +70,7 @@ class OverlayPickerSheet extends ConsumerWidget {
                       icon: const Icon(Icons.layers_clear_outlined, size: 18),
                       label: Text(l10n.clearAll),
                       style: TextButton.styleFrom(
-                        foregroundColor: isDark
-                            ? MqColors.charcoal800
-                            : MqColors.red,
+                        foregroundColor: MqColors.red,
                         minimumSize: const Size(
                           MqSpacing.minTapTarget,
                           MqSpacing.minTapTarget,
@@ -92,9 +90,7 @@ class OverlayPickerSheet extends ConsumerWidget {
               child: Text(
                 l10n.mapLayersDesc,
                 style: context.textTheme.bodySmall?.copyWith(
-                  color: isDark
-                      ? MqColors.contentSecondaryDark
-                      : MqColors.contentSecondary,
+                  color: isDark ? Colors.white : MqColors.contentSecondary,
                 ),
               ),
             ),
@@ -195,9 +191,7 @@ class _OverlayToggleRow extends StatelessWidget {
                     Text(
                       description,
                       style: context.textTheme.bodySmall?.copyWith(
-                        color: isDark
-                            ? MqColors.contentSecondaryDark
-                            : MqColors.contentTertiary,
+                        color: isDark ? Colors.white : MqColors.contentTertiary,
                       ),
                     ),
                   ],

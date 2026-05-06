@@ -49,6 +49,27 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-07 (AEST) — Map follow-up audit: service/accent labels corrected to red
+**Scope:** Map dark/light accent parity follow-up.
+**Summary:** Ran an extra map presentation audit and corrected remaining accent inconsistencies so service/accent labels that should be red no longer render dark in dark mode (notably route category badge and overlay clear action styling).
+**Files Changed:** `lib/features/map/presentation/widgets/route_panel.dart`, `lib/features/map/presentation/widgets/overlay_picker_sheet.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` on touched files; `flutter analyze lib/features/map/presentation` (no issues).
+**Follow-ups:** Use runtime screenshot review to catch any remaining one-off style exceptions.
+
+### Raouf: 2026-05-07 (AEST) — Map dark-mode color hierarchy aligned to light-mode reference
+**Scope:** Map presentation color semantics in dark mode.
+**Summary:** Updated dark-mode map styling to follow the same semantic hierarchy as light mode: accent/active states remain red, while baseline textual content remains white, preserving the intended contrast and emphasis structure.
+**Files Changed:** `lib/features/map/presentation/pages/map_page.dart`, `lib/features/map/presentation/widgets/route_panel.dart`, `lib/features/map/presentation/widgets/map_shell.dart`, `lib/features/map/presentation/widgets/map_mode_toggle.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` on touched files; `flutter analyze lib/features/map/presentation` (no issues).
+**Follow-ups:** Extend same semantic pass to adjacent map modules if future inconsistencies appear.
+
+### Raouf: 2026-05-07 (AEST) — Map dark-mode text standardized to pure white
+**Scope:** Map presentation dark-mode text readability consistency.
+**Summary:** Applied pure-white dark-mode text styling across core map presentation widgets to align with the Home screen readability rule and remove dim/off-white dark text variants.
+**Files Changed:** `lib/features/map/presentation/pages/map_page.dart`, `lib/features/map/presentation/widgets/route_panel.dart`, `lib/features/map/presentation/widgets/building_search_sheet.dart`, `lib/features/map/presentation/widgets/overlay_picker_sheet.dart`, `lib/features/map/presentation/widgets/google/desktop_map_fallback_view.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` on touched map files; `flutter analyze lib/features/map/presentation` (no issues).
+**Follow-ups:** Extend the same rule to additional map modules if you want strict app-wide parity beyond presentation components.
+
 ### Raouf: 2026-05-07 (AEST) — Removed all Home blinking text effects
 **Scope:** Home text animation behavior reset.
 **Summary:** Removed the `_BlinkingText` animation usage and helper from Home so hero title/subtitle and `QUICK ACCESS` render as static text in both light and dark modes.

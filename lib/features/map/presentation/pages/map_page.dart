@@ -390,7 +390,7 @@ class _MapPageState extends ConsumerState<MapPage> {
               Text(
                 l10n.loadingBuildings,
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: isDark ? MqColors.sand400 : MqColors.contentTertiary,
+                  color: isDark ? Colors.white : MqColors.contentTertiary,
                 ),
               ),
             ],
@@ -488,9 +488,7 @@ class _MapErrorBanner extends StatelessWidget {
           Text(
             message,
             style: context.textTheme.bodySmall?.copyWith(
-              color: isDark
-                  ? MqColors.contentSecondaryDark
-                  : MqColors.contentSecondary,
+              color: isDark ? Colors.white : MqColors.contentSecondary,
             ),
           ),
           if (isPermissionBlocked) ...[
@@ -626,7 +624,7 @@ class _CategoryBuildingList extends StatelessWidget {
                           Icons.arrow_back,
                           size: 20,
                           color: isDark
-                              ? Colors.white.withValues(alpha: 0.7)
+                              ? Colors.white
                               : MqColors.contentSecondary,
                         ),
                         tooltip: l10n.back,
@@ -648,9 +646,7 @@ class _CategoryBuildingList extends StatelessWidget {
                       icon: Icon(
                         Icons.close,
                         size: 20,
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.5)
-                            : MqColors.contentTertiary,
+                        color: isDark ? Colors.white : MqColors.contentTertiary,
                       ),
                       tooltip: l10n.clear,
                       onPressed: onClear,
@@ -674,9 +670,9 @@ class _CategoryBuildingList extends StatelessWidget {
                     final building = validBuildings[index];
                     return ListTile(
                       dense: true,
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.location_on,
-                        color: isDark ? MqColors.charcoal800 : MqColors.red,
+                        color: MqColors.red,
                         size: 20,
                       ),
                       title: Text(
@@ -694,7 +690,7 @@ class _CategoryBuildingList extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     color: isDark
-                                        ? Colors.white.withValues(alpha: 0.4)
+                                        ? Colors.white
                                         : MqColors.charcoal600,
                                   ),
                               maxLines: 1,
@@ -704,9 +700,7 @@ class _CategoryBuildingList extends StatelessWidget {
                       trailing: Icon(
                         Icons.chevron_right,
                         size: 20,
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.3)
-                            : MqColors.charcoal600,
+                        color: isDark ? Colors.white : MqColors.charcoal600,
                       ),
                       onTap: () => onSelectBuilding(building),
                       shape: RoundedRectangleBorder(
@@ -853,9 +847,7 @@ class _BrowseGroupPanel<TGroup> extends StatelessWidget {
                       icon: Icon(
                         Icons.close,
                         size: 20,
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.5)
-                            : MqColors.contentTertiary,
+                        color: isDark ? Colors.white : MqColors.contentTertiary,
                       ),
                       tooltip: l10n.clear,
                       onPressed: onClear,
@@ -880,11 +872,7 @@ class _BrowseGroupPanel<TGroup> extends StatelessWidget {
                     final count = countsByGroup[group] ?? 0;
                     return ListTile(
                       dense: false,
-                      leading: Icon(
-                        leadingIcon,
-                        color: isDark ? MqColors.charcoal800 : MqColors.red,
-                        size: 22,
-                      ),
+                      leading: Icon(leadingIcon, color: MqColors.red, size: 22),
                       title: Text(
                         labelOf(group),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -897,9 +885,7 @@ class _BrowseGroupPanel<TGroup> extends StatelessWidget {
                       subtitle: Text(
                         '${descriptionOf(group)}  ·  $count',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.5)
-                              : MqColors.charcoal600,
+                          color: isDark ? Colors.white : MqColors.charcoal600,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -907,9 +893,7 @@ class _BrowseGroupPanel<TGroup> extends StatelessWidget {
                       trailing: Icon(
                         Icons.chevron_right,
                         size: 20,
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.3)
-                            : MqColors.charcoal600,
+                        color: isDark ? Colors.white : MqColors.charcoal600,
                       ),
                       onTap: () => onSelectGroup(group),
                       shape: RoundedRectangleBorder(
@@ -1010,7 +994,7 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeBg = isDark ? MqColors.charcoal800 : MqColors.red;
+    const activeBg = MqColors.red;
     final inactiveBg = isDark
         ? MqColors.charcoal800.withValues(alpha: 0.85)
         : Colors.white.withValues(alpha: 0.9);

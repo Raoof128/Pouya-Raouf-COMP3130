@@ -458,7 +458,7 @@ class _OsmFallbackBadge extends StatelessWidget {
             Text(
               l10n.mapOsmFallbackBadge,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: isDark ? Colors.white70 : MqColors.contentSecondary,
+                color: isDark ? Colors.white : MqColors.contentSecondary,
               ),
             ),
           ],

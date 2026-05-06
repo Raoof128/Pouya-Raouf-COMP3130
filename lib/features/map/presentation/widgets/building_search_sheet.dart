@@ -219,9 +219,7 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
                     child: Text(
                       l10n.noBuildingsFound(query),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: isDark
-                            ? MqColors.contentSecondaryDark
-                            : MqColors.contentTertiary,
+                        color: isDark ? Colors.white : MqColors.contentTertiary,
                       ),
                     ),
                   ),
@@ -246,9 +244,7 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
                     l10n.nearbyPlaces,
                     style: context.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: isDark
-                          ? MqColors.contentSecondaryDark
-                          : MqColors.contentSecondary,
+                      color: isDark ? Colors.white : MqColors.contentSecondary,
                     ),
                   ),
                 ),
@@ -268,9 +264,7 @@ class _BuildingSearchSheetState extends ConsumerState<BuildingSearchSheet> {
                     (suggestion) => ListTile(
                       leading: Icon(
                         Icons.place,
-                        color: isDark
-                            ? MqColors.contentSecondaryDark
-                            : MqColors.contentTertiary,
+                        color: isDark ? Colors.white : MqColors.contentTertiary,
                       ),
                       title: Text(
                         suggestion.description,

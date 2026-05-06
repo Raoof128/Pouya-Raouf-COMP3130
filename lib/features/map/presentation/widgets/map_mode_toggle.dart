@@ -92,9 +92,7 @@ class _PillSegment extends StatelessWidget {
             vertical: MqSpacing.space2,
           ),
           decoration: BoxDecoration(
-            color: isSelected
-                ? (isDark ? MqColors.charcoal800 : MqColors.red)
-                : Colors.transparent,
+            color: isSelected ? MqColors.red : Colors.transparent,
             borderRadius: BorderRadius.circular(MqSpacing.radiusFull),
           ),
           child: Text(

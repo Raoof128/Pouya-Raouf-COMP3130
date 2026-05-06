@@ -158,9 +158,7 @@ class _RoutePanelState extends State<RoutePanel> {
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           color: isDark
-                                              ? Colors.white.withValues(
-                                                  alpha: 0.5,
-                                                )
+                                              ? Colors.white
                                               : MqColors.contentTertiary,
                                         ),
                                     children: [
@@ -187,11 +185,7 @@ class _RoutePanelState extends State<RoutePanel> {
                                     vertical: MqSpacing.space1,
                                   ),
                                   decoration: BoxDecoration(
-                                    color:
-                                        (isDark
-                                                ? MqColors.charcoal800
-                                                : MqColors.red)
-                                            .withValues(alpha: 0.15),
+                                    color: MqColors.red.withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(
                                       MqSpacing.radiusFull,
                                     ),
@@ -204,9 +198,7 @@ class _RoutePanelState extends State<RoutePanel> {
                                         .labelSmall
                                         ?.copyWith(
                                           fontWeight: FontWeight.w700,
-                                          color: isDark
-                                              ? MqColors.charcoal800
-                                              : MqColors.red,
+                                          color: MqColors.red,
                                           letterSpacing: 1.2,
                                         ),
                                   ),
@@ -411,9 +403,7 @@ class _RouteInfoRow extends StatelessWidget {
         Text(
           '${l10n.eta} ${DateFormat('h:mm a').format(route.arrivalAt)}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.4)
-                : MqColors.contentTertiary,
+            color: isDark ? Colors.white : MqColors.contentTertiary,
           ),
         ),
       ],
@@ -478,16 +468,14 @@ class _TravelModePills extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? (isDark ? MqColors.charcoal800 : MqColors.red)
-                              .withValues(alpha: 0.15)
+                        ? MqColors.red.withValues(alpha: 0.15)
                         : isDark
                         ? Colors.white.withValues(alpha: 0.06)
                         : MqColors.charcoal800.withValues(alpha: 0.04),
                     borderRadius: BorderRadius.circular(MqSpacing.radiusFull),
                     border: Border.all(
                       color: isSelected
-                          ? (isDark ? MqColors.charcoal800 : MqColors.red)
-                                .withValues(alpha: 0.4)
+                          ? MqColors.red.withValues(alpha: 0.4)
                           : isDark
                           ? Colors.white.withValues(alpha: 0.08)
                           : MqColors.charcoal800.withValues(alpha: 0.08),
@@ -500,7 +488,7 @@ class _TravelModePills extends StatelessWidget {
                         _iconFor(mode),
                         size: MqSpacing.iconSm,
                         color: isSelected
-                            ? (isDark ? MqColors.charcoal800 : MqColors.red)
+                            ? MqColors.red
                             : isDark
                             ? Colors.white.withValues(alpha: 0.5)
                             : MqColors.contentTertiary,
@@ -514,9 +502,9 @@ class _TravelModePills extends StatelessWidget {
                               ? FontWeight.w600
                               : FontWeight.w500,
                           color: isSelected
-                              ? (isDark ? MqColors.charcoal800 : MqColors.red)
+                              ? MqColors.red
                               : isDark
-                              ? Colors.white.withValues(alpha: 0.6)
+                              ? Colors.white
                               : MqColors.contentSecondary,
                         ),
                       ),
@@ -584,9 +572,7 @@ class _NextInstructionCard extends StatelessWidget {
             instruction.text,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w500,
-              color: isDark
-                  ? MqColors.navInstructionTextDark
-                  : MqColors.navInstructionTextLight,
+              color: isDark ? Colors.white : MqColors.navInstructionTextLight,
             ),
           ),
           if (instruction.distanceMeters > 0)
@@ -598,7 +584,7 @@ class _NextInstructionCard extends StatelessWidget {
                     : '${instruction.distanceMeters} ${l10n.routeMetersShort}',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: isDark
-                      ? MqColors.navInstructionSubtextDark
+                      ? Colors.white
                       : MqColors.navInstructionSubtextLight,
                 ),
               ),
@@ -650,9 +636,7 @@ class _ExpandableStepList extends StatelessWidget {
                     l10n.stepsCount(instructions.length),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.5)
-                          : MqColors.contentSecondary,
+                      color: isDark ? Colors.white : MqColors.contentSecondary,
                     ),
                   ),
                   Icon(
@@ -738,9 +722,7 @@ class _ExpandableStepList extends StatelessWidget {
                                   style: Theme.of(context).textTheme.labelSmall
                                       ?.copyWith(
                                         color: isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.4,
-                                              )
+                                            ? Colors.white
                                             : MqColors.contentTertiary,
                                       ),
                                 ),
@@ -777,7 +759,6 @@ class _BrandActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final effectiveOnPressed = isLoading ? null : onPressed;
 
     return Semantics(
@@ -785,15 +766,11 @@ class _BrandActionButton extends StatelessWidget {
       label: label,
       child: Material(
         color: effectiveOnPressed == null
-            ? (isDark ? MqColors.charcoal800 : MqColors.red).withValues(
-                alpha: 0.5,
-              )
-            : (isDark ? MqColors.charcoal800 : MqColors.red),
+            ? MqColors.red.withValues(alpha: 0.5)
+            : MqColors.red,
         borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
         elevation: effectiveOnPressed == null ? 0 : 4,
-        shadowColor: (isDark ? MqColors.charcoal800 : MqColors.red).withValues(
-          alpha: 0.3,
-        ),
+        shadowColor: MqColors.red.withValues(alpha: 0.3),
         child: InkWell(
           onTap: effectiveOnPressed,
           borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
@@ -878,9 +855,7 @@ class _GlassOutlinedButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.7)
-                    : MqColors.contentSecondary,
+                color: isDark ? Colors.white : MqColors.contentSecondary,
               ),
             ),
           ),
@@ -1004,9 +979,7 @@ class _ArrivalCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? MqColors.arrivalTextDark
-                      : MqColors.arrivalTextLight,
+                  color: isDark ? Colors.white : MqColors.arrivalTextLight,
                 ),
               ),
               if (buildingName.isNotEmpty) ...[
@@ -1015,9 +988,7 @@ class _ArrivalCard extends StatelessWidget {
                   buildingName,
                   style: TextStyle(
                     fontSize: 14,
-                    color: isDark
-                        ? MqColors.arrivalSubtextDark
-                        : MqColors.arrivalSubtextLight,
+                    color: isDark ? Colors.white : MqColors.arrivalSubtextLight,
                   ),
                   textAlign: TextAlign.center,
                 ),
