@@ -161,16 +161,32 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   );
 });
 
-/// Tiny [Listenable] adapter that fires `notifyListeners()` only when the
-/// `hasCompletedOnboarding` bit changes. Used as `GoRouter.refreshListenable`
-/// so the router re-evaluates its redirect on onboarding completion without
-/// being torn down and rebuilt (which is what previously caused a full
-/// page-slide animation on every unrelated settings change).
+/// Tiny [Listenable] adapter for `GoRouter.refreshListenable`.
+///
+/// The redirect cares about exactly two pieces of settings state:
+///   1. `s.isLoading`  — while loading we don't redirect at all
+///   2. `s.value?.hasCompletedOnboarding` — drives the onboarding gate
+///
+/// We listen to a record of *both* projected via `.select()` so the
+/// listener fires when EITHER changes:
+///   - first launch: `(loading=true, _)` → `(loading=false, false)` →
+///     redirect re-runs and bounces to `/onboarding`. (Without listening
+///     to `isLoading`, the projected onboarding bool would stay `false`
+///     across the loading→data transition and the redirect would never
+///     fire — the user would land on `/home` instead of `/onboarding`.)
+///   - completion: `hasCompleted` flips `false → true`, redirect re-runs
+///     and stops bouncing back.
+///
+/// Records use value-equality, so unrelated settings changes (theme,
+/// locale, bachelor, …) keep this listener silent and the router stable.
 class _OnboardingFlagListenable extends ChangeNotifier {
   _OnboardingFlagListenable(Ref ref) {
-    _sub = ref.listen<bool>(
+    _sub = ref.listen<({bool isLoading, bool hasCompleted})>(
       settingsControllerProvider.select(
-        (s) => s.value?.hasCompletedOnboarding ?? false,
+        (s) => (
+          isLoading: s.isLoading,
+          hasCompleted: s.value?.hasCompletedOnboarding ?? false,
+        ),
       ),
       (_, _) => notifyListeners(),
       fireImmediately: false,
@@ -178,5 +194,5 @@ class _OnboardingFlagListenable extends ChangeNotifier {
     ref.onDispose(() => _sub?.close());
   }
 
-  ProviderSubscription<bool>? _sub;
+  ProviderSubscription<({bool isLoading, bool hasCompleted})>? _sub;
 }

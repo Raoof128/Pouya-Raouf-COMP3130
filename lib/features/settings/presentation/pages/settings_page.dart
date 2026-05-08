@@ -1542,26 +1542,40 @@ class _SettingsCard extends StatelessWidget {
     final dark = context.isDarkMode;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: dark
-            ? MqColors.charcoal700
-            : Colors.white.withValues(alpha: 0.88),
+        // Fully opaque in light mode (was 88% — the 12% transparency was
+        // letting the cool charcoal shadow underneath bleed THROUGH the
+        // card, contributing to the visible blue/grey haze the user
+        // reported). With pure white, each card stops cleanly at its
+        // edge.
+        color: dark ? MqColors.charcoal700 : Colors.white,
         borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
         border: Border.all(
+          // Light mode: pure black at very low alpha is colour-neutral.
+          // The previous `charcoal800` (#3A3F47) introduced a cool tint
+          // along every card edge that compounded across stacked cards.
           color: dark
               ? Colors.white.withValues(alpha: 0.06)
-              : MqColors.charcoal800.withValues(alpha: 0.05),
+              : Colors.black.withValues(alpha: 0.04),
           width: 0.6,
         ),
         boxShadow: [
-          // Subtle elevation lifts the card off the new branded
-          // background, giving Settings the same "premium surface"
-          // language as the Home Bento cards.
+          // **Fix for the residual blue/grey haze in Settings light mode.**
+          //
+          // Previously the shadow used `MqColors.charcoal800` (a cool
+          // desaturated dark grey-blue) at 5% alpha with a 16px blur.
+          // Settings stacks 6+ `_SettingsCard`s vertically, so 6 cool
+          // shadows overlapped and accumulated into a visible
+          // grey/blue cast between the cards.
+          //
+          // Replaced with pure `Colors.black` at the same alpha and a
+          // tighter 10px blur. Black is colour-neutral, so even when
+          // shadows compound they stay grey rather than tinting blue.
           BoxShadow(
             color: dark
                 ? Colors.black.withValues(alpha: 0.30)
-                : MqColors.charcoal800.withValues(alpha: 0.05),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+                : Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),

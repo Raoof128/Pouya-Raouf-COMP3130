@@ -44,20 +44,36 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
-  void _onNext(int totalSlides) {
+  Future<void> _onNext(int totalSlides) async {
     if (_currentIndex == totalSlides - 1) {
-      ref.read(settingsControllerProvider.notifier).completeOnboarding();
-      context.goNamed(RouteNames.home);
+      await _finishOnboarding();
     } else {
-      _pageController.nextPage(
+      // Page animation is fire-and-forget; we don't await it.
+      await _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOutCubic,
       );
     }
   }
 
-  void _onSkip() {
-    ref.read(settingsControllerProvider.notifier).completeOnboarding();
+  Future<void> _onSkip() async {
+    await _finishOnboarding();
+  }
+
+  /// Persist onboarding completion *before* navigating. The settings
+  /// controller's `_save` is optimistic (flips state in-memory
+  /// synchronously), so the router redirect sees the new value
+  /// immediately — but awaiting also ensures the secure-storage write
+  /// has actually landed on disk before we change route. Without the
+  /// await, a user who closes the app within the first few hundred
+  /// milliseconds after tapping Done could relaunch and replay
+  /// onboarding because the persisted flag never made it past the
+  /// in-memory optimistic update.
+  Future<void> _finishOnboarding() async {
+    await ref
+        .read(settingsControllerProvider.notifier)
+        .completeOnboarding();
+    if (!mounted) return;
     context.goNamed(RouteNames.home);
   }
 
