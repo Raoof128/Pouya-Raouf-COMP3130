@@ -2383,5 +2383,24 @@
   "overlay_parking_label": "Parking",
   "overlay_water_label": "Drinking Water",
   "overlay_accessibility_label": "Accessibility",
-  "overlay_permits_label": "Special Permits"
+  "overlay_permits_label": "Special Permits",
+
+  "compassMode": "Compass Mode",
+  "compassError": "Compass Error",
+  "compassNoSensor": "Device does not have compass sensors.",
+  "compassNextHint": "Next Hint",
+  "compassHeading": "{degrees}°",
+  "@compassHeading": {
+    "placeholders": {
+      "degrees": {}
+    }
+  },
+  "compassAccuracy": "±{degrees}°",
+  "@compassAccuracy": {
+    "placeholders": {
+      "degrees": {}
+    }
+  },
+  "compassCalibrate": "Move your device in a figure-8 pattern to calibrate",
+  "compassRetry": "Retry Compass"
 }

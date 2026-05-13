@@ -49,6 +49,21 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-13 (AEST) — Compass Mode audit + production hardening (204 tests, 0 issues)
+**Scope:** Compass Mode production-readiness audit, i18n, animation, and test coverage.
+**Summary:** Conducted a full comprehensive audit of `CompassModeView` against Apple 2026 heading docs and Flutter 3.41 best practices. **Fixes applied:**
+1. **Dead code eliminated** — `CompassEvent.heading` is `double?` (flutter_compass 0.8.1), so null-check path now correctly routes to `_buildNoSensorState` when heading is null.
+2. **Stream null-safety** — `FlutterCompass.events` returns `Stream<CompassEvent>?`; added null-stream guard.
+3. **Localization** — All 4 hardcoded strings (`Compass Mode`, `Compass Error`, `Device does not have compass sensors.`, `Next Hint`) moved to `app_en.arb` plus placeholder-backed strings for heading (`compassHeading({degrees}°)`) and accuracy (`compassAccuracy({degrees}°)`). Added `compassCalibrate` and `compassRetry` keys.
+4. **Smooth animation** — Replaced instant `Transform.rotate` with `AnimatedRotation` (250ms easeInOut) per Flutter 2026 animation best practices.
+5. **Heading accuracy display** — New `_buildHeadingBar` shows current heading in degrees ± accuracy when available.
+6. **Error/no-sensor states** — Rethemed with `explore_off`/`sensors_off` icons, calibration hint text, and retry `FilledButton`.
+7. **"N" marker** — Added static North indicator at top of compass radar.
+**Tests:** 20 new tests covering: heading angle calculation (10 edge cases), `resolveBuildingGeographicTarget` (3 cases), constructor contracts, `Geolocator.bearingBetween` integration (3 cases), heading/accuracy rounding display logic (3 cases).
+**Files Changed:** `lib/features/map/presentation/widgets/compass_mode_view.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/generated/*`, `test/features/map/compass_mode_view_test.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter analyze` (0 issues); `flutter test test/features/map/compass_mode_view_test.dart` (20/20 passed); `flutter test test/features/map/` (101/101 passed); `flutter test` (204/204 passed).
+**Follow-ups:** Add true-north correction using magnetic declination for Sydney (~12°E) when the platform heading API supports it; consider adding `headingOrientation` handling for landscape vs portrait device orientations.
+
 ### Raouf: 2026-05-13 (AEST) — Added Compass Mode for Navigation
 **Scope:** Map Section / Navigation Features
 **Summary:** Implemented "Compass Mode", a privacy-first, on-device radar view that guides users to their selected building without complex routing lines. Integrated `flutter_compass` to provide a live-updating, rotating arrow directing towards the destination, coupled with distance remaining, walking ETA, and prominent landmark hints extracted from route instructions. Added a quick-access toggle for Compass Mode directly into the active `RoutePanel`.

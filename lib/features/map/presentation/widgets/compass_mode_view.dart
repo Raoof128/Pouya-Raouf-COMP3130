@@ -2,7 +2,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
 import 'package:mq_navigation/app/l10n/generated/app_localizations.dart';
 import 'package:mq_navigation/app/theme/mq_colors.dart';
 import 'package:mq_navigation/app/theme/mq_spacing.dart';
@@ -71,7 +70,7 @@ class CompassModeView extends StatelessWidget {
           onPressed: onClose,
         ),
         title: Text(
-          'Compass Mode',
+          l10n.compassMode,
           style: TextStyle(
             color: isDark ? Colors.white : MqColors.charcoal900,
             fontWeight: FontWeight.w700,
@@ -79,77 +78,164 @@ class CompassModeView extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: StreamBuilder<CompassEvent>(
-        stream: FlutterCompass.events,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return _buildErrorState(context, isDark);
-          }
+      body: _buildBody(context, isDark, l10n, bearingToDestination),
+    );
+  }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+  Widget _buildBody(
+    BuildContext context,
+    bool isDark,
+    AppLocalizations l10n,
+    double bearingToDestination,
+  ) {
+    final stream = FlutterCompass.events;
+    if (stream == null) {
+      return _buildNoSensorState(context, isDark, l10n);
+    }
 
-          final compassHeading = snapshot.data?.heading;
-          if (compassHeading == null) {
-            return _buildNoSensorState(context, isDark);
-          }
+    return StreamBuilder<CompassEvent>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return _buildErrorState(context, isDark, l10n);
+        }
 
-          // Calculate rotation
-          // Device heading is 0 when pointing North, 90 East.
-          // Bearing to destination is 0 when North, 90 East.
-          // Arrow points UP (0 radians) by default.
-          // Rotation angle: Bearing - Heading
-          var direction = bearingToDestination - compassHeading;
-          if (direction < 0) direction += 360;
-          final angle = direction * (math.pi / 180);
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.data == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          return SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        final compassHeading = snapshot.data!.heading;
+        final headingAccuracy = snapshot.data!.accuracy;
+
+        if (compassHeading == null) {
+          return _buildNoSensorState(context, isDark, l10n);
+        }
+
+        var direction = bearingToDestination - compassHeading;
+        if (direction < 0) direction += 360;
+        final angle = direction * (math.pi / 180);
+
+        return SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildHeadingBar(
+                  context, isDark, l10n, compassHeading, headingAccuracy),
+              _buildRouteInfo(context, isDark, l10n),
+              _buildCompassRadar(context, isDark, angle),
+              _buildLandmarkHints(context, isDark, l10n),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHeadingBar(
+    BuildContext context,
+    bool isDark,
+    AppLocalizations l10n,
+    double heading,
+    double? accuracy,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: MqSpacing.space6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: MqSpacing.space4,
+              vertical: MqSpacing.space2,
+            ),
+            decoration: BoxDecoration(
+              color: isDark ? MqColors.charcoal800 : Colors.white,
+              borderRadius: BorderRadius.circular(MqSpacing.radiusFull),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // Distance and ETA
-                _buildRouteInfo(context, isDark, l10n),
+                const Icon(
+                  Icons.explore,
+                  size: MqSpacing.iconMd,
+                  color: MqColors.red,
+                ),
+                const SizedBox(width: MqSpacing.space2),
+                Text(
+                  l10n.compassHeading(heading.round().toString()),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? Colors.white : MqColors.charcoal900,
+                  ),
+                ),
+                if (accuracy != null) ...[
+                  const SizedBox(width: MqSpacing.space2),
+                  Text(
+                    l10n.compassAccuracy(accuracy.round().toString()),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.5)
+                          : MqColors.contentTertiary,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-                // Big Arrow Radar
-                Expanded(
-                  child: Center(
-                    child: Transform.rotate(
-                      angle: angle,
-                      child: Container(
-                        width: 200,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isDark ? MqColors.charcoal800 : Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: MqColors.charcoal800.withValues(
-                                alpha: isDark ? 0.30 : 0.10,
-                              ),
-                              blurRadius: 24,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.navigation,
-                            size: 100,
-                            color: MqColors.red,
-                          ),
-                        ),
-                      ),
+  Widget _buildCompassRadar(BuildContext context, bool isDark, double angle) {
+    return Expanded(
+      child: Center(
+        child: AnimatedRotation(
+          turns: angle / (2 * math.pi),
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          child: Container(
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isDark ? MqColors.charcoal800 : Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: MqColors.charcoal800.withValues(
+                    alpha: isDark ? 0.30 : 0.10,
+                  ),
+                  blurRadius: 24,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: const Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  top: 16,
+                  child: Text(
+                    'N',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: MqColors.red,
                     ),
                   ),
                 ),
-
-                // Landmark Hints
-                _buildLandmarkHints(context, isDark),
+                Center(
+                  child: Icon(
+                    Icons.navigation,
+                    size: 100,
+                    color: MqColors.red,
+                  ),
+                ),
               ],
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
@@ -230,7 +316,11 @@ class CompassModeView extends StatelessWidget {
     );
   }
 
-  Widget _buildLandmarkHints(BuildContext context, bool isDark) {
+  Widget _buildLandmarkHints(
+    BuildContext context,
+    bool isDark,
+    AppLocalizations l10n,
+  ) {
     if (route == null || route!.instructions.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(MqSpacing.space6),
@@ -245,7 +335,6 @@ class CompassModeView extends StatelessWidget {
       );
     }
 
-    // Find the next instruction with a substantial distance
     final instruction = route!.instructions.first;
 
     return Padding(
@@ -259,7 +348,7 @@ class CompassModeView extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Next Hint',
+              l10n.compassNextHint,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: MqColors.red,
                 fontWeight: FontWeight.w700,
@@ -281,20 +370,92 @@ class CompassModeView extends StatelessWidget {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, bool isDark) {
+  Widget _buildErrorState(
+    BuildContext context,
+    bool isDark,
+    AppLocalizations l10n,
+  ) {
     return Center(
-      child: Text(
-        'Compass Error',
-        style: TextStyle(color: isDark ? Colors.white : Colors.black),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.explore_off,
+            size: 64,
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.5)
+                : MqColors.contentTertiary,
+          ),
+          const SizedBox(height: MqSpacing.space4),
+          Text(
+            l10n.compassError,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: isDark ? Colors.white : MqColors.charcoal900,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: MqSpacing.space2),
+          Text(
+            l10n.compassCalibrate,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.6)
+                  : MqColors.contentTertiary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: MqSpacing.space6),
+          FilledButton.icon(
+            onPressed: onClose,
+            icon: const Icon(Icons.refresh),
+            label: Text(l10n.compassRetry),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildNoSensorState(BuildContext context, bool isDark) {
+  Widget _buildNoSensorState(
+    BuildContext context,
+    bool isDark,
+    AppLocalizations l10n,
+  ) {
     return Center(
-      child: Text(
-        'Device does not have compass sensors.',
-        style: TextStyle(color: isDark ? Colors.white : Colors.black),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.sensors_off,
+            size: 64,
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.5)
+                : MqColors.contentTertiary,
+          ),
+          const SizedBox(height: MqSpacing.space4),
+          Text(
+            l10n.compassNoSensor,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: isDark ? Colors.white : MqColors.charcoal900,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: MqSpacing.space2),
+          Text(
+            l10n.compassCalibrate,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.6)
+                  : MqColors.contentTertiary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: MqSpacing.space6),
+          FilledButton.icon(
+            onPressed: onClose,
+            icon: const Icon(Icons.refresh),
+            label: Text(l10n.compassRetry),
+          ),
+        ],
       ),
     );
   }

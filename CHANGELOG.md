@@ -1,3 +1,10 @@
+### Raouf: 2026-05-13 (AEST) — Compass Mode audit + production hardening (204 tests, 0 issues)
+**Scope:** Compass Mode production-readiness audit, i18n, animation, and test coverage.
+**Summary:** Full comprehensive audit of `CompassModeView`. **Fixes:** dead-code elimination (`CompassEvent.heading` is `double?`), stream null-safety (`FlutterCompass.events` is nullable), localization (all 4 hardcoded strings → `app_en.arb` with 2 placeholder-backed keys), smooth `AnimatedRotation` (250ms easeInOut), heading accuracy bar with degree display, error/no-sensor retheme with calibration hints. **Tests:** 20 new tests (heading angle math, geo-target resolution, constructor contracts, bearing integration, display rounding).
+**Files Changed:** `lib/features/map/presentation/widgets/compass_mode_view.dart`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/generated/*`, `test/features/map/compass_mode_view_test.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter analyze` (0 issues); `flutter test test/features/map/` (101/101 passed); `flutter test` (204/204 passed).
+**Follow-ups:** Add true-north correction (Sydney ~12°E declination) when platform API supports it.
+
 ### Raouf: 2026-05-13 (AEST) — Added Compass Mode for Navigation
 **Scope:** Map Section / Navigation Features
 **Summary:** Implemented "Compass Mode", a privacy-first, on-device radar view that guides users to their selected building without complex routing lines. Integrated `flutter_compass` to provide a live-updating, rotating arrow directing towards the destination, coupled with distance remaining, walking ETA, and prominent landmark hints extracted from route instructions. Added a quick-access toggle for Compass Mode directly into the active `RoutePanel`.
