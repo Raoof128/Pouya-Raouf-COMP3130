@@ -276,15 +276,48 @@ class _MapPageState extends ConsumerState<MapPage> {
                             )
                             .length,
                     },
-                    labelOf: (g) => g.label,
-                    descriptionOf: (g) => g.description,
+                    labelOf: (g) {
+                      switch (g) {
+                        case FacultyGroup.arts:
+                          return l10n.faculty_arts_label;
+                        case FacultyGroup.business:
+                          return l10n.faculty_business_label;
+                        case FacultyGroup.mhhs:
+                          return l10n.faculty_mhhs_label;
+                        case FacultyGroup.scienceEngineering:
+                          return l10n.faculty_scienceEngineering_label;
+                      }
+                    },
+                    descriptionOf: (g) {
+                      switch (g) {
+                        case FacultyGroup.arts:
+                          return l10n.faculty_arts_desc;
+                        case FacultyGroup.business:
+                          return l10n.faculty_business_desc;
+                        case FacultyGroup.mhhs:
+                          return l10n.faculty_mhhs_desc;
+                        case FacultyGroup.scienceEngineering:
+                          return l10n.faculty_scienceEngineering_desc;
+                      }
+                    },
                     onSelectGroup: controller.selectFacultyGroup,
                     onClear: controller.clearCategoryBrowse,
                   )
                 : facultySubLevel
                 ? _CategoryBuildingList(
                     buildings: facultyBuildings,
-                    searchQuery: mapState.selectedFacultyGroup!.label,
+                    searchQuery: () {
+                      switch (mapState.selectedFacultyGroup!) {
+                        case FacultyGroup.arts:
+                          return l10n.faculty_arts_label;
+                        case FacultyGroup.business:
+                          return l10n.faculty_business_label;
+                        case FacultyGroup.mhhs:
+                          return l10n.faculty_mhhs_label;
+                        case FacultyGroup.scienceEngineering:
+                          return l10n.faculty_scienceEngineering_label;
+                      }
+                    }(),
                     onSelectBuilding: controller.selectBuilding,
                     onBack: () => controller.selectFacultyGroup(null),
                     onClear: controller.clearCategoryBrowse,
@@ -305,15 +338,66 @@ class _MapPageState extends ConsumerState<MapPage> {
                             )
                             .length,
                     },
-                    labelOf: (g) => g.label,
-                    descriptionOf: (g) => g.description,
+                    labelOf: (g) {
+                      switch (g) {
+                        case StudentServicesGroup.support:
+                          return l10n.services_support_label;
+                        case StudentServicesGroup.admin:
+                          return l10n.services_admin_label;
+                        case StudentServicesGroup.academic:
+                          return l10n.services_academic_label;
+                        case StudentServicesGroup.it:
+                          return l10n.services_it_label;
+                        case StudentServicesGroup.security:
+                          return l10n.services_security_label;
+                        case StudentServicesGroup.careers:
+                          return l10n.services_careers_label;
+                        case StudentServicesGroup.inclusion:
+                          return l10n.services_inclusion_label;
+                      }
+                    },
+                    descriptionOf: (g) {
+                      switch (g) {
+                        case StudentServicesGroup.support:
+                          return l10n.services_support_desc;
+                        case StudentServicesGroup.admin:
+                          return l10n.services_admin_desc;
+                        case StudentServicesGroup.academic:
+                          return l10n.services_academic_desc;
+                        case StudentServicesGroup.it:
+                          return l10n.services_it_desc;
+                        case StudentServicesGroup.security:
+                          return l10n.services_security_desc;
+                        case StudentServicesGroup.careers:
+                          return l10n.services_careers_desc;
+                        case StudentServicesGroup.inclusion:
+                          return l10n.services_inclusion_desc;
+                      }
+                    },
                     onSelectGroup: controller.selectStudentServicesGroup,
                     onClear: controller.clearCategoryBrowse,
                   )
                 : studentServicesSubLevel
                 ? _CategoryBuildingList(
                     buildings: studentServicesBuildings,
-                    searchQuery: mapState.selectedStudentServicesGroup!.label,
+                    searchQuery: () {
+                      switch (mapState.selectedStudentServicesGroup!) {
+                        case StudentServicesGroup.support:
+                          return l10n.services_support_label;
+                        case StudentServicesGroup.admin:
+                          return l10n.services_admin_label;
+                        case StudentServicesGroup.academic:
+                          return l10n.services_academic_label;
+                        case StudentServicesGroup.it:
+                          return l10n.services_it_label;
+                        case StudentServicesGroup.security:
+                          return l10n.services_security_label;
+                        case StudentServicesGroup.careers:
+                          return l10n.services_careers_label;
+                        case StudentServicesGroup.inclusion:
+                          return l10n.services_inclusion_label;
+                      }
+                    }(),
                     onSelectBuilding: controller.selectBuilding,
                     onBack: () => controller.selectStudentServicesGroup(null),
                     onClear: controller.clearCategoryBrowse,
@@ -334,15 +418,78 @@ class _MapPageState extends ConsumerState<MapPage> {
                             )
                             .length,
                     },
-                    labelOf: (g) => g.label,
-                    descriptionOf: (g) => g.description,
+                    labelOf: (g) {
+                      switch (g) {
+                        case CampusHubGroup.accommodation:
+                          return l10n.hub_accommodation_label;
+                        case CampusHubGroup.sport:
+                          return l10n.hub_sport_label;
+                        case CampusHubGroup.study:
+                          return l10n.hub_study_label;
+                        case CampusHubGroup.museums:
+                          return l10n.hub_museums_label;
+                        case CampusHubGroup.studentLife:
+                          return l10n.hub_studentLife_label;
+                        case CampusHubGroup.childcare:
+                          return l10n.hub_childcare_label;
+                        case CampusHubGroup.health:
+                          return l10n.hub_health_label;
+                        case CampusHubGroup.bike:
+                          return l10n.hub_bike_label;
+                        case CampusHubGroup.smoking:
+                          return l10n.hub_smoking_label;
+                      }
+                    },
+                    descriptionOf: (g) {
+                      switch (g) {
+                        case CampusHubGroup.accommodation:
+                          return l10n.hub_accommodation_desc;
+                        case CampusHubGroup.sport:
+                          return l10n.hub_sport_desc;
+                        case CampusHubGroup.study:
+                          return l10n.hub_study_desc;
+                        case CampusHubGroup.museums:
+                          return l10n.hub_museums_desc;
+                        case CampusHubGroup.studentLife:
+                          return l10n.hub_studentLife_desc;
+                        case CampusHubGroup.childcare:
+                          return l10n.hub_childcare_desc;
+                        case CampusHubGroup.health:
+                          return l10n.hub_health_desc;
+                        case CampusHubGroup.bike:
+                          return l10n.hub_bike_desc;
+                        case CampusHubGroup.smoking:
+                          return l10n.hub_smoking_desc;
+                      }
+                    },
                     onSelectGroup: controller.selectCampusHubGroup,
                     onClear: controller.clearCategoryBrowse,
                   )
                 : campusHubSubLevel
                 ? _CategoryBuildingList(
                     buildings: campusHubBuildings,
-                    searchQuery: mapState.selectedCampusHubGroup!.label,
+                    searchQuery: () {
+                      switch (mapState.selectedCampusHubGroup!) {
+                        case CampusHubGroup.accommodation:
+                          return l10n.hub_accommodation_label;
+                        case CampusHubGroup.sport:
+                          return l10n.hub_sport_label;
+                        case CampusHubGroup.study:
+                          return l10n.hub_study_label;
+                        case CampusHubGroup.museums:
+                          return l10n.hub_museums_label;
+                        case CampusHubGroup.studentLife:
+                          return l10n.hub_studentLife_label;
+                        case CampusHubGroup.childcare:
+                          return l10n.hub_childcare_label;
+                        case CampusHubGroup.health:
+                          return l10n.hub_health_label;
+                        case CampusHubGroup.bike:
+                          return l10n.hub_bike_label;
+                        case CampusHubGroup.smoking:
+                          return l10n.hub_smoking_label;
+                      }
+                    }(),
                     onSelectBuilding: controller.selectBuilding,
                     onBack: () => controller.selectCampusHubGroup(null),
                     onClear: controller.clearCategoryBrowse,
