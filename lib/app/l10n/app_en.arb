@@ -2402,5 +2402,20 @@
     }
   },
   "compassCalibrate": "Move your device in a figure-8 pattern to calibrate",
-  "compassRetry": "Retry Compass"
+  "compassRetry": "Retry Compass",
+  "safetyToolkit": "Safety Toolkit",
+  "safetyFlashlight": "Flashlight",
+  "safetyFlashlightOn": "Flashlight On",
+  "safetyFlashlightOff": "Flashlight Off",
+  "safetyCallSecurity": "Call Campus Security",
+  "safetySecurityNumber": "(02) 9850 7111",
+  "safetyEmergencyCall": "Emergency (000)",
+  "safetyFirstAid": "First Aid Locations",
+  "safetyDefibrillator": "AED Locations",
+  "safetySecurityShuttle": "Security Shuttle",
+  "safetyShuttleInfo": "The MQ security shuttle operates 24/7 during semester. Press the button below to call for a pickup.",
+  "safetyIneedHelp": "I Need Help",
+  "safetyIneedHelpMsg": "If you are in immediate danger, call 000 (Emergency) or Campus Security on (02) 9850 7111. This app does not share your location automatically.",
+  "safetyNavigateToSecurity": "Navigate to Security",
+  "safetyPrivacyNote": "Your location is never shared automatically. You choose when to call or navigate."
 }

@@ -10,6 +10,7 @@ import 'package:mq_navigation/features/home/presentation/pages/onboarding_page.d
 import 'package:mq_navigation/features/map/presentation/pages/map_page.dart';
 import 'package:mq_navigation/features/notifications/presentation/pages/notifications_page.dart';
 import 'package:mq_navigation/features/open_day/presentation/pages/open_day_page.dart';
+import 'package:mq_navigation/features/safety/presentation/pages/safety_toolkit_page.dart';
 import 'package:mq_navigation/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:mq_navigation/features/settings/presentation/pages/settings_page.dart';
 
@@ -112,6 +113,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/onboarding',
         name: RouteNames.onboarding,
         builder: (context, state) => const OnboardingPage(),
+      ),
+      // Safety Toolkit — standalone page for campus safety features.
+      // Accessible from the settings page or map overflow menu.
+      // Privacy-safe: NO automatic location sharing — user manually calls or navigates.
+      GoRoute(
+        path: '/safety',
+        name: RouteNames.safetyToolkit,
+        builder: (context, state) => const SafetyToolkitPage(),
       ),
       // The shell route handles the bottom navigation bar and nested routing.
       StatefulShellRoute.indexedStack(

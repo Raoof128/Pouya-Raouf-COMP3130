@@ -12,4 +12,7 @@ abstract final class RouteNames {
 
   // Detail screens (pushed on top of shell)
   static const String buildingDetail = 'building-detail';
+
+  // Safety
+  static const String safetyToolkit = 'safety';
 }

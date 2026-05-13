@@ -49,6 +49,23 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-13 (AEST) — Campus Safety Toolkit (228 tests, 0 issues)
+**Scope:** New Safety feature — `lib/features/safety/`.
+**Summary:** Implemented Campus Safety Toolkit (Monash MSafe-inspired) with privacy-safe design (no automatic location sharing — user manually calls or navigates). **Features:**
+1. **Safety Toolkit page** (`SafetyToolkitPage`) — full-screen scrollable toolkit with Quick Actions, emergency contacts, security shuttle info, first aid locations, defibrillator (AED) locations.
+2. **Quick Actions** — Flashlight toggle state, "Navigate to Security" shortcut.
+3. **Emergency Contacts** — 000 (emergency), Campus Security (02 9850 7111), Health Service, MQ Afterhours 1800 CRISIS. Press to dial via `url_launcher`.
+4. **Security Shuttle** — Info card + call button for 24/7 on-demand campus transport.
+5. **First Aid & AED locations** — Curated data: 3 first aid points (1CC, 18WW, Sport Centre), 5 AEDs (LIB, 1CC, Sport, 18WW, C5C) with building codes and descriptions.
+6. **Privacy banner** — Red-tinted note: "Your location is never shared automatically."
+7. **Route** — `/safety` via GoRouter, outside bottom-nav shell (standalone page).
+8. **Entities** — `SafetyPoi` (id, type, name, buildingCode, lat/lng), `EmergencyContact` (label, phoneNumber, isEmergency), `SafetyPoiSource` with verified campus data.
+9. **Widget** — `SafetyActionCard` (icon, title, subtitle, value badge, destructive/active modes).
+10. **Dependency** — Added `torch_light: ^1.1.0` (flashlight control, gated by availability).
+**Files Changed:** `pubspec.yaml`, `lib/app/l10n/app_en.arb` (+16 safety keys), `lib/app/l10n/generated/*`, `lib/app/router/route_names.dart`, `lib/app/router/app_router.dart`, `lib/features/safety/domain/entities/safety_poi.dart`, `lib/features/safety/domain/entities/emergency_contact.dart`, `lib/features/safety/data/datasources/safety_poi_source.dart`, `lib/features/safety/presentation/pages/safety_toolkit_page.dart`, `lib/features/safety/presentation/widgets/safety_action_card.dart`, `test/features/safety/safety_toolkit_test.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter analyze` (0 issues); `flutter test test/features/safety/` (24/24 passed); `flutter test` (228/228 passed).
+**Follow-ups:** Wire flashlight to `torch_light` package; add actual campus map navigation to security office; localize 16 new ARB keys across 34 non-English locales; add Safety entry point to Settings page or map overflow menu.
+
 ### Raouf: 2026-05-13 (AEST) — Compass Mode audit + production hardening (204 tests, 0 issues)
 **Scope:** Compass Mode production-readiness audit, i18n, animation, and test coverage.
 **Summary:** Conducted a full comprehensive audit of `CompassModeView` against Apple 2026 heading docs and Flutter 3.41 best practices. **Fixes applied:**

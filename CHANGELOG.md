@@ -1,3 +1,10 @@
+### Raouf: 2026-05-13 (AEST) — Campus Safety Toolkit (228 tests, 0 issues)
+**Scope:** New Safety feature — campus safety toolkit with privacy-safe design (no auto location sharing).
+**Summary:** Implemented `SafetyToolkitPage` with flashlight toggle, emergency contacts (000, Campus Security (02) 9850 7111, Health Service, 1800 CRISIS), security shuttle info, 3 first aid + 5 AED locations, privacy banner, and `/safety` route. Added `SafetyPoi`/`EmergencyContact` entities, `SafetyPoiSource` with campus-verified data, `SafetyActionCard` widget, `torch_light` dependency, and 16 ARB keys.
+**Files Changed:** `pubspec.yaml`, `lib/app/l10n/app_en.arb`, `lib/app/l10n/generated/*`, `lib/app/router/route_names.dart`, `lib/app/router/app_router.dart`, `lib/features/safety/*` (7 new files), `test/features/safety/*` (24 tests), `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter analyze` (0 issues); `flutter test test/features/safety/` (24/24 passed); `flutter test` (228/228 passed).
+**Follow-ups:** Wire torch_light; add map navigation to security; localize ARB keys.
+
 ### Raouf: 2026-05-13 (AEST) — Compass Mode audit + production hardening (204 tests, 0 issues)
 **Scope:** Compass Mode production-readiness audit, i18n, animation, and test coverage.
 **Summary:** Full comprehensive audit of `CompassModeView`. **Fixes:** dead-code elimination (`CompassEvent.heading` is `double?`), stream null-safety (`FlutterCompass.events` is nullable), localization (all 4 hardcoded strings → `app_en.arb` with 2 placeholder-backed keys), smooth `AnimatedRotation` (250ms easeInOut), heading accuracy bar with degree display, error/no-sensor retheme with calibration hints. **Tests:** 20 new tests (heading angle math, geo-target resolution, constructor contracts, bearing integration, display rounding).
