@@ -2417,5 +2417,7 @@
   "safetyIneedHelp": "I Need Help",
   "safetyIneedHelpMsg": "If you are in immediate danger, call 000 (Emergency) or Campus Security on (02) 9850 7111. This app does not share your location automatically.",
   "safetyNavigateToSecurity": "Navigate to Security",
-  "safetyPrivacyNote": "Your location is never shared automatically. You choose when to call or navigate."
+  "safetyPrivacyNote": "Your location is never shared automatically. You choose when to call or navigate.",
+
+  "privacyBadge": "Private by design: no account, no tracking, no location history."
 }

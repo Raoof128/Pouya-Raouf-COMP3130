@@ -639,6 +639,45 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ),
                   const SizedBox(height: MqSpacing.space6),
 
+                  // ── Privacy Badge ─────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: MqSpacing.space1,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(MqSpacing.space4),
+                      decoration: BoxDecoration(
+                        color: MqColors.red.withValues(alpha: 0.06),
+                        borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
+                        border: Border.all(
+                          color: MqColors.red.withValues(alpha: 0.15),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.shield_outlined,
+                            size: 22,
+                            color: MqColors.red,
+                          ),
+                          const SizedBox(width: MqSpacing.space3),
+                          Expanded(
+                            child: Text(
+                              l10n.privacyBadge,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: dark ? Colors.white : MqColors.red,
+                                height: 1.3,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: MqSpacing.space6),
+
                   // ── Danger Zone section ──────────────────────
                   //
                   // Trailing position is deliberate — destructive
