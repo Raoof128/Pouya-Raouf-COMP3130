@@ -49,6 +49,13 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-13 (AEST) — Map Section UI/UX alignment for dark and light modes
+**Scope:** Map Section / UI Design Tokens
+**Summary:** Standardized the surface alpha, border styles, and drop shadows across all floating map UI panels (`_CategoryBuildingList`, `_CategoryGroupList`, `_BlockedPermissionBox`, `RoutePanel`, `_ArrivalCard`) to align seamlessly with the premium glassmorphism aesthetic established by the Home Page. The unified tokens (`surface alpha: 0.94`, translucent border `width: 0.6`, `blurRadius: 18`, `offset: (0, -6)` for bottom sheets and `offset: (0, 6)` for top floats) ensure 100% production-ready UX alignment in both light and dark modes against the live map background. Map markers were intentionally excluded to preserve physical pin casting accuracy.
+**Files Changed:** `lib/features/map/presentation/pages/map_page.dart`, `lib/features/map/presentation/widgets/route_panel.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` and `flutter analyze` both successfully completed with no issues.
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-13 (AEST) — Settings Page UI/UX alignment for dark and light modes
 **Scope:** Settings Page / UI Design Tokens
 **Summary:** Standardized the border styles and drop shadows across all Settings Page cards (`_SettingsCard`, `_DangerZoneCard`) to perfectly align with the premium aesthetic established by the Home Page cards. The unified tokens (translucent border `width: 0.6`, `blurRadius: 18`, `offset: (0, 6)`) provide 100% production-ready UX alignment in both light and dark modes, removing the outdated solid black drop shadows while elevating the premium layout.

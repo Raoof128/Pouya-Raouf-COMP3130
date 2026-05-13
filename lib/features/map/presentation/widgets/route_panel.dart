@@ -91,21 +91,22 @@ class _RoutePanelState extends State<RoutePanel> {
         child: Container(
           decoration: BoxDecoration(
             color: isDark
-                ? MqColors.charcoal800.withValues(alpha: 0.88)
-                : Colors.white.withValues(alpha: 0.88),
+                ? MqColors.charcoal800.withValues(alpha: 0.94)
+                : Colors.white.withValues(alpha: 0.94),
             borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-            border: Border(
-              top: BorderSide(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.15)
-                    : MqColors.charcoal800.withValues(alpha: 0.05),
-              ),
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : MqColors.charcoal800.withValues(alpha: 0.06),
+              width: 0.6,
             ),
             boxShadow: [
               BoxShadow(
-                color: MqColors.charcoal800.withValues(alpha: 0.2),
-                blurRadius: 24,
-                offset: const Offset(0, -4),
+                color: MqColors.charcoal800.withValues(
+                  alpha: isDark ? 0.30 : 0.10,
+                ),
+                blurRadius: 18,
+                offset: const Offset(0, -6),
               ),
             ],
           ),
@@ -947,19 +948,22 @@ class _ArrivalCard extends StatelessWidget {
           padding: const EdgeInsets.all(MqSpacing.space6),
           decoration: BoxDecoration(
             color: isDark
-                ? MqColors.arrivalBgDark.withValues(alpha: 0.9)
-                : MqColors.arrivalBgLight.withValues(alpha: 0.92),
+                ? MqColors.arrivalBgDark.withValues(alpha: 0.94)
+                : MqColors.arrivalBgLight.withValues(alpha: 0.94),
             borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
             border: Border.all(
               color: isDark
                   ? MqColors.arrivalBorderDark
                   : MqColors.arrivalBorderLight,
+              width: 0.6,
             ),
             boxShadow: [
               BoxShadow(
-                color: MqColors.charcoal800.withValues(alpha: 0.15),
-                blurRadius: 24,
-                offset: const Offset(0, -4),
+                color: MqColors.charcoal800.withValues(
+                  alpha: isDark ? 0.30 : 0.10,
+                ),
+                blurRadius: 18,
+                offset: const Offset(0, -6),
               ),
             ],
           ),

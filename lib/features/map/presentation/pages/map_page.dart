@@ -600,12 +600,13 @@ class _MapErrorBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
         border: Border.all(
           color: MqColors.error.withValues(alpha: isDark ? 0.34 : 0.22),
+          width: 0.6,
         ),
         boxShadow: [
           BoxShadow(
-            color: MqColors.charcoal800.withValues(alpha: 0.1),
-            blurRadius: 16,
-            offset: const Offset(0, 10),
+            color: MqColors.charcoal800.withValues(alpha: isDark ? 0.30 : 0.10),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -714,22 +715,25 @@ class _CategoryBuildingList extends StatelessWidget {
           constraints: const BoxConstraints(maxHeight: 240),
           decoration: BoxDecoration(
             color: isDark
-                ? MqColors.charcoal800.withValues(alpha: 0.88)
-                : Colors.white.withValues(alpha: 0.85),
+                ? MqColors.charcoal800.withValues(alpha: 0.94)
+                : Colors.white.withValues(alpha: 0.94),
             borderRadius: const BorderRadius.vertical(
               top: Radius.circular(MqSpacing.radiusXl),
               bottom: Radius.circular(MqSpacing.radiusXl),
             ),
             border: Border.all(
               color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : MqColors.charcoal800.withValues(alpha: 0.08),
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : MqColors.charcoal800.withValues(alpha: 0.06),
+              width: 0.6,
             ),
             boxShadow: [
               BoxShadow(
-                color: MqColors.charcoal800.withValues(alpha: 0.15),
-                blurRadius: 24,
-                offset: const Offset(0, -4),
+                color: MqColors.charcoal800.withValues(
+                  alpha: isDark ? 0.30 : 0.10,
+                ),
+                blurRadius: 18,
+                offset: const Offset(0, -6),
               ),
             ],
           ),
@@ -927,22 +931,25 @@ class _BrowseGroupPanel<TGroup> extends StatelessWidget {
           constraints: const BoxConstraints(maxHeight: 360),
           decoration: BoxDecoration(
             color: isDark
-                ? MqColors.charcoal800.withValues(alpha: 0.88)
-                : Colors.white.withValues(alpha: 0.85),
+                ? MqColors.charcoal800.withValues(alpha: 0.94)
+                : Colors.white.withValues(alpha: 0.94),
             borderRadius: const BorderRadius.vertical(
               top: Radius.circular(MqSpacing.radiusXl),
               bottom: Radius.circular(MqSpacing.radiusXl),
             ),
             border: Border.all(
               color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : MqColors.charcoal800.withValues(alpha: 0.08),
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : MqColors.charcoal800.withValues(alpha: 0.06),
+              width: 0.6,
             ),
             boxShadow: [
               BoxShadow(
-                color: MqColors.charcoal800.withValues(alpha: 0.15),
-                blurRadius: 24,
-                offset: const Offset(0, -4),
+                color: MqColors.charcoal800.withValues(
+                  alpha: isDark ? 0.30 : 0.10,
+                ),
+                blurRadius: 18,
+                offset: const Offset(0, -6),
               ),
             ],
           ),
