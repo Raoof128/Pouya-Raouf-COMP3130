@@ -69,12 +69,22 @@ class _OnboardingCard extends StatelessWidget {
         padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
         decoration: BoxDecoration(
           color: dark
-              ? MqColors.charcoal800
-              : Colors.white.withValues(alpha: 0.92),
+              ? MqColors.charcoal800.withValues(alpha: 0.94)
+              : Colors.white.withValues(alpha: 0.94),
           borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
           border: Border.all(
-            color: dark ? Colors.white.withAlpha(13) : MqColors.sand200,
+            color: dark
+                ? Colors.white.withValues(alpha: 0.08)
+                : MqColors.charcoal800.withValues(alpha: 0.06),
+            width: 0.6,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: MqColors.charcoal800.withValues(alpha: dark ? 0.30 : 0.10),
+              blurRadius: 18,
+              offset: const Offset(0, 6),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -159,12 +169,22 @@ class _PreviewCard extends StatelessWidget {
         padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
         decoration: BoxDecoration(
           color: dark
-              ? MqColors.charcoal800
-              : Colors.white.withValues(alpha: 0.92),
+              ? MqColors.charcoal800.withValues(alpha: 0.94)
+              : Colors.white.withValues(alpha: 0.94),
           borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
           border: Border.all(
-            color: dark ? Colors.white.withAlpha(13) : MqColors.sand200,
+            color: dark
+                ? Colors.white.withValues(alpha: 0.08)
+                : MqColors.charcoal800.withValues(alpha: 0.06),
+            width: 0.6,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: MqColors.charcoal800.withValues(alpha: dark ? 0.30 : 0.10),
+              blurRadius: 18,
+              offset: const Offset(0, 6),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

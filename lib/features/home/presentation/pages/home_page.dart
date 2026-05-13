@@ -174,9 +174,11 @@ class _MetroCountdownCard extends StatelessWidget {
     final dark = context.isDarkMode;
 
     final surface = dark
-        ? MqColors.charcoal800
-        : Colors.white.withValues(alpha: 0.88);
-    final border = dark ? Colors.white.withAlpha(13) : MqColors.sand200;
+        ? MqColors.charcoal800.withValues(alpha: 0.94)
+        : Colors.white.withValues(alpha: 0.94);
+    final border = dark
+        ? Colors.white.withValues(alpha: 0.08)
+        : MqColors.charcoal800.withValues(alpha: 0.06);
     const accent = MqColors.brightRed;
     final titleColor = dark ? Colors.white : MqColors.black;
     final subtitleColor = dark ? Colors.white : MqColors.black;
@@ -222,7 +224,14 @@ class _MetroCountdownCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: surface,
         borderRadius: BorderRadius.circular(MqSpacing.radiusXl),
-        border: Border.all(color: border),
+        border: Border.all(color: border, width: 0.6),
+        boxShadow: [
+          BoxShadow(
+            color: MqColors.charcoal800.withValues(alpha: dark ? 0.30 : 0.10),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       padding: const EdgeInsetsDirectional.all(MqSpacing.space4),
       child: Row(

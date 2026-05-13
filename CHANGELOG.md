@@ -1,3 +1,10 @@
+### Raouf: 2026-05-13 (AEST) — Home Page UI/UX alignment for dark and light modes
+**Scope:** Home Page / UI Design Tokens
+**Summary:** Standardized the surface alpha, border styles, and drop shadows across all Home Page cards (`_MetroCountdownCard`, `OpenDayHomeCard` `_OnboardingCard`, `_PreviewCard`) to perfectly align with the premium glassmorphism aesthetic established by the `_BentoHeroCard`. The unified tokens (`surface alpha: 0.94`, translucent border `width: 0.6`, `blurRadius: 18`, `offset: (0, 6)`) provide 100% production-ready UX alignment in both light and dark modes against the campus background photo.
+**Files Changed:** `lib/features/home/presentation/pages/home_page.dart`, `lib/features/open_day/presentation/widgets/open_day_home_card.dart`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `dart format` and `flutter analyze` both successfully completed with no issues.
+**Follow-ups:** None.
+
 ### Raouf: 2026-05-07 (AEST) — TfNSW open-data attribution on onboarding commute slide
 **Scope:** Onboarding UI + ARBs (`onboardingTransitDataAttribution`).
 **Summary:** Added l10n key **`onboardingTransitDataAttribution`** crediting **Transport for NSW (TfNSW)** open data beneath **`onboardingTransitBody`** so operator wording stays accurate while retaining mandatory attribution. Extended **`_OnboardingSlideData`** with optional **`footnote`**, styled as **`bodySmall`** with **`MqColors.contentSecondary`** / **`contentSecondaryDark`**. Synced EN template plus **34** translated ARBs and `scripts/onboarding_google_map_arb_translations.json` via **`scripts/sync_tfnsw_attribution_arb.py`** ([TfNSW / NSW transport cluster context](https://transport.nsw.gov.au/transport-for-nsw-information-guide)).
