@@ -21,7 +21,10 @@ class _SafetyToolkitPageState extends State<SafetyToolkitPage> {
   bool _flashlightOn = false;
 
   Future<void> _callNumber(String phoneNumber) async {
-    final uri = Uri(scheme: 'tel', path: phoneNumber.replaceAll(RegExp(r'\D'), ''));
+    final uri = Uri(
+      scheme: 'tel',
+      path: phoneNumber.replaceAll(RegExp(r'\D'), ''),
+    );
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     }
@@ -102,11 +105,7 @@ class _SafetyToolkitPageState extends State<SafetyToolkitPage> {
             ),
             child: Row(
               children: [
-                Icon(
-                  icon,
-                  size: 20,
-                  color: MqColors.red,
-                ),
+                Icon(icon, size: 20, color: MqColors.red),
                 const SizedBox(width: MqSpacing.space3),
                 Expanded(
                   child: Column(
@@ -152,7 +151,9 @@ class _SafetyToolkitPageState extends State<SafetyToolkitPage> {
         vertical: MqSpacing.space1,
       ),
       child: SafetyActionCard(
-        icon: contact.isEmergency ? Icons.warning_amber_rounded : Icons.phone_in_talk,
+        icon: contact.isEmergency
+            ? Icons.warning_amber_rounded
+            : Icons.phone_in_talk,
         title: contact.label,
         subtitle: contact.description,
         value: contact.phoneNumber,
@@ -229,12 +230,18 @@ class _SafetyToolkitPageState extends State<SafetyToolkitPage> {
               // Quick Actions
               _buildSectionHeader(context, 'Quick Actions', isDark),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: MqSpacing.space4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: MqSpacing.space4,
+                ),
                 child: Column(
                   children: [
                     SafetyActionCard(
-                      icon: _flashlightOn ? Icons.flash_on : Icons.flashlight_on,
-                      title: _flashlightOn ? l10n.safetyFlashlightOn : l10n.safetyFlashlight,
+                      icon: _flashlightOn
+                          ? Icons.flash_on
+                          : Icons.flashlight_on,
+                      title: _flashlightOn
+                          ? l10n.safetyFlashlightOn
+                          : l10n.safetyFlashlight,
                       subtitle: 'Use device camera flash as light',
                       isActive: _flashlightOn,
                       onTap: _toggleFlashlight,
@@ -245,7 +252,9 @@ class _SafetyToolkitPageState extends State<SafetyToolkitPage> {
                       title: l10n.safetyNavigateToSecurity,
                       subtitle: 'Open campus map to security office',
                       onTap: () {
-                        context.showSnackBar('Navigate to Security — opening campus map');
+                        context.showSnackBar(
+                          'Navigate to Security — opening campus map',
+                        );
                       },
                     ),
                   ],
@@ -261,7 +270,9 @@ class _SafetyToolkitPageState extends State<SafetyToolkitPage> {
               // Shuttle Info
               _buildSectionHeader(context, l10n.safetySecurityShuttle, isDark),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: MqSpacing.space4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: MqSpacing.space4,
+                ),
                 child: SafetyActionCard(
                   icon: Icons.airport_shuttle,
                   title: l10n.safetySecurityShuttle,
@@ -273,7 +284,9 @@ class _SafetyToolkitPageState extends State<SafetyToolkitPage> {
               // First Aid
               _buildSectionHeader(context, l10n.safetyFirstAid, isDark),
               _buildPoiList(
-                context, isDark, l10n,
+                context,
+                isDark,
+                l10n,
                 _source.firstAidLocations,
                 Icons.medical_services,
               ),
@@ -281,7 +294,9 @@ class _SafetyToolkitPageState extends State<SafetyToolkitPage> {
               // Defibrillators
               _buildSectionHeader(context, l10n.safetyDefibrillator, isDark),
               _buildPoiList(
-                context, isDark, l10n,
+                context,
+                isDark,
+                l10n,
                 _source.defibrillatorLocations,
                 Icons.favorite_border,
               ),

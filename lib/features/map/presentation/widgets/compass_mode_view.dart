@@ -121,7 +121,12 @@ class CompassModeView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildHeadingBar(
-                  context, isDark, l10n, compassHeading, headingAccuracy),
+                context,
+                isDark,
+                l10n,
+                compassHeading,
+                headingAccuracy,
+              ),
               _buildRouteInfo(context, isDark, l10n),
               _buildCompassRadar(context, isDark, angle),
               _buildLandmarkHints(context, isDark, l10n),
@@ -226,11 +231,7 @@ class CompassModeView extends StatelessWidget {
                   ),
                 ),
                 Center(
-                  child: Icon(
-                    Icons.navigation,
-                    size: 100,
-                    color: MqColors.red,
-                  ),
+                  child: Icon(Icons.navigation, size: 100, color: MqColors.red),
                 ),
               ],
             ),

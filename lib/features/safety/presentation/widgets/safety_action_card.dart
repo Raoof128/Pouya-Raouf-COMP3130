@@ -38,18 +38,16 @@ class SafetyActionCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: isDestructive
                 ? (isDark
-                    ? MqColors.red.withValues(alpha: 0.15)
-                    : MqColors.red.withValues(alpha: 0.08))
-                : (isDark
-                    ? MqColors.charcoal800
-                    : Colors.white),
+                      ? MqColors.red.withValues(alpha: 0.15)
+                      : MqColors.red.withValues(alpha: 0.08))
+                : (isDark ? MqColors.charcoal800 : Colors.white),
             borderRadius: BorderRadius.circular(MqSpacing.radiusLg),
             border: Border.all(
               color: isDestructive
                   ? MqColors.red.withValues(alpha: 0.3)
                   : (isDark
-                      ? Colors.white.withValues(alpha: 0.08)
-                      : MqColors.charcoal800.withValues(alpha: 0.06)),
+                        ? Colors.white.withValues(alpha: 0.08)
+                        : MqColors.charcoal800.withValues(alpha: 0.06)),
               width: 0.6,
             ),
           ),
@@ -62,19 +60,17 @@ class SafetyActionCard extends StatelessWidget {
                   color: isDestructive
                       ? MqColors.red.withValues(alpha: 0.2)
                       : (isActive
-                          ? MqColors.red.withValues(alpha: 0.15)
-                          : (isDark
-                              ? Colors.white.withValues(alpha: 0.1)
-                              : MqColors.red.withValues(alpha: 0.08))),
+                            ? MqColors.red.withValues(alpha: 0.15)
+                            : (isDark
+                                  ? Colors.white.withValues(alpha: 0.1)
+                                  : MqColors.red.withValues(alpha: 0.08))),
                   borderRadius: BorderRadius.circular(MqSpacing.radiusMd),
                 ),
                 child: Icon(
                   icon,
                   color: isDestructive || isActive
                       ? MqColors.red
-                      : (isDark
-                          ? Colors.white
-                          : MqColors.charcoal900),
+                      : (isDark ? Colors.white : MqColors.charcoal900),
                   size: 24,
                 ),
               ),
@@ -90,9 +86,7 @@ class SafetyActionCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: isDestructive
                             ? MqColors.red
-                            : (isDark
-                                ? Colors.white
-                                : MqColors.charcoal900),
+                            : (isDark ? Colors.white : MqColors.charcoal900),
                       ),
                     ),
                     if (subtitle != null) ...[

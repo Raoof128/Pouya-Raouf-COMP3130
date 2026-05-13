@@ -49,6 +49,13 @@ lib/
 - All keys loaded via `--dart-define-from-file=.env` — never hardcoded in source
 - Use `scripts/run.sh` to launch with native key injection for Maps SDKs
 
+### Raouf: 2026-05-13 (AEST) — check.sh production-grade upgrade (privacy guard, secret scan, --fix/--verbose)
+**Scope:** CI/Dev UX — `scripts/check.sh` rewrite.
+**Summary:** Upgraded `check.sh` with: `--fix` (auto-format), `--verbose` (stream logs), structured logs under `.dart_tool/check_logs/`, untranslated l10n check (non-blocking), privacy guard (blocks analytics/tracking packages), secret scan (flags hardcoded API keys in lib/test/scripts — supabase/ edge functions excluded since they use `Deno.env.get` for runtime env vars), cleaner summary with per-step failure list. Single-pass `flutter analyze`. Format check now also covers `scripts/` and `integration_test/` if they exist.
+**Files Changed:** `scripts/check.sh`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `./scripts/check.sh --quick` (8/8 passed); `./scripts/check.sh` (9/9 passed including debug APK build).
+**Follow-ups:** Run `scripts/sync_arb.py` (if available) to propagate new compass+safety keys across 34 non-English locales.
+
 ### Raouf: 2026-05-13 (AEST) — Campus Safety Toolkit (228 tests, 0 issues)
 **Scope:** New Safety feature — `lib/features/safety/`.
 **Summary:** Implemented Campus Safety Toolkit (Monash MSafe-inspired) with privacy-safe design (no automatic location sharing — user manually calls or navigates). **Features:**

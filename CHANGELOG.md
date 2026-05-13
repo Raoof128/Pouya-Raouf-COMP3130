@@ -1,3 +1,9 @@
+### Raouf: 2026-05-13 (AEST) — check.sh production-grade upgrade (privacy guard, secret scan, --fix/--verbose)
+**Scope:** CI/UX — `scripts/check.sh` rewrite with --fix, --verbose, privacy guard, secret scan, untranslated l10n check.
+**Summary:** Added structured logs, --fix mode (auto-format), --verbose (stream logs), privacy guard (blocks analytics packages), secret scan (hardcoded API keys), untranslated l10n tracking (non-blocking). Format check covers scripts/integration_test. Single-pass flutter analyze. Cleaner summary with per-step failure list.
+**Files Changed:** `scripts/check.sh`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `./scripts/check.sh --quick` (8/8); `./scripts/check.sh` (9/9 including debug APK build).
+
 ### Raouf: 2026-05-13 (AEST) — Campus Safety Toolkit (228 tests, 0 issues)
 **Scope:** New Safety feature — campus safety toolkit with privacy-safe design (no auto location sharing).
 **Summary:** Implemented `SafetyToolkitPage` with flashlight toggle, emergency contacts (000, Campus Security (02) 9850 7111, Health Service, 1800 CRISIS), security shuttle info, 3 first aid + 5 AED locations, privacy banner, and `/safety` route. Added `SafetyPoi`/`EmergencyContact` entities, `SafetyPoiSource` with campus-verified data, `SafetyActionCard` widget, `torch_light` dependency, and 16 ARB keys.

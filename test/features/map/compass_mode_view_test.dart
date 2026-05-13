@@ -162,21 +162,23 @@ void main() {
       expect(view, isA<CompassModeView>());
     });
 
-    test('constructor requires currentLocation, selectedBuilding, route, onClose',
-        () {
-      // The named parameters are all required.
-      // Verify they appear in the API contract via compile-time checks
-      // in the test project (compilation of this file as-is) .
-      expect(
-        () => CompassModeView(
-          currentLocation: _loc(-33.77, 151.11),
-          selectedBuilding: _building(),
-          route: _route(),
-          onClose: () {},
-        ),
-        isNot(throwsA(anything)),
-      );
-    });
+    test(
+      'constructor requires currentLocation, selectedBuilding, route, onClose',
+      () {
+        // The named parameters are all required.
+        // Verify they appear in the API contract via compile-time checks
+        // in the test project (compilation of this file as-is) .
+        expect(
+          () => CompassModeView(
+            currentLocation: _loc(-33.77, 151.11),
+            selectedBuilding: _building(),
+            route: _route(),
+            onClose: () {},
+          ),
+          isNot(throwsA(anything)),
+        );
+      },
+    );
   });
 
   group('bearing between locations matches compass use case', () {
@@ -185,8 +187,10 @@ void main() {
     // 18 Wally's Walk: -33.7740, 151.1126
     test('bearing from library to 18WW points roughly north', () {
       final bearing = Geolocator.bearingBetween(
-        -33.7757, 151.1131, // Library
-        -33.7740, 151.1126, // 18WW
+        -33.7757,
+        151.1131, // Library
+        -33.7740,
+        151.1126, // 18WW
       );
       // 18WW is north of the library by ~0.0017°, so bearing ~350° or ~-10°
       final normalized = ((bearing % 360) + 360) % 360;
@@ -194,22 +198,13 @@ void main() {
     });
 
     test('bearing returns a finite number', () {
-      final bearing = Geolocator.bearingBetween(
-        -33.77, 151.11,
-        -33.76, 151.12,
-      );
+      final bearing = Geolocator.bearingBetween(-33.77, 151.11, -33.76, 151.12);
       expect(bearing.isFinite, isTrue);
     });
 
     test('bearing is symmetric for reverse direction', () {
-      final fwd = Geolocator.bearingBetween(
-        -33.77, 151.11,
-        -33.76, 151.12,
-      );
-      final rev = Geolocator.bearingBetween(
-        -33.76, 151.12,
-        -33.77, 151.11,
-      );
+      final fwd = Geolocator.bearingBetween(-33.77, 151.11, -33.76, 151.12);
+      final rev = Geolocator.bearingBetween(-33.76, 151.12, -33.77, 151.11);
       // Should differ by roughly 180°
       final diff = ((fwd - rev).abs() % 360);
       expect(diff, closeTo(180, 5));
