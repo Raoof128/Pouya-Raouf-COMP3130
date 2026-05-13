@@ -3450,3 +3450,14 @@ Addressed the failing iOS CI build by synchronizing deployment targets and updat
 **Files Changed:** `lib/features/map/presentation/widgets/google/google_map_view.dart`, `lib/features/map/presentation/widgets/google/desktop_map_fallback_view.dart`, `AGENT.md`, `CHANGELOG.md`.
 **Verification:** `/opt/homebrew/share/flutter/bin/cache/dart-sdk/bin/dart format ...` passed; `/opt/homebrew/share/flutter/bin/cache/dart-sdk/bin/dart analyze lib/features/map test/features/map` passed with no issues; `git diff --check` passed. Flutter test runner was blocked by sandbox-denied writes to `/opt/homebrew/share/flutter/bin/cache` (`engine.stamp`/`lockfile`); plain `dart test test/features/map` was attempted but is not valid for Flutter tests because `dart:ui` is unavailable outside the Flutter test runner.
 **Follow-ups:** Run `flutter test test/features/map` or `./scripts/check.sh --quick` outside the restricted sandbox to re-confirm the full Flutter test suite.
+
+### 2026-05-13 (Australia/Sydney)
+**Raouf:**
+- **Scope:** Dark Mode Styling & Map Selection Logic
+- **Summary:** Replaced invisible charcoal800 icons with high-contrast brightRed in dark mode for Open Day widgets and ensured the category browse section bar closes seamlessly when a map location is selected.
+- **Files Changed:**
+  - `lib/features/open_day/presentation/pages/open_day_page.dart` - Updated text and action icons to use MqColors.brightRed in dark mode.
+  - `lib/features/open_day/presentation/widgets/event_actions_sheet.dart` - Updated Google Maps location icon to use brightRed in dark mode.
+  - `lib/features/map/presentation/pages/map_page.dart` - Elevated RoutePanel priority over category browse panels so the footer closes when a map marker is actively selected.
+- **Verification:** UI visual inspection in dark mode confirms icon visibility, map interaction testing confirms expected panel dismissal, and `./scripts/check.sh` reports 184 tests passed successfully.
+- **Follow-ups:** Monitor future map-panel components to ensure category drill-down states don't accidentally supersede RoutePanel display logic.

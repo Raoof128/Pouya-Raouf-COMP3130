@@ -169,14 +169,12 @@ class _StudyInterestHeader extends ConsumerWidget {
             style: context.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w800,
               letterSpacing: 1.4,
-              color: dark ? MqColors.charcoal800 : MqColors.red,
+              color: dark ? MqColors.brightRed : MqColors.red,
             ),
           ),
           const SizedBox(height: MqSpacing.space1),
           Text(
-            selected == null
-                ? l10n.openDay_pickInterest
-                : selected!.name,
+            selected == null ? l10n.openDay_pickInterest : selected!.name,
             style: context.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w800,
               color: dark ? Colors.white : MqColors.contentPrimary,
@@ -199,7 +197,7 @@ class _StudyInterestHeader extends ConsumerWidget {
             child: TextButton.icon(
               onPressed: () => BachelorPickerSheet.show(context),
               style: TextButton.styleFrom(
-                foregroundColor: dark ? MqColors.charcoal800 : MqColors.red,
+                foregroundColor: dark ? MqColors.brightRed : MqColors.red,
                 padding: const EdgeInsetsDirectional.symmetric(
                   horizontal: MqSpacing.space3,
                   vertical: MqSpacing.space1,
@@ -238,7 +236,7 @@ class _TimeBlockHeader extends StatelessWidget {
         style: context.textTheme.labelMedium?.copyWith(
           fontWeight: FontWeight.w800,
           letterSpacing: 1.2,
-          color: dark ? MqColors.charcoal800 : MqColors.red,
+          color: dark ? MqColors.brightRed : MqColors.red,
         ),
       ),
     );
@@ -308,8 +306,9 @@ class _EventTile extends StatelessWidget {
           // consciously choose between in-app context and external nav.
           Semantics(
             button: true,
-            label: AppLocalizations.of(context)!
-                .openDay_directionsTo(event.venueName),
+            label: AppLocalizations.of(
+              context,
+            )!.openDay_directionsTo(event.venueName),
             child: MqTactileButton(
               onTap: () => EventActionsSheet.show(context, event),
               borderRadius: MqSpacing.radiusXl,
@@ -321,7 +320,7 @@ class _EventTile extends StatelessWidget {
                 child: Icon(
                   Icons.directions_rounded,
                   size: 24,
-                  color: dark ? MqColors.charcoal800 : MqColors.red,
+                  color: dark ? MqColors.brightRed : MqColors.red,
                 ),
               ),
             ),

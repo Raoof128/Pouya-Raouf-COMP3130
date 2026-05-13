@@ -238,7 +238,29 @@ class _MapPageState extends ConsumerState<MapPage> {
                         ? controller.openLocationSettings
                         : controller.openAppSettings,
                   ),
-            footer: facultyTopLevel
+            footer: mapState.selectedBuilding != null
+                ? RoutePanel(
+                    selectedBuilding: mapState.selectedBuilding,
+                    route: mapState.route,
+                    travelMode: mapState.travelMode,
+                    supportedTravelModes:
+                        mapState.renderer == MapRendererType.campus
+                        ? const [TravelMode.walk]
+                        : TravelMode.values,
+                    isLoading: mapState.isLoadingRoute,
+                    isNavigating: mapState.isNavigating,
+                    hasArrived: mapState.hasArrived,
+                    onLoadRoute: controller.loadRoute,
+                    onClearRoute: controller.clearRoute,
+                    onClearSelection: controller.clearSelection,
+                    onTravelModeChanged: controller.setTravelMode,
+                    onStartNavigation: controller.startNavigation,
+                    onStopNavigation: controller.stopNavigation,
+                    onDismissArrival: controller.dismissArrival,
+                    onOpenInGoogleMaps: controller.openInGoogleMaps,
+                    onOpenStreetView: controller.openStreetView,
+                  )
+                : facultyTopLevel
                 ? _BrowseGroupPanel<FacultyGroup>(
                     title: l10n.home_faculty,
                     leadingIcon: Icons.school,
@@ -334,28 +356,6 @@ class _MapPageState extends ConsumerState<MapPage> {
                     // browse entirely. `clearSelection` is reserved
                     // for focused-back-to-list (RoutePanel close).
                     onClear: controller.clearCategoryBrowse,
-                  )
-                : mapState.selectedBuilding != null
-                ? RoutePanel(
-                    selectedBuilding: mapState.selectedBuilding,
-                    route: mapState.route,
-                    travelMode: mapState.travelMode,
-                    supportedTravelModes:
-                        mapState.renderer == MapRendererType.campus
-                        ? const [TravelMode.walk]
-                        : TravelMode.values,
-                    isLoading: mapState.isLoadingRoute,
-                    isNavigating: mapState.isNavigating,
-                    hasArrived: mapState.hasArrived,
-                    onLoadRoute: controller.loadRoute,
-                    onClearRoute: controller.clearRoute,
-                    onClearSelection: controller.clearSelection,
-                    onTravelModeChanged: controller.setTravelMode,
-                    onStartNavigation: controller.startNavigation,
-                    onStopNavigation: controller.stopNavigation,
-                    onDismissArrival: controller.dismissArrival,
-                    onOpenInGoogleMaps: controller.openInGoogleMaps,
-                    onOpenStreetView: controller.openStreetView,
                   )
                 : null,
           );

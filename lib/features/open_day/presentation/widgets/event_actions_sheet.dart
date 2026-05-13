@@ -102,7 +102,7 @@ class EventActionsSheet extends ConsumerWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.location_on_rounded,
-                    color: dark ? MqColors.charcoal800 : MqColors.red,
+                    color: dark ? MqColors.brightRed : MqColors.red,
                   ),
                   title: Text(
                     l10n.openDay_viewInCampusMap,
@@ -120,9 +120,7 @@ class EventActionsSheet extends ConsumerWidget {
               ),
               Semantics(
                 button: true,
-                label: l10n.openDay_navigateWithGoogleSemantic(
-                  event.venueName,
-                ),
+                label: l10n.openDay_navigateWithGoogleSemantic(event.venueName),
                 child: ListTile(
                   leading: Icon(
                     Icons.navigation_rounded,

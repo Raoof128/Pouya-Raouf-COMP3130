@@ -986,3 +986,14 @@ The project was built through phases 0–5, originally including auth, calendar,
 **Files Audited:** All `.md` files in root and `docs/`.
 **Verification:** Manual verification of each inventory field against source code and Context7 tech standards.
 **Follow-ups:** None.
+
+### 2026-05-13 (Australia/Sydney)
+**Raouf:**
+- **Scope:** Dark Mode Styling & Map Selection Logic
+- **Summary:** Replaced invisible charcoal800 icons with high-contrast brightRed in dark mode for Open Day widgets and ensured the category browse section bar closes seamlessly when a map location is selected.
+- **Files Changed:**
+  - `lib/features/open_day/presentation/pages/open_day_page.dart`
+  - `lib/features/open_day/presentation/widgets/event_actions_sheet.dart`
+  - `lib/features/map/presentation/pages/map_page.dart`
+- **Verification:** UI visual inspection in dark mode confirms icon visibility, map interaction testing confirms expected panel dismissal, and `./scripts/check.sh` reports 184 tests passed successfully.
+- **Follow-ups:** Monitor future map-panel components to ensure category drill-down states don't accidentally supersede RoutePanel display logic.
