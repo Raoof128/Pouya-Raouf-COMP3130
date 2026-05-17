@@ -1054,6 +1054,13 @@ The project was built through phases 0–5, originally including auth, calendar,
 **Verification:** Manual verification of each inventory field against source code and Context7 tech standards.
 **Follow-ups:** None.
 
+### Raouf: 2026-05-17 (AEST) — ARB placeholder normalization (ICU Lexing Errors fixed, 8/8 checks pass)
+**Scope:** i18n / ARB localization quality — all 35 locales.
+**Summary:** Identified and fixed 147 ICU placeholder normalization errors across 13 non-English ARB files. Root cause: translated strings used localized placeholder names (e.g. `{μοίρες}` in Greek, `{درجه}` in Farsi, `{Minuten}` in German) instead of the English ICU parameter names required by `flutter gen-l10n`. This caused two classes of failures: (1) ICU Lexing Errors in `flutter gen-l10n` for non-ASCII placeholder names; (2) extra positional parameters in generated Dart methods (e.g. `minutesShort(int minutes, Object Minuten, Object minutos)`) causing `not_enough_positional_arguments` compile errors across `home_page.dart`, `compass_mode_view.dart`, `route_panel.dart`, `open_day_home_card.dart`, `settings_page.dart`. Fixed by two new utility scripts: `scripts/fix_icu_placeholders.py` (targeted pass for the 69 original ICU errors) and `scripts/normalize_arb_placeholders.py` (comprehensive pass normalizing all 35 locales). Also fixed a `use_null_aware_elements` info lint in `safety_action_card.dart` (`if (trailing case final t?) t,` → `?trailing,`).
+**Files Changed:** `lib/app/l10n/app_bn.arb`, `app_cs.arb`, `app_da.arb`, `app_de.arb`, `app_el.arb`, `app_es.arb`, `app_fa.arb`, `app_ja.arb`, `app_ko.arb`, `app_pl.arb`, `app_ru.arb`, `app_si.arb`, `app_ta.arb`, `app_uk.arb`, `app_ur.arb`, `lib/app/l10n/generated/*`, `lib/features/safety/presentation/widgets/safety_action_card.dart`, `scripts/fix_icu_placeholders.py`, `scripts/normalize_arb_placeholders.py`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `python3 scripts/fix_icu_placeholders.py` (69 keys); `python3 scripts/normalize_arb_placeholders.py` (78 keys); `flutter gen-l10n` (0 errors); `flutter analyze` (0 issues); `./scripts/check.sh --quick` (8/8 passed).
+**Follow-ups:** Run `normalize_arb_placeholders.py` after any new localization session to prevent recurrence.
+
 ### 2026-05-13 (Australia/Sydney)
 **Raouf:**
 - **Scope:** Dark Mode Styling & Map Selection Logic

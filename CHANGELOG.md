@@ -1,3 +1,9 @@
+### Raouf: 2026-05-17 (AEST) — ARB placeholder normalization (ICU Lexing Errors fixed, 8/8 checks pass)
+**Scope:** i18n / ARB localization quality — all 35 locales.
+**Summary:** Fixed 147 ICU placeholder normalization errors across 13 non-English ARB files. Non-English translations were using localized placeholder names (e.g. `{μοίρες}`, `{درجه}`, `{Minuten}`) instead of English ICU names, causing both `ICU Lexing Error` in `flutter gen-l10n` and `not_enough_positional_arguments` compile errors in the generated Dart code. Added two utility scripts (`fix_icu_placeholders.py`, `normalize_arb_placeholders.py`) to detect and repair these issues. Also fixed a `use_null_aware_elements` lint in `safety_action_card.dart`.
+**Files Changed:** 15 locale ARB files, `lib/app/l10n/generated/*`, `safety_action_card.dart`, `scripts/fix_icu_placeholders.py`, `scripts/normalize_arb_placeholders.py`, `AGENT.md`, `CHANGELOG.md`
+**Verification:** `flutter gen-l10n` (0 errors); `flutter analyze` (0 issues); `./scripts/check.sh --quick` (8/8 passed).
+
 ### Raouf: 2026-05-13 (AEST) — check.sh production-grade upgrade (privacy guard, secret scan, --fix/--verbose)
 **Scope:** CI/UX — `scripts/check.sh` rewrite with --fix, --verbose, privacy guard, secret scan, untranslated l10n check.
 **Summary:** Added structured logs, --fix mode (auto-format), --verbose (stream logs), privacy guard (blocks analytics packages), secret scan (hardcoded API keys), untranslated l10n tracking (non-blocking). Format check covers scripts/integration_test. Single-pass flutter analyze. Cleaner summary with per-step failure list.

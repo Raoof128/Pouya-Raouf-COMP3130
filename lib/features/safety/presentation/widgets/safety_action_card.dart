@@ -125,7 +125,7 @@ class SafetyActionCard extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (trailing case final t?) t,
+              ?trailing,
               if (onTap != null && trailing == null)
                 Icon(
                   Icons.chevron_right,
